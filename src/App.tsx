@@ -7,7 +7,7 @@ function App() {
         <Canvas
             shadows
             dpr={[1, 2]}
-            camera={{ position: [0, 0, 40], fov: 40 }}
+            camera={{ position: [0, 20, 40], fov: 45 }}
         >
             <Scene />
         </Canvas>
