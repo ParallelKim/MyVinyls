@@ -1,0 +1,21 @@
+import { useRef } from "react";
+import { Group } from "three";
+// import { LpWithCover } from "../models/LpWithCover";
+import { Shelf } from "../models/Shelf";
+import { CustomLp } from "../models/CustomLp";
+import { JUNGWOO } from "../../constants/jungwoo";
+
+export const ShelfGroup = () => {
+    const shelfRef = useRef<Group>(null);
+
+    return (
+        <group ref={shelfRef}>
+            <Shelf />
+            {/* <LpWithCover parent={shelfRef} /> */}
+            <CustomLp
+                parent={shelfRef}
+                album={JUNGWOO.albums[0]}
+            />
+        </group>
+    );
+};
