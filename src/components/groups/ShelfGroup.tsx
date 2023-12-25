@@ -8,14 +8,19 @@ import { JUNGWOO } from "../../constants/jungwoo";
 export const ShelfGroup = () => {
     const shelfRef = useRef<Group>(null);
 
+    console.log(JUNGWOO);
     return (
         <group ref={shelfRef}>
             <Shelf />
             {/* <LpWithCover parent={shelfRef} /> */}
-            <CustomLp
-                parent={shelfRef}
-                album={JUNGWOO.albums[0]}
-            />
+            {JUNGWOO.albums.map((album, idx) => (
+                <CustomLp
+                    key={album.title}
+                    order={idx}
+                    parent={shelfRef}
+                    album={album}
+                />
+            ))}
         </group>
     );
 };

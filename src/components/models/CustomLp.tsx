@@ -1,6 +1,13 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { RefObject, useRef, useState } from "react";
-import { Euler, Group, Object3DEventMap, TextureLoader, Vector3 } from "three";
+import {
+    Euler,
+    Group,
+    MeshStandardMaterial,
+    Object3DEventMap,
+    TextureLoader,
+    Vector3,
+} from "three";
 import { Album } from "../../types/Album";
 
 import { useGLTF } from "@react-three/drei";
@@ -25,7 +32,7 @@ const INIT_STATE: {
     position: Vector3;
     rotation: Euler;
 } = {
-    position: new Vector3(-4.3, 31.2, -2),
+    position: new Vector3(-4.3, 31.1, -2),
     rotation: new Euler(-Math.PI / 8, 0, 0),
 };
 
@@ -33,9 +40,11 @@ const OFFSET = new Vector3(0, 0, -20);
 
 export const CustomLp = ({
     album,
+    order,
     parent,
 }: {
     album: Album;
+    order: number;
     parent: RefObject<Group<Object3DEventMap>>;
 }) => {
     const [isFocus, setIsFocus] = useState(false);
@@ -72,16 +81,21 @@ export const CustomLp = ({
     const { nodes, materials } = useGLTF(
         "/lpCover-transformed.glb"
     ) as GLTFResult;
+    const textureLoader = new TextureLoader();
+    const texture = textureLoader.load(album.cover);
+    const customMaterial: MeshStandardMaterial = materials.Material_25.clone();
+    customMaterial.map = texture;
 
-    const texture = new TextureLoader().load(album.cover);
-
-    console.log(materials.Material_25);
-    materials.Material_25.map = texture;
-
+    console.log(texture);
     return (
         <group
             ref={lp}
-            {...INIT_STATE}
+            position={[
+                INIT_STATE.position.x + 8.9 * order,
+                INIT_STATE.position.y,
+                INIT_STATE.position.z,
+            ]}
+            rotation={INIT_STATE.rotation}
             onClick={() => {
                 setIsFocus(!isFocus);
             }}
@@ -90,7 +104,7 @@ export const CustomLp = ({
         >
             <mesh
                 geometry={nodes["Box001_Material_#25_0"].geometry}
-                material={materials.Material_25}
+                material={customMaterial}
                 position={[-0.025, 0, 0]}
                 scale={0.038}
             />
