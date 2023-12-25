@@ -7,7 +7,7 @@ const INIT_STATE: {
     position: Vector3;
     rotation: Euler;
 } = {
-    position: new Vector3(-3.5, 24.7, 2),
+    position: new Vector3(-4.3, 31.2, -2),
     rotation: new Euler(-Math.PI / 8, 0, 0),
 };
 
@@ -58,7 +58,7 @@ export const LpWithCover = ({
                 onClick={() => {
                     setIsFocus(!isFocus);
                 }}
-                scale={[16, 16, 16]}
+                scale={19}
                 src="/lpCover.glb"
                 receiveShadow
                 castShadow
