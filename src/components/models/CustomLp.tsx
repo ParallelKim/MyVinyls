@@ -10,8 +10,10 @@ import {
 } from "three";
 import { Album } from "../../types/Album";
 
-import { useGLTF } from "@react-three/drei";
+import { Html, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
+import { currentAlbumAtom } from "../../atoms/currentAlbumAtom";
+import { useAtom } from "jotai";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -47,33 +49,45 @@ export const CustomLp = ({
     order: number;
     parent: RefObject<Group<Object3DEventMap>>;
 }) => {
-    const [isFocus, setIsFocus] = useState(false);
-    const lp = useRef<Group>(null);
+    const [currentAlbum, setCurrentAlbum] = useAtom(currentAlbumAtom);
+    const isFocus = currentAlbum?.url === album.url;
+
+    const [isLerped, setIsLerped] = useState(false);
+    const lpRef = useRef<Group>(null);
+    const htmlRef = useRef<HTMLDivElement>(null);
 
     const { camera, scene } = useThree();
     const temp = new Vector3();
 
     useFrame(() => {
-        if (!lp.current) return;
+        if (!lpRef.current) return;
         if (isFocus) {
-            if (parent.current && lp.current.parent === parent.current) {
-                lp.current.rotation.set(0, 0, 0);
-                temp.copy(lp.current.position);
+            if (parent.current && lpRef.current.parent === parent.current) {
+                lpRef.current.rotation.set(0, 0, 0);
+                temp.copy(lpRef.current.position);
                 temp.y -= 22;
                 camera.worldToLocal(temp);
-                lp.current.position.copy(temp);
+                lpRef.current.position.copy(temp);
 
-                camera.add(lp.current);
+                camera.add(lpRef.current);
                 scene.add(camera);
+                setIsLerped(false);
             }
 
-            lp.current.position.lerp(OFFSET, 0.05);
-            lp.current.lookAt(camera.position);
+            if (lpRef.current.position.distanceTo(camera.position) < 75) {
+                !isLerped && setIsLerped(true);
+            }
+
+            lpRef.current.position.lerp(OFFSET, 0.05);
+            lpRef.current.lookAt(camera.position);
         } else {
-            if (parent.current && lp.current.parent !== parent.current) {
-                parent.current.add(lp.current);
-                lp.current.position.copy(INIT_STATE.position);
-                lp.current.rotation.copy(INIT_STATE.rotation);
+            if (parent.current && lpRef.current.parent !== parent.current) {
+                parent.current.add(lpRef.current);
+                const initPos = INIT_STATE.position.clone();
+                initPos.x += 8.9 * order;
+                lpRef.current.position.copy(initPos);
+                lpRef.current.rotation.copy(INIT_STATE.rotation);
+                setIsLerped(false);
             }
         }
     });
@@ -86,10 +100,9 @@ export const CustomLp = ({
     const customMaterial: MeshStandardMaterial = materials.Material_25.clone();
     customMaterial.map = texture;
 
-    console.log(texture);
     return (
         <group
-            ref={lp}
+            ref={lpRef}
             position={[
                 INIT_STATE.position.x + 8.9 * order,
                 INIT_STATE.position.y,
@@ -97,7 +110,7 @@ export const CustomLp = ({
             ]}
             rotation={INIT_STATE.rotation}
             onClick={() => {
-                setIsFocus(!isFocus);
+                setCurrentAlbum(isFocus ? null : album);
             }}
             scale={19}
             dispose={null}
@@ -126,6 +139,27 @@ export const CustomLp = ({
                 position={[-0.025, 0, 0]}
                 scale={0.038}
             />
+            {isLerped && (
+                <Html
+                    ref={htmlRef}
+                    position={[0, 0.25, 0]}
+                    scale={0.1}
+                    center
+                    distanceFactor={0}
+                    transform
+                >
+                    <div
+                        style={{
+                            padding: "0.3rem 0.5rem",
+                            color: "#e0e0e0",
+                            background: "#242424CC",
+                            borderRadius: "0.25rem",
+                        }}
+                    >
+                        {album.title}
+                    </div>
+                </Html>
+            )}
         </group>
     );
 };

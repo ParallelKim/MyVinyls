@@ -8,7 +8,6 @@ import { JUNGWOO } from "../../constants/jungwoo";
 export const ShelfGroup = () => {
     const shelfRef = useRef<Group>(null);
 
-    console.log(JUNGWOO);
     return (
         <group ref={shelfRef}>
             <Shelf />
