@@ -1,13 +1,32 @@
-import { Gltf } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
+import { GLTF } from "three-stdlib";
 
-export const Desk = () => {
+type GLTFResult = GLTF & {
+    nodes: {
+        Cylinder02: THREE.Mesh;
+    };
+    materials: {
+        ["IKEA-Gustav_Desk-3D_Material__8.001"]: THREE.MeshStandardMaterial;
+    };
+};
+
+export const Desk = (props: JSX.IntrinsicElements["group"]) => {
+    const { nodes, materials } = useGLTF("/desk-transformed.glb") as GLTFResult;
     return (
-        <Gltf
+        <group
             position={[25, 0, -4]}
-            rotation={[0, 0, 0]}
-            src="/desk.glb"
-            receiveShadow
-            castShadow
-        />
+            {...props}
+            dispose={null}
+        >
+            <mesh
+                receiveShadow
+                castShadow
+                geometry={nodes.Cylinder02.geometry}
+                material={materials["IKEA-Gustav_Desk-3D_Material__8.001"]}
+                scale={0.025}
+            />
+        </group>
     );
 };
+
+useGLTF.preload("/desk-transformed.glb");
