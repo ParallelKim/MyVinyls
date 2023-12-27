@@ -1,8 +1,6 @@
 import { Artist } from "../types/Artist";
 
 export const JUNGWOO: Artist = {
-    profile:
-        "https://image.genie.co.kr/Y/IMAGE/IMG_MUZICAT/IV2/Genie_Magazine/13746/Mgz_Main_Top_20231109104820.jpg/dims/resize/Q_80,0",
     albums: [
         {
             title: "여섯 번째 토요일",
