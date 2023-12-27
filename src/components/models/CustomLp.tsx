@@ -3,6 +3,7 @@ import { RefObject, useRef, useState } from "react";
 import {
     Euler,
     Group,
+    MeshBasicMaterial,
     MeshStandardMaterial,
     Object3DEventMap,
     TextureLoader,
@@ -10,7 +11,7 @@ import {
 } from "three";
 import { Album } from "../../types/Album";
 
-import { Html, useGLTF } from "@react-three/drei";
+import { Center, Text3D, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { currentAlbumAtom } from "../../atoms/currentAlbumAtom";
 import { useAtom } from "jotai";
@@ -31,10 +32,8 @@ type GLTFResult = GLTF & {
 };
 
 const INIT_STATE: {
-    position: Vector3;
     rotation: Euler;
 } = {
-    position: new Vector3(-4.3, 30.7, -3),
     rotation: new Euler(-Math.PI / 8, 0, 0),
 };
 
@@ -54,7 +53,6 @@ export const CustomLp = ({
 
     const [isLerped, setIsLerped] = useState(false);
     const lpRef = useRef<Group>(null);
-    const htmlRef = useRef<HTMLDivElement>(null);
 
     const { camera, scene } = useThree();
     const temp = new Vector3();
@@ -65,7 +63,8 @@ export const CustomLp = ({
             if (parent.current && lpRef.current.parent === parent.current) {
                 lpRef.current.rotation.set(0, 0, 0);
                 temp.copy(lpRef.current.position);
-                temp.y -= 22;
+                temp.y += 5;
+                temp.x -= 4.27;
                 camera.worldToLocal(temp);
                 lpRef.current.position.copy(temp);
 
@@ -82,11 +81,9 @@ export const CustomLp = ({
             lpRef.current.lookAt(camera.position);
         } else {
             if (parent.current && lpRef.current.parent !== parent.current) {
-                parent.current.add(lpRef.current);
-                const initPos = INIT_STATE.position.clone();
-                initPos.x += 8.9 * order;
-                lpRef.current.position.copy(initPos);
+                lpRef.current.position.set(8.9 * order, 0, 0);
                 lpRef.current.rotation.copy(INIT_STATE.rotation);
+                parent.current.add(lpRef.current);
                 setIsLerped(false);
             }
         }
@@ -103,14 +100,14 @@ export const CustomLp = ({
     return (
         <group
             ref={lpRef}
-            position={[
-                INIT_STATE.position.x + 8.9 * order,
-                INIT_STATE.position.y,
-                INIT_STATE.position.z,
-            ]}
+            position={[8.9 * order, 0, 0]}
             rotation={INIT_STATE.rotation}
             onClick={() => {
-                setCurrentAlbum(isFocus ? null : album);
+                if (isFocus) {
+                    console.log("te");
+                } else {
+                    setCurrentAlbum(album);
+                }
             }}
             scale={19}
             dispose={null}
@@ -142,25 +139,18 @@ export const CustomLp = ({
                 scale={0.038}
             />
             {isLerped && (
-                <Html
-                    ref={htmlRef}
-                    position={[0, 0.25, 0]}
-                    scale={0.1}
-                    center
-                    distanceFactor={0}
-                    transform
+                <Center
+                    top
+                    position={[0, 0.2, 0]}
                 >
-                    <div
-                        style={{
-                            padding: "0.3rem 0.5rem",
-                            color: "#e0e0e0",
-                            background: "#242424CC",
-                            borderRadius: "0.25rem",
-                        }}
+                    <Text3D
+                        font="/Pretendard.json"
+                        scale={0.05}
                     >
                         {album.title}
-                    </div>
-                </Html>
+                        <meshToonMaterial color="black" />
+                    </Text3D>
+                </Center>
             )}
         </group>
     );

@@ -1,7 +1,6 @@
 import { useAtomValue } from "jotai";
 import { currentAlbumAtom } from "../../atoms/currentAlbumAtom";
 import { Html } from "@react-three/drei";
-import { JUNGWOO } from "../../constants/jungwoo";
 
 export const AlbumInfo = () => {
     const currentAlbum = useAtomValue(currentAlbumAtom);
@@ -21,29 +20,6 @@ export const AlbumInfo = () => {
             >
                 <div
                     style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        padding: "4rem",
-                        color: "#e0e0e0",
-                        background: "#242424CC",
-                        borderRadius: "0 0.5rem 0.5rem 0",
-                    }}
-                >
-                    <img
-                        style={{
-                            width: "10rem",
-                            height: "10rem",
-                            borderRadius: "50%",
-                            objectFit: "cover",
-                        }}
-                        src={JUNGWOO.profile}
-                    />
-                    <div style={{ fontSize: "3rem", marginTop: "1rem" }}>
-                        {currentAlbum.artist}
-                    </div>
-                </div>
-                <div
-                    style={{
                         padding: "2rem",
                         display: "flex",
                         flexDirection: "column",
@@ -51,7 +27,7 @@ export const AlbumInfo = () => {
                         textAlign: "left",
                         color: "#e0e0e0",
                         background: "#242424CC",
-                        borderRadius: "0.5rem 0 0 0.5rem",
+                        borderRadius: "0 0.5rem 0.5rem 0",
                     }}
                 >
                     <ol
@@ -66,6 +42,15 @@ export const AlbumInfo = () => {
                         ))}
                     </ol>
                 </div>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        color: "#e0e0e0",
+                        background: "#242424CC",
+                        borderRadius: "0.5rem 0 0 0.5rem",
+                    }}
+                ></div>
             </div>
         </Html>
     );
