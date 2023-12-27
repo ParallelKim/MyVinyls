@@ -9,16 +9,22 @@ export const ShelfGroup = () => {
     const shelfRef = useRef<Group>(null);
 
     return (
-        <group ref={shelfRef}>
+        <group>
             <Shelf />
-            {JUNGWOO.albums.map((album, idx) => (
-                <CustomLp
-                    key={album.title}
-                    order={idx}
-                    parent={shelfRef}
-                    album={album}
-                />
-            ))}
+            <group
+                ref={shelfRef}
+                name="lpGroup"
+                position={[-4.27, 30.7, -4]}
+            >
+                {JUNGWOO.albums.map((album, idx) => (
+                    <CustomLp
+                        key={album.title}
+                        order={idx}
+                        parent={shelfRef}
+                        album={album}
+                    />
+                ))}
+            </group>
         </group>
     );
 };
