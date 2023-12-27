@@ -11,7 +11,6 @@ export const ShelfGroup = () => {
     return (
         <group ref={shelfRef}>
             <Shelf />
-            {/* <LpWithCover parent={shelfRef} /> */}
             {JUNGWOO.albums.map((album, idx) => (
                 <CustomLp
                     key={album.title}

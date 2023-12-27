@@ -31,27 +31,23 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
             <group scale={0.025}>
                 <mesh
                     receiveShadow
-                    castShadow
                     geometry={nodes.Mesh018.geometry}
                     material={materials.PaletteMaterial001}
                 />
                 <mesh
                     receiveShadow
-                    castShadow
                     geometry={nodes.Mesh018_1.geometry}
                     material={materials.PaletteMaterial002}
                 />
             </group>
             <mesh
                 receiveShadow
-                castShadow
                 geometry={nodes.Object001.geometry}
                 material={materials["IKE170031_02___Default.001"]}
                 scale={0.025}
             />
             <mesh
                 receiveShadow
-                castShadow
                 geometry={nodes.Cylinder004.geometry}
                 material={materials.PaletteMaterial003}
                 position={[-0.16, 0.956, -1.538]}
