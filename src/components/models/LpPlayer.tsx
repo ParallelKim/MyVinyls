@@ -24,7 +24,7 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
         <group
             {...props}
             dispose={null}
-            position={[26, 18.5, -3]}
+            position={[26, 18.1, -3]}
             scale={2}
             rotation={[0, -Math.PI / 2, 0]}
         >

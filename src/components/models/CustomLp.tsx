@@ -34,7 +34,7 @@ const INIT_STATE: {
     position: Vector3;
     rotation: Euler;
 } = {
-    position: new Vector3(-4.3, 31.1, -2),
+    position: new Vector3(-4.3, 30.7, -3),
     rotation: new Euler(-Math.PI / 8, 0, 0),
 };
 
@@ -116,24 +116,32 @@ export const CustomLp = ({
             dispose={null}
         >
             <mesh
+                castShadow
+                receiveShadow
                 geometry={nodes["Box001_Material_#25_0"].geometry}
                 material={customMaterial}
                 position={[-0.025, 0, 0]}
                 scale={0.038}
             />
             <mesh
+                castShadow
+                receiveShadow
                 geometry={nodes["Box001_Material_#37_0"].geometry}
                 material={materials.Material_37}
                 position={[-0.025, 0, 0]}
                 scale={0.038}
             />
             <mesh
+                castShadow
+                receiveShadow
                 geometry={nodes["Box001_Material_#49_0"].geometry}
                 material={materials.Material_49}
                 position={[-0.025, 0, 0]}
                 scale={0.038}
             />
             <mesh
+                castShadow
+                receiveShadow
                 geometry={nodes["Box001_Material_#73_0"].geometry}
                 material={materials.Material_73}
                 position={[-0.025, 0, 0]}
