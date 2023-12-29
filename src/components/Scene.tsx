@@ -1,4 +1,4 @@
-import { OrbitControls, ScrollControls, SoftShadows } from "@react-three/drei";
+import { SoftShadows } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { Desk } from "./models/Desk";
 import { LpPlayer } from "./models/LpPlayer";
@@ -8,18 +8,15 @@ export const Scene = () => {
     const { height } = useThree((state) => state.viewport);
 
     return (
-        <>
-            <gridHelper args={[100, 100]} />
-            <axesHelper args={[8]} />
+        <group position={[0, -10, 0]}>
             <ambientLight
                 intensity={0.5}
                 position={[0, 0, 30]}
             />
-            <OrbitControls makeDefault />
             <mesh
                 receiveShadow
                 rotation={[-Math.PI / 2, 0, 0]}
-                position={[0, -22.5, 0]}
+                position={[0, -height / 1.65, 0]}
                 scale={10}
             >
                 <planeGeometry
@@ -38,10 +35,7 @@ export const Scene = () => {
                     <LpPlayer />
                 </group>
             </group>
-            <ScrollControls pages={5}>
-                <mesh></mesh>
-            </ScrollControls>
             <SoftShadows />
-        </>
+        </group>
     );
 };

@@ -2,20 +2,26 @@ import "./App.css";
 import { Canvas } from "@react-three/fiber";
 import { Scene } from "./components/Scene";
 import { AlbumInfo } from "./components/element/AlbumInfo";
+import { CameraControls } from "@react-three/drei";
 
-function App() {
+const App = () => {
     return (
         <>
             <Canvas
                 shadows
-                dpr={[1, 2]}
-                camera={{ position: [0, 20, 40], fov: 45 }}
+                camera={{
+                    fov: 45,
+                    position: [0, 0, 30],
+                }}
             >
+                <CameraControls makeDefault />
+                <gridHelper args={[100, 100]} />
+                <axesHelper args={[8]} />
                 <Scene />
                 <AlbumInfo />
             </Canvas>
         </>
     );
-}
+};
 
 export default App;

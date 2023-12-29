@@ -14,7 +14,7 @@ export const ShelfGroup = () => {
             <group
                 ref={shelfRef}
                 name="lpGroup"
-                position={[-4.27, 30.7, -4]}
+                position={[-4.76, 30.7, -4]}
             >
                 {JUNGWOO.albums.map((album, idx) => (
                     <CustomLp

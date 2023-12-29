@@ -30,6 +30,9 @@ export const AlbumInfo = () => {
                         borderRadius: "0 0.5rem 0.5rem 0",
                     }}
                 >
+                    <div style={{ marginBottom: "2rem", fontSize: "2rem" }}>
+                        Track
+                    </div>
                     <ol
                         style={{
                             margin: 0,
