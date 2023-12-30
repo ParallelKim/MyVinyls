@@ -39,6 +39,11 @@ const INIT_STATE: {
     rotation: new Euler(-Math.PI / 8, 0, 0),
 };
 
+const RECORD_POS = {
+    init: new Vector3(0.5, 0, 0.03),
+    focus: new Vector3(4.5, 0, 0.03),
+};
+
 const FollowCam = new Object3D();
 
 export const CustomLp = ({
@@ -61,6 +66,13 @@ export const CustomLp = ({
 
     useFrame(() => {
         if (!lpRef.current) return;
+
+        const record = lpRef.current.children.find(
+            (ch) => ch.name === "record"
+        );
+
+        if (!record) return;
+
         if (isFocus) {
             FollowCam.quaternion.copy(camera.quaternion);
             FollowCam.position.copy(camera.position);
@@ -70,7 +82,7 @@ export const CustomLp = ({
             );
 
             const dis = FollowCam.position.distanceTo(lpRef.current.position);
-            const speed = Math.min(0.5, (1 / 3) * dis);
+            const speed = Math.min(0.5, (1 / 100) * dis);
 
             lpRef.current.position.lerp(FollowCam.position, speed);
             lpRef.current.lookAt(camera.position);
@@ -78,9 +90,12 @@ export const CustomLp = ({
             if (lpRef.current.position.distanceTo(FollowCam.position) < 75) {
                 !isLerped && setIsLerped(true);
             }
+
+            record.position.lerp(RECORD_POS.focus, 0.2);
         } else {
             lpRef.current.position.lerp(INIT_POS, 0.5);
             lpRef.current.rotation.copy(INIT_STATE.rotation);
+            record.position.lerp(RECORD_POS.init, 0.5);
         }
     });
 
@@ -136,12 +151,13 @@ export const CustomLp = ({
                 position={[-0.025, 0, 0]}
             />
             <mesh
+                name="record"
                 castShadow
                 receiveShadow
                 geometry={nodes["Cylinder001_Material_#85_0"].geometry}
                 material={materials.Material_85}
-                position={[10, 0, 0.03]}
-                scale={4}
+                position={RECORD_POS.init}
+                scale={4.5}
             />
             {isLerped && (
                 <Center
