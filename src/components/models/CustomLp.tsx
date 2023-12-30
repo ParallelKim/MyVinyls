@@ -57,7 +57,7 @@ export const CustomLp = ({
     };
 
     const snap = useSnapshot(albumState);
-    const isFocus = snap.album?.url === album.url;
+    const isFocus = snap.album?.id === album.id;
 
     const { camera } = useThree();
     const lpRef = useRef<Group>(null);
@@ -77,13 +77,13 @@ export const CustomLp = ({
         );
         if (!record) return;
 
-        if (isFocus) {
-            FollowCam.position.copy(camera.position);
-            const positionRelativeToCamera = new Vector3(5, -5, -20);
-            FollowCam.position.add(
-                positionRelativeToCamera.applyQuaternion(camera.quaternion)
-            );
+        FollowCam.position.copy(camera.position);
+        const positionRelativeToCamera = new Vector3(5, -5, -20);
+        FollowCam.position.add(
+            positionRelativeToCamera.applyQuaternion(camera.quaternion)
+        );
 
+        if (isFocus) {
             const dis = FollowCam.position.distanceTo(lpRef.current.position);
             const speed = Math.min(0.1, 1 / dis);
 
@@ -93,14 +93,20 @@ export const CustomLp = ({
                 record.position.lerp(RECORD_POS.focus, 2 * speed);
             }
         } else {
-            record.position.lerp(RECORD_POS.init, 0.5);
+            const dis = INIT_STATE.position.distanceTo(lpRef.current.position);
+            const speed = Math.min(0.1, 1 / dis);
+
+            lpRef.current.position.lerp(INIT_STATE.position, speed);
+            lpRef.current.rotation.copy(INIT_STATE.rotation);
+
+            record.position.lerp(RECORD_POS.init, speed);
         }
     });
 
     return (
         <group
             ref={lpRef}
-            position={INIT_STATE.position}
+            position={[8.9 * order, 0, 0]}
             rotation={INIT_STATE.rotation}
             onClick={() => {
                 if (isFocus) {
