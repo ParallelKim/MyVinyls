@@ -15,7 +15,6 @@ import { Center, Text3D, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { currentAlbumAtom } from "../../atoms/currentAlbumAtom";
 import { useAtom } from "jotai";
-import { lerp3V } from "../../utils";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -70,8 +69,10 @@ export const CustomLp = ({
                 positionRelativeToCamera.applyQuaternion(camera.quaternion)
             );
 
-            lerp3V(lpRef.current.position, FollowCam.position, 150);
+            const dis = FollowCam.position.distanceTo(lpRef.current.position);
+            const speed = Math.min(0.5, (1 / 3) * dis);
 
+            lpRef.current.position.lerp(FollowCam.position, speed);
             lpRef.current.lookAt(camera.position);
 
             if (lpRef.current.position.distanceTo(FollowCam.position) < 75) {
@@ -139,8 +140,8 @@ export const CustomLp = ({
                 receiveShadow
                 geometry={nodes["Cylinder001_Material_#85_0"].geometry}
                 material={materials.Material_85}
-                position={[-0.001, 0, 0.001]}
-                scale={2}
+                position={[10, 0, 0.03]}
+                scale={4}
             />
             {isLerped && (
                 <Center
