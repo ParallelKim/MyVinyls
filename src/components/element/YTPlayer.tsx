@@ -1,7 +1,5 @@
-import { useAtomValue } from "jotai";
 import YouTube from "react-youtube";
 import { YouTubeEvent } from "react-youtube";
-import { playlistAtom } from "../../atoms/playlistAtom";
 
 interface YTVProps {
     onReady: (event: YouTubeEvent<number>) => void;
@@ -15,7 +13,7 @@ export const YoutubeVideo = ({
     onError,
     isLoop,
 }: YTVProps) => {
-    const playlist = useAtomValue(playlistAtom);
+    const playlist = "";
 
     return (
         <YouTube

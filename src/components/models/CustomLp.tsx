@@ -13,8 +13,8 @@ import { Album } from "../../types/Album";
 
 import { Center, Text3D, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import { currentAlbumAtom } from "../../atoms/currentAlbumAtom";
-import { useAtom } from "jotai";
+import { useSnapshot } from "valtio";
+import { albumState, setAlbum } from "@states/album";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -54,13 +54,12 @@ export const CustomLp = ({
     order: number;
     parent: RefObject<Group<Object3DEventMap>>;
 }) => {
-    const [currentAlbum, setCurrentAlbum] = useAtom(currentAlbumAtom);
-    const isFocus = currentAlbum?.url === album.url;
-
-    const [isLerped, setIsLerped] = useState(false);
-    const lpRef = useRef<Group>(null);
+    const snap = useSnapshot(albumState);
+    const isFocus = snap.album?.url === album.url;
 
     const { camera } = useThree();
+    const [isLerped, setIsLerped] = useState(false);
+    const lpRef = useRef<Group>(null);
 
     const INIT_POS = new Vector3(8.9 * order, 0, 0);
 
@@ -114,9 +113,9 @@ export const CustomLp = ({
             rotation={INIT_STATE.rotation}
             onClick={() => {
                 if (isFocus) {
-                    setCurrentAlbum(null);
+                    setAlbum(null);
                 } else {
-                    setCurrentAlbum(album);
+                    setAlbum(album);
                 }
             }}
             scale={0.722}

@@ -9,7 +9,11 @@ type Status =
     | "buffering"
     | "video cued";
 
-export const store = proxy<{ album: Album | null; status: Status }>({
+export const albumState = proxy<{ album: Album | null; status: Status }>({
     album: null,
     status: "unstarted",
 });
+
+export const setAlbum = (album: Album | null) => {
+    albumState.album = album;
+};

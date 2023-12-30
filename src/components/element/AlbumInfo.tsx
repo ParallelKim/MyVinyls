@@ -1,11 +1,11 @@
-import { useAtomValue } from "jotai";
-import { currentAlbumAtom } from "../../atoms/currentAlbumAtom";
 import { Html } from "@react-three/drei";
+import { albumState } from "@states/album";
+import { useSnapshot } from "valtio";
 
 export const AlbumInfo = () => {
-    const currentAlbum = useAtomValue(currentAlbumAtom);
+    const snap = useSnapshot(albumState);
 
-    if (!currentAlbum) return;
+    if (!snap.album) return;
 
     return (
         <Html fullscreen>
@@ -40,7 +40,7 @@ export const AlbumInfo = () => {
                             listStylePosition: "inside",
                         }}
                     >
-                        {currentAlbum.list.map((song) => (
+                        {snap.album.list.map((song) => (
                             <li key={song}>{song}</li>
                         ))}
                     </ol>
