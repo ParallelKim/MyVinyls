@@ -1,6 +1,6 @@
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
-import { Scene } from "./components/Scene";
+import { Scene } from "@components/Scene";
 import { AlbumInfo } from "./components/element/AlbumInfo";
 import { CameraControls } from "@react-three/drei";
 
