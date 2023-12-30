@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { RefObject, useRef, useState } from "react";
+import { RefObject, useRef } from "react";
 import {
     Euler,
     Group,
@@ -11,7 +11,7 @@ import {
 } from "three";
 import { Album } from "../../types/Album";
 
-import { Center, Text3D, useGLTF } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useSnapshot } from "valtio";
 import { albumState, setAlbum } from "@states/album";
@@ -33,12 +33,6 @@ type GLTFResult = GLTF & {
     };
 };
 
-const INIT_STATE: {
-    rotation: Euler;
-} = {
-    rotation: new Euler(-Math.PI / 8, 0, 0),
-};
-
 const RECORD_POS = {
     init: new Vector3(0.5, 0, 0.03),
     focus: new Vector3(4.5, 0, 0.03),
@@ -54,49 +48,19 @@ export const CustomLp = ({
     order: number;
     parent: RefObject<Group<Object3DEventMap>>;
 }) => {
+    const INIT_STATE: {
+        rotation: Euler;
+        position: Vector3;
+    } = {
+        rotation: new Euler(-Math.PI / 8, 0, 0),
+        position: new Vector3(8.9 * order, 0, 0),
+    };
+
     const snap = useSnapshot(albumState);
     const isFocus = snap.album?.url === album.url;
 
     const { camera } = useThree();
-    const [isLerped, setIsLerped] = useState(false);
     const lpRef = useRef<Group>(null);
-
-    const INIT_POS = new Vector3(8.9 * order, 0, 0);
-
-    useFrame(() => {
-        if (!lpRef.current) return;
-
-        const record = lpRef.current.children.find(
-            (ch) => ch.name === "record"
-        );
-
-        if (!record) return;
-
-        if (isFocus) {
-            FollowCam.quaternion.copy(camera.quaternion);
-            FollowCam.position.copy(camera.position);
-            const positionRelativeToCamera = new Vector3(5, -5, -20);
-            FollowCam.position.add(
-                positionRelativeToCamera.applyQuaternion(camera.quaternion)
-            );
-
-            const dis = FollowCam.position.distanceTo(lpRef.current.position);
-            const speed = Math.min(0.5, (1 / 100) * dis);
-
-            lpRef.current.position.lerp(FollowCam.position, speed);
-            lpRef.current.lookAt(camera.position);
-
-            if (lpRef.current.position.distanceTo(FollowCam.position) < 75) {
-                !isLerped && setIsLerped(true);
-            }
-
-            record.position.lerp(RECORD_POS.focus, 0.2);
-        } else {
-            lpRef.current.position.lerp(INIT_POS, 0.5);
-            lpRef.current.rotation.copy(INIT_STATE.rotation);
-            record.position.lerp(RECORD_POS.init, 0.5);
-        }
-    });
 
     const { nodes, materials } = useGLTF(
         "/lpRecord-transformed.glb"
@@ -106,10 +70,37 @@ export const CustomLp = ({
     const customMaterial: MeshStandardMaterial = materials.Material_25.clone();
     customMaterial.map = texture;
 
+    useFrame(() => {
+        if (!lpRef.current) return;
+        const record = lpRef.current.children.find(
+            (ch) => ch.name === "record"
+        );
+        if (!record) return;
+
+        if (isFocus) {
+            FollowCam.position.copy(camera.position);
+            const positionRelativeToCamera = new Vector3(5, -5, -20);
+            FollowCam.position.add(
+                positionRelativeToCamera.applyQuaternion(camera.quaternion)
+            );
+
+            const dis = FollowCam.position.distanceTo(lpRef.current.position);
+            const speed = Math.min(0.1, 1 / dis);
+
+            lpRef.current.position.lerp(FollowCam.position, speed);
+            lpRef.current.lookAt(camera.position);
+            if (dis < 3) {
+                record.position.lerp(RECORD_POS.focus, 2 * speed);
+            }
+        } else {
+            record.position.lerp(RECORD_POS.init, 0.5);
+        }
+    });
+
     return (
         <group
             ref={lpRef}
-            position={[8.9 * order, 0, 0]}
+            position={INIT_STATE.position}
             rotation={INIT_STATE.rotation}
             onClick={() => {
                 if (isFocus) {
@@ -158,20 +149,6 @@ export const CustomLp = ({
                 position={RECORD_POS.init}
                 scale={4.5}
             />
-            {isLerped && (
-                <Center
-                    top
-                    position={[0, 0.21, 0]}
-                >
-                    <Text3D
-                        font="/Pretendard.json"
-                        scale={0.05}
-                    >
-                        {album.title}
-                        <meshPhysicalMaterial color="black" />
-                    </Text3D>
-                </Center>
-            )}
         </group>
     );
 };

@@ -11,7 +11,7 @@ const App = () => {
                 shadows
                 camera={{
                     fov: 45,
-                    position: [0, 0, 30],
+                    position: [0, 10, 30],
                 }}
             >
                 <CameraControls makeDefault />
