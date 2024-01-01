@@ -78,7 +78,7 @@ export const CustomLp = ({
         if (!record) return;
 
         FollowCam.position.copy(camera.position);
-        const positionRelativeToCamera = new Vector3(5, -5, -20);
+        const positionRelativeToCamera = new Vector3(5, -5, -15);
         FollowCam.position.add(
             positionRelativeToCamera.applyQuaternion(camera.quaternion)
         );
@@ -105,6 +105,7 @@ export const CustomLp = ({
 
     return (
         <group
+            name={"lpOBJ-" + album.id}
             ref={lpRef}
             position={[8.9 * order, 0, 0]}
             rotation={INIT_STATE.rotation}
