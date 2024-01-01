@@ -15,7 +15,7 @@ const App = () => {
                 shadows
                 camera={{
                     fov: 45,
-                    position: [0, 10, 30],
+                    position: [0, 15, 30],
                 }}
                 onCreated={({ camera, scene }) => {
                     camera.add(light);
