@@ -78,7 +78,7 @@ export const CustomLp = ({
         if (!record) return;
 
         FollowCam.position.copy(camera.position);
-        const positionRelativeToCamera = new Vector3(0, -5, -15);
+        const positionRelativeToCamera = new Vector3(2, -5, -15);
         FollowCam.position.add(
             positionRelativeToCamera.applyQuaternion(camera.quaternion)
         );
@@ -88,13 +88,16 @@ export const CustomLp = ({
             const speed = Math.min(0.1, 1 / dis);
 
             lpRef.current.position.lerp(FollowCam.position, speed);
-            lpRef.current.lookAt(camera.position.clone().add(new Vector3(-5)));
+            lpRef.current.lookAt(
+                camera.position.clone().add(new Vector3(-2.8, -0.5))
+            );
+
             if (dis < 3) {
                 record.position.lerp(RECORD_POS.focus, 2 * speed);
             }
         } else {
             const dis = INIT_STATE.position.distanceTo(lpRef.current.position);
-            const speed = Math.min(0.1, 1 / dis);
+            const speed = Math.min(0.1, 2 / dis);
 
             lpRef.current.position.lerp(INIT_STATE.position, speed);
             lpRef.current.rotation.copy(INIT_STATE.rotation);
@@ -118,6 +121,7 @@ export const CustomLp = ({
             }}
             scale={0.722}
             dispose={null}
+            renderOrder={10}
         >
             <mesh
                 castShadow
