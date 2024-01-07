@@ -74,7 +74,7 @@ export const AlbumInfo = () => {
                         scale={0.8}
                         position={[0, 0, -5]}
                     >
-                        <Center position={[1, 8.5, 0]}>
+                        <Center position={[1, 9, 0]}>
                             <Text3D font="/Pretendard.json">
                                 {snap.album.title}
                             </Text3D>
@@ -103,6 +103,10 @@ export const AlbumInfo = () => {
                                         onPointerLeave={() =>
                                             setHoveredIndex(0)
                                         }
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            console.log(song, idx);
+                                        }}
                                     >
                                         <Center right>
                                             <Text3D
@@ -112,7 +116,7 @@ export const AlbumInfo = () => {
                                                 {idx + 1}. {song}
                                             </Text3D>
                                         </Center>
-                                        <Center position={[6, 0.5, 0]}>
+                                        <Center position={[4, 0, 1]}>
                                             <mesh>
                                                 <planeGeometry args={[10, 1]} />
                                                 <MeshReflectorMaterial
