@@ -31,6 +31,7 @@ export const AlbumInfo = () => {
     );
 
     const len = snap.album?.list.length ?? 2;
+    const player = snap.player;
 
     return (
         <group
@@ -38,7 +39,11 @@ export const AlbumInfo = () => {
             renderOrder={-1}
         >
             {snap.album && (
-                <group>
+                <group
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                >
                     <mesh
                         name="panel"
                         position={[0, 0, -10]}
@@ -105,7 +110,10 @@ export const AlbumInfo = () => {
                                         }
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            console.log(song, idx);
+
+                                            if (player) {
+                                                player.playVideoAt(idx);
+                                            }
                                         }}
                                     >
                                         <Center right>

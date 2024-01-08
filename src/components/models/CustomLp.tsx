@@ -114,7 +114,7 @@ export const CustomLp = ({
             rotation={INIT_STATE.rotation}
             onClick={() => {
                 if (isFocus) {
-                    setAlbum(null);
+                    // setAlbum(null);
                 } else {
                     setAlbum(album);
                 }

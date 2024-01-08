@@ -1,21 +1,19 @@
 import { Html } from "@react-three/drei";
-import YouTube from "react-youtube";
-import { YouTubeEvent } from "react-youtube";
+import { setPlayer } from "@states/album";
+import YouTube, { YouTubeEvent } from "react-youtube";
 
 interface YTVProps {
-    onReady: (event: YouTubeEvent<number>) => void;
+    playlist: string;
     onStateChange: (event: YouTubeEvent<number>) => void;
     onError: (event: YouTubeEvent<number>) => void;
     isLoop: boolean;
 }
 export const YoutubeVideo = ({
-    onReady,
+    playlist,
     onStateChange,
     onError,
     isLoop,
 }: YTVProps) => {
-    const playlist = "OLAK5uy_kwUBAtUZb46mNA16pZV0qTh5Yqk6X5byc";
-
     return (
         <Html
             transform
@@ -24,7 +22,9 @@ export const YoutubeVideo = ({
             rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
         >
             <YouTube
-                onReady={onReady}
+                onReady={(event) => {
+                    setPlayer(event.target);
+                }}
                 onStateChange={onStateChange}
                 onError={onError}
                 opts={{
@@ -32,10 +32,10 @@ export const YoutubeVideo = ({
                     height: 270,
                     playerVars: {
                         controls: 0,
-                        autoplay: 1,
+                        autoplay: 0,
                         loop: isLoop ? 1 : 0,
                         listType: "playlist",
-                        list: playlist ?? "",
+                        list: playlist,
                     },
                 }}
             />

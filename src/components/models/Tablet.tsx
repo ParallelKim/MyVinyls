@@ -1,6 +1,8 @@
 import { YoutubeVideo } from "@components/element/YTPlayer";
 import { useGLTF } from "@react-three/drei";
+import { albumState } from "@states/album";
 import { GLTF } from "three-stdlib";
+import { useSnapshot } from "valtio";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -43,6 +45,10 @@ type GLTFResult = GLTF & {
 
 export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
     const { nodes, materials } = useGLTF("/ipad.glb") as GLTFResult;
+
+    const snap = useSnapshot(albumState);
+    const query = snap.album?.url.split("=");
+
     return (
         <group
             {...props}
@@ -50,6 +56,20 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
             position={[15, 25, 0]}
             rotation={[Math.PI / 2, Math.PI / 2, 0]}
         >
+            {(() => {
+                if (query?.length && query?.length > 0) {
+                    const playlist = query[query?.length - 1] ?? "";
+
+                    return (
+                        <YoutubeVideo
+                            playlist={playlist}
+                            onStateChange={function () {}}
+                            onError={function () {}}
+                            isLoop={false}
+                        />
+                    );
+                }
+            })()}
             <group position={[0.033, 0, -0.053]}>
                 <mesh
                     castShadow
@@ -225,14 +245,6 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
                     rotation={[0, 0, -Math.PI]}
                 />
             </group>
-            <YoutubeVideo
-                onReady={function () {
-                    console.log(this, "ready");
-                }}
-                onStateChange={function () {}}
-                onError={function () {}}
-                isLoop={false}
-            />
         </group>
     );
 };
