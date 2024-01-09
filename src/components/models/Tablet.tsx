@@ -1,6 +1,7 @@
 import { YoutubeVideo } from "@components/element/YTPlayer";
+import { youtubeState } from "@constants/youtubeState";
 import { useGLTF } from "@react-three/drei";
-import { albumState } from "@states/album";
+import { albumState, setAlbumStatus } from "@states/album";
 import { GLTF } from "three-stdlib";
 import { useSnapshot } from "valtio";
 
@@ -63,7 +64,10 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
                     return (
                         <YoutubeVideo
                             playlist={playlist}
-                            onStateChange={function () {}}
+                            onStateChange={function (e) {
+                                console.log(e, youtubeState[e.data]);
+                                setAlbumStatus(youtubeState[e.data]);
+                            }}
                             onError={function () {}}
                             isLoop={false}
                         />

@@ -1,6 +1,6 @@
 import { Html } from "@react-three/drei";
 import { setPlayer } from "@states/album";
-import YouTube, { YouTubeEvent } from "react-youtube";
+import YouTube, { YouTubeEvent, YouTubePlayer } from "react-youtube";
 
 interface YTVProps {
     playlist: string;
@@ -8,6 +8,7 @@ interface YTVProps {
     onError: (event: YouTubeEvent<number>) => void;
     isLoop: boolean;
 }
+
 export const YoutubeVideo = ({
     playlist,
     onStateChange,
@@ -23,7 +24,11 @@ export const YoutubeVideo = ({
         >
             <YouTube
                 onReady={(event) => {
-                    setPlayer(event.target);
+                    setPlayer(
+                        event.target as YouTubePlayer & {
+                            playerInfo: { playlistIndex: number };
+                        }
+                    );
                 }}
                 onStateChange={onStateChange}
                 onError={onError}

@@ -204,6 +204,94 @@ export const AlbumInfo = () => {
                                     />
                                 </mesh>
                             )}
+                            {snap.status === "playing" &&
+                                (() => {
+                                    const currentIndex =
+                                        snap.player?.playerInfo.playlistIndex;
+                                    if (
+                                        typeof currentIndex === "number" &&
+                                        currentIndex >= 0
+                                    ) {
+                                        return (
+                                            <mesh
+                                                name="background"
+                                                position={[2.5, -7, 0]}
+                                            >
+                                                <Geometry>
+                                                    <Base>
+                                                        <planeGeometry
+                                                            args={[10, 20]}
+                                                        />
+                                                    </Base>
+                                                    <Addition
+                                                        position={[5, 0, 0]}
+                                                    >
+                                                        <circleGeometry
+                                                            args={[
+                                                                10,
+                                                                64,
+                                                                -Math.PI / 2,
+                                                                Math.PI,
+                                                            ]}
+                                                        />
+                                                    </Addition>
+                                                    <>
+                                                        <Subtraction
+                                                            position={[
+                                                                5,
+                                                                22.5 -
+                                                                    (13 *
+                                                                        (currentIndex +
+                                                                            1)) /
+                                                                        len,
+
+                                                                0,
+                                                            ]}
+                                                        >
+                                                            <boxGeometry
+                                                                args={[
+                                                                    20, 30, 20,
+                                                                ]}
+                                                            />
+                                                        </Subtraction>
+                                                        <Subtraction
+                                                            position={[
+                                                                5,
+                                                                -8.5 -
+                                                                    (13 *
+                                                                        (currentIndex +
+                                                                            1)) /
+                                                                        len,
+                                                                0,
+                                                            ]}
+                                                        >
+                                                            <boxGeometry
+                                                                args={[
+                                                                    20, 30, 20,
+                                                                ]}
+                                                            />
+                                                        </Subtraction>
+                                                    </>
+                                                </Geometry>
+                                                <MeshReflectorMaterial
+                                                    color="#FFF"
+                                                    transparent
+                                                    opacity={0.7}
+                                                    side={DoubleSide}
+                                                    mixStrength={1} // Strength of the reflections
+                                                    mixContrast={1} // Contrast of the reflections
+                                                    resolution={256} // Off-buffer resolution, lower=faster, higher=better quality, slower
+                                                    mirror={0} // Mirror environment, 0 = texture colors, 1 = pick up env colors
+                                                    depthScale={0} // Scale the depth factor (0 = no depth, default = 0)
+                                                    minDepthThreshold={0.9} // Lower edge for the depthTexture interpolation (default = 0)
+                                                    maxDepthThreshold={1} // Upper edge for the depthTexture interpolation (default = 0)
+                                                    depthToBlurRatioBias={0.25} // Adds a bias factor to the depthTexture before calculating the blur amount [blurFactor = blurTexture * (depthTexture + bias)]. It accepts values between 0 and 1, default is 0.25. An amount > 0 of bias makes sure that the blurTexture is not too sharp because of the multiplication with the depthTexture
+                                                    reflectorOffset={0.2}
+                                                />
+                                            </mesh>
+                                        );
+                                    }
+                                })()}
                         </group>
                     </group>
                 </group>
