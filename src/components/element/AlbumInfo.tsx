@@ -112,7 +112,8 @@ export const AlbumInfo = () => {
                                             e.stopPropagation();
 
                                             if (player) {
-                                                player.playVideoAt(idx);
+                                                player.playVideoAt(idx); // player.playerInfo.playerListIndex에 저장됨
+                                                console.log(player);
                                             }
                                         }}
                                     >

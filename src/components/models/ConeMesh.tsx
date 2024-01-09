@@ -30,7 +30,7 @@ export const Triangle = () => {
     }, []);
     return (
         <mesh
-            position={[5.2, 0, 5]}
+            position={[0, 0, 1]}
             scale={1 / 8}
         >
             <shapeGeometry args={[shape]} />

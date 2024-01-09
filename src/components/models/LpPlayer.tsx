@@ -20,8 +20,10 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
     const { nodes, materials } = useGLTF(
         "/lpPlayer-transformed.glb"
     ) as GLTFResult;
+
     return (
         <group
+            name="lpPlayerOBJ"
             {...props}
             dispose={null}
             position={[26, 18.5, -3]}

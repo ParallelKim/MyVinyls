@@ -27,5 +27,3 @@ export const setAlbum = (album: Album | null) => {
 export const setPlayer = (player: YouTubePlayer) => {
     albumState.player = ref(player);
 };
-
-export const startFrom = (index: number) => {};

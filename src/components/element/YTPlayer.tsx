@@ -31,7 +31,10 @@ export const YoutubeVideo = ({
                     width: 360,
                     height: 270,
                     playerVars: {
+                        color: "white",
                         controls: 0,
+                        disablekb: 1,
+                        fs: 0,
                         autoplay: 0,
                         loop: isLoop ? 1 : 0,
                         listType: "playlist",
