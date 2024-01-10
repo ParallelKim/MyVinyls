@@ -64,9 +64,13 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
                     return (
                         <YoutubeVideo
                             playlist={playlist}
-                            onStateChange={function (e) {
-                                console.log(e, youtubeState[e.data]);
-                                setAlbumStatus(youtubeState[e.data]);
+                            onStateChange={async function (e) {
+                                const statusStr = youtubeState[e.data];
+                                console.log(e, statusStr);
+                                setAlbumStatus(
+                                    statusStr,
+                                    await e.target.getDuration()
+                                );
                             }}
                             onError={function () {}}
                             isLoop={false}

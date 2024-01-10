@@ -18,10 +18,12 @@ export const albumState = proxy<{
     album: Album | null;
     status: YTStatus;
     player: CustomYTPlayer | null;
+    duration: number;
 }>({
     album: null,
-    status: "unstarted",
     player: null,
+    status: "unstarted",
+    duration: 0,
 });
 
 export const setAlbum = (album: Album | null) => {
@@ -32,6 +34,9 @@ export const setPlayer = (player: CustomYTPlayer) => {
     albumState.player = ref(player);
 };
 
-export const setAlbumStatus = (status: YTStatus) => {
+export const setAlbumStatus = (status: YTStatus, duration: number) => {
     albumState.status = status;
+    if (status === "playing") {
+        albumState.duration = duration;
+    }
 };

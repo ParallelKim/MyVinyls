@@ -1,6 +1,12 @@
-import { Geometry, Base, Addition, Subtraction } from "@react-three/csg";
-import { Center, MeshReflectorMaterial, Text3D } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
+import { Geometry, Base, Addition, Subtraction, Brush } from "@react-three/csg";
+import {
+    Center,
+    GradientTexture,
+    GradientType,
+    MeshReflectorMaterial,
+    Text3D,
+} from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
 import { albumState } from "@states/album";
 import { useEffect, useRef, useState } from "react";
 import { DoubleSide, Group } from "three";
@@ -10,9 +16,13 @@ export const AlbumInfo = () => {
     const snap = useSnapshot(albumState);
     const scene = useThree((state) => state.scene);
 
-    const htmlRef = useRef<Group>(null);
+    const panelRef = useRef<Group>(null);
+    const progressRef = useRef<Brush>(null);
 
     const [hoveredIndex, setHoveredIndex] = useState(0);
+
+    const len = snap.album?.list.length ?? 2;
+    const player = snap.player;
 
     useEffect(
         () =>
@@ -22,20 +32,28 @@ export const AlbumInfo = () => {
                         "lpOBJ-" + albumState.album.id
                     );
 
-                    if (lpObj && htmlRef.current) {
-                        lpObj.add(htmlRef.current);
+                    if (lpObj && panelRef.current) {
+                        lpObj.add(panelRef.current);
                     }
                 }
             }),
         [scene]
     );
 
-    const len = snap.album?.list.length ?? 2;
-    const player = snap.player;
+    useFrame(({ clock }) => {
+        if (progressRef.current) {
+            const cur = clock.getElapsedTime();
+            const duration = snap.duration ?? 1;
+
+            console.log(cur / duration);
+
+            progressRef.current.position.x += (0.01 * cur) / duration;
+        }
+    });
 
     return (
         <group
-            ref={htmlRef}
+            ref={panelRef}
             renderOrder={-1}
         >
             {snap.album && (
@@ -58,20 +76,11 @@ export const AlbumInfo = () => {
                                 />
                             </Addition>
                         </Geometry>
-                        <MeshReflectorMaterial
+                        <meshBasicMaterial
                             color="#000"
                             transparent
                             opacity={0.7}
                             side={DoubleSide}
-                            mixStrength={1} // Strength of the reflections
-                            mixContrast={1} // Contrast of the reflections
-                            resolution={256} // Off-buffer resolution, lower=faster, higher=better quality, slower
-                            mirror={0} // Mirror environment, 0 = texture colors, 1 = pick up env colors
-                            depthScale={0} // Scale the depth factor (0 = no depth, default = 0)
-                            minDepthThreshold={0.9} // Lower edge for the depthTexture interpolation (default = 0)
-                            maxDepthThreshold={1} // Upper edge for the depthTexture interpolation (default = 0)
-                            depthToBlurRatioBias={0.25} // Adds a bias factor to the depthTexture before calculating the blur amount [blurFactor = blurTexture * (depthTexture + bias)]. It accepts values between 0 and 1, default is 0.25. An amount > 0 of bias makes sure that the blurTexture is not too sharp because of the multiplication with the depthTexture
-                            reflectorOffset={0.2}
                         />
                     </mesh>
                     <group
@@ -187,20 +196,11 @@ export const AlbumInfo = () => {
                                             </Subtraction>
                                         </>
                                     </Geometry>
-                                    <MeshReflectorMaterial
+                                    <meshBasicMaterial
                                         color="#FFF"
                                         transparent
                                         opacity={0.7}
                                         side={DoubleSide}
-                                        mixStrength={1} // Strength of the reflections
-                                        mixContrast={1} // Contrast of the reflections
-                                        resolution={256} // Off-buffer resolution, lower=faster, higher=better quality, slower
-                                        mirror={0} // Mirror environment, 0 = texture colors, 1 = pick up env colors
-                                        depthScale={0} // Scale the depth factor (0 = no depth, default = 0)
-                                        minDepthThreshold={0.9} // Lower edge for the depthTexture interpolation (default = 0)
-                                        maxDepthThreshold={1} // Upper edge for the depthTexture interpolation (default = 0)
-                                        depthToBlurRatioBias={0.25} // Adds a bias factor to the depthTexture before calculating the blur amount [blurFactor = blurTexture * (depthTexture + bias)]. It accepts values between 0 and 1, default is 0.25. An amount > 0 of bias makes sure that the blurTexture is not too sharp because of the multiplication with the depthTexture
-                                        reflectorOffset={0.2}
                                     />
                                 </mesh>
                             )}
@@ -213,82 +213,81 @@ export const AlbumInfo = () => {
                                         currentIndex >= 0
                                     ) {
                                         return (
-                                            <mesh
-                                                name="background"
-                                                position={[2.5, -7, 0]}
-                                            >
-                                                <Geometry>
-                                                    <Base>
-                                                        <planeGeometry
-                                                            args={[10, 20]}
-                                                        />
-                                                    </Base>
-                                                    <Addition
-                                                        position={[5, 0, 0]}
-                                                    >
-                                                        <circleGeometry
-                                                            args={[
-                                                                10,
-                                                                64,
-                                                                -Math.PI / 2,
-                                                                Math.PI,
-                                                            ]}
-                                                        />
-                                                    </Addition>
-                                                    <>
+                                            <group>
+                                                <mesh
+                                                    name="playingBack"
+                                                    position={[2.5, -7, -0.2]}
+                                                >
+                                                    <Geometry>
+                                                        <Base>
+                                                            <planeGeometry
+                                                                args={[10, 20]}
+                                                            />
+                                                        </Base>
+                                                        <Addition
+                                                            position={[5, 0, 0]}
+                                                        >
+                                                            <circleGeometry
+                                                                args={[
+                                                                    10,
+                                                                    64,
+                                                                    -Math.PI /
+                                                                        2,
+                                                                    Math.PI,
+                                                                ]}
+                                                            />
+                                                        </Addition>
                                                         <Subtraction
                                                             position={[
                                                                 5,
-                                                                22.5 -
-                                                                    (13 *
-                                                                        (currentIndex +
-                                                                            1)) /
-                                                                        len,
-
+                                                                -(
+                                                                    13 *
+                                                                    (currentIndex +
+                                                                        1)
+                                                                ) / len,
                                                                 0,
                                                             ]}
                                                         >
-                                                            <boxGeometry
-                                                                args={[
-                                                                    20, 30, 20,
-                                                                ]}
-                                                            />
+                                                            <Geometry>
+                                                                <Base
+                                                                    position={[
+                                                                        0, 22.5,
+                                                                        0,
+                                                                    ]}
+                                                                >
+                                                                    <boxGeometry
+                                                                        args={[
+                                                                            20,
+                                                                            30,
+                                                                            20,
+                                                                        ]}
+                                                                    />
+                                                                </Base>
+                                                                <Addition
+                                                                    position={[
+                                                                        0, -8.5,
+                                                                        0,
+                                                                    ]}
+                                                                >
+                                                                    <boxGeometry
+                                                                        args={[
+                                                                            20,
+                                                                            30,
+                                                                            20,
+                                                                        ]}
+                                                                    />
+                                                                </Addition>
+                                                            </Geometry>
                                                         </Subtraction>
-                                                        <Subtraction
-                                                            position={[
-                                                                5,
-                                                                -8.5 -
-                                                                    (13 *
-                                                                        (currentIndex +
-                                                                            1)) /
-                                                                        len,
-                                                                0,
-                                                            ]}
-                                                        >
-                                                            <boxGeometry
-                                                                args={[
-                                                                    20, 30, 20,
-                                                                ]}
-                                                            />
-                                                        </Subtraction>
-                                                    </>
-                                                </Geometry>
-                                                <MeshReflectorMaterial
-                                                    color="#FFF"
-                                                    transparent
-                                                    opacity={0.7}
-                                                    side={DoubleSide}
-                                                    mixStrength={1} // Strength of the reflections
-                                                    mixContrast={1} // Contrast of the reflections
-                                                    resolution={256} // Off-buffer resolution, lower=faster, higher=better quality, slower
-                                                    mirror={0} // Mirror environment, 0 = texture colors, 1 = pick up env colors
-                                                    depthScale={0} // Scale the depth factor (0 = no depth, default = 0)
-                                                    minDepthThreshold={0.9} // Lower edge for the depthTexture interpolation (default = 0)
-                                                    maxDepthThreshold={1} // Upper edge for the depthTexture interpolation (default = 0)
-                                                    depthToBlurRatioBias={0.25} // Adds a bias factor to the depthTexture before calculating the blur amount [blurFactor = blurTexture * (depthTexture + bias)]. It accepts values between 0 and 1, default is 0.25. An amount > 0 of bias makes sure that the blurTexture is not too sharp because of the multiplication with the depthTexture
-                                                    reflectorOffset={0.2}
-                                                />
-                                            </mesh>
+                                                    </Geometry>
+                                                    <meshBasicMaterial
+                                                        color="#FFF"
+                                                        transparent
+                                                        opacity={0.2}
+                                                        side={DoubleSide}
+                                                    />
+                                                </mesh>
+                                            </group>
                                         );
                                     }
                                 })()}
