@@ -19,14 +19,17 @@ export const albumState = proxy<{
     status: YTStatus;
     player: CustomYTPlayer | null;
     duration: number;
+    isNewRecord: boolean;
 }>({
     album: null,
     player: null,
     status: "unstarted",
     duration: 0,
+    isNewRecord: true,
 });
 
 export const setAlbum = (album: Album | null) => {
+    console.log("album selected", album);
     albumState.album = album;
 };
 

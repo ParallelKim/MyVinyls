@@ -59,7 +59,8 @@ export const CustomLp = ({
     const snap = useSnapshot(albumState);
     const isFocus = snap.album?.id === album.id;
 
-    const { camera } = useThree();
+    const camera = useThree((state) => state.camera);
+
     const lpRef = useRef<Group>(null);
 
     const { nodes, materials } = useGLTF(
@@ -76,6 +77,7 @@ export const CustomLp = ({
             (ch) => ch.name === "record"
         );
         if (!record) return;
+        if (!camera) return;
 
         FollowCam.position.copy(camera.position);
         const positionRelativeToCamera = new Vector3(2, -5, -15);
@@ -112,11 +114,15 @@ export const CustomLp = ({
             ref={lpRef}
             position={[8.9 * order, 0, 0]}
             rotation={INIT_STATE.rotation}
-            onClick={() => {
-                if (isFocus) {
-                    // setAlbum(null);
-                } else {
-                    setAlbum(album);
+            onClick={(e) => {
+                e.stopPropagation();
+
+                if (e.delta <= 2) {
+                    if (isFocus) {
+                        setAlbum(null);
+                    } else {
+                        setAlbum(album);
+                    }
                 }
             }}
             scale={0.722}
