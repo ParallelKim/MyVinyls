@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { Group } from "three";
-// import { LpWithCover } from "../models/LpWithCover";
 import { Shelf } from "../models/Shelf";
 import { CustomLp } from "../models/CustomLp";
 import { JUNGWOO } from "../../constants/jungwoo";
