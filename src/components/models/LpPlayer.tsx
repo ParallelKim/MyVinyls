@@ -1,4 +1,7 @@
 import { useGLTF } from "@react-three/drei";
+import { setLpPlayer } from "@states/refState";
+import { useEffect, useRef } from "react";
+import { Group } from "three";
 import { GLTF } from "three-stdlib";
 
 type GLTFResult = GLTF & {
@@ -21,9 +24,18 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
         "/lpPlayer-transformed.glb"
     ) as GLTFResult;
 
+    const lpRef = useRef<Group>(null);
+
+    useEffect(() => {
+        if (lpRef.current) {
+            setLpPlayer(lpRef.current);
+        }
+    });
+
     return (
         <group
             name="lpPlayerOBJ"
+            ref={lpRef}
             {...props}
             dispose={null}
             position={[26, 18.5, -3]}

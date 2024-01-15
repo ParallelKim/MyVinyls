@@ -1,17 +1,25 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Group } from "three";
 import { Shelf } from "../models/Shelf";
 import { CustomLp } from "../models/CustomLp";
 import { JUNGWOO } from "../../constants/jungwoo";
+import { setShelf } from "@states/refState";
 
 export const ShelfGroup = () => {
     const shelfRef = useRef<Group>(null);
 
+    useEffect(() => {
+        if (shelfRef.current) {
+            setShelf(shelfRef.current);
+        }
+    }, []);
+
     return (
         <group>
-            <Shelf />
+            <group ref={shelfRef}>
+                <Shelf />
+            </group>
             <group
-                ref={shelfRef}
                 name="lpGroup"
                 position={[-4.76, 30.7, -4]}
             >

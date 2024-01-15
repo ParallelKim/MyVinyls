@@ -7,6 +7,9 @@ import { Group, Vector3 } from "three";
 import { setRoot } from "@states/refState";
 import { albumState } from "@states/album";
 import { useSnapshot } from "valtio";
+import { lerp3Vec } from "utils";
+
+const LP_PLAYER_POS = new Vector3(-25, -16, 20);
 
 export const Scene = () => {
     const { height } = useThree((state) => state.viewport);
@@ -14,7 +17,7 @@ export const Scene = () => {
 
     useEffect(() => {
         if (rootRef.current) {
-            setRoot(rootRef);
+            setRoot(rootRef.current);
         }
     });
 
@@ -23,7 +26,7 @@ export const Scene = () => {
     useFrame(() => {
         if (!rootRef.current) return;
         if (snap.status === "playing") {
-            rootRef.current.position.lerp(new Vector3(-25, -16, 20), 0.05);
+            lerp3Vec(rootRef.current.position, LP_PLAYER_POS);
         }
     });
 

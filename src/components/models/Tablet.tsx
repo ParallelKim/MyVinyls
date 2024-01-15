@@ -1,6 +1,6 @@
 import { YoutubeVideo } from "@components/element/YTPlayer";
 import { youtubeState } from "@constants/youtubeState";
-import { useGLTF } from "@react-three/drei";
+import { useBounds, useGLTF } from "@react-three/drei";
 import { albumState, setAlbumStatus } from "@states/album";
 import { GLTF } from "three-stdlib";
 import { useSnapshot } from "valtio";
@@ -50,6 +50,8 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
     const snap = useSnapshot(albumState);
     const query = snap.album?.url.split("=");
 
+    const bounds = useBounds();
+
     return (
         <group
             {...props}
@@ -71,6 +73,10 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
                                     statusStr,
                                     await e.target.getDuration()
                                 );
+
+                                if (statusStr === "playing") {
+                                    bounds.lookAt({ target: [0, -10, 0] });
+                                }
                             }}
                             onError={function () {}}
                             isLoop={false}

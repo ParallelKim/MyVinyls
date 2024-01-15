@@ -1,11 +1,5 @@
 import { Geometry, Base, Addition, Subtraction, Brush } from "@react-three/csg";
-import {
-    Center,
-    GradientTexture,
-    GradientType,
-    MeshReflectorMaterial,
-    Text3D,
-} from "@react-three/drei";
+import { Center, MeshReflectorMaterial, Text3D } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { albumState } from "@states/album";
 import { useEffect, useRef, useState } from "react";
