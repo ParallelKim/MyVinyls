@@ -1,9 +1,9 @@
-import { SoftShadows, useBounds } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { SoftShadows } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import { ShelfGroup } from "./groups/ShelfGroup";
 import { DeskGroup } from "./groups/DeskGroup";
 import { useEffect, useRef } from "react";
-import { Group, Vector3 } from "three";
+import { Group } from "three";
 import { setRoot } from "@states/refState";
 
 export const Scene = () => {
@@ -18,6 +18,7 @@ export const Scene = () => {
 
     return (
         <group
+            name="root"
             ref={rootRef}
             position={[0, -10 - height / 1.65, 0]}
         >

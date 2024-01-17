@@ -15,6 +15,7 @@ import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useSnapshot } from "valtio";
 import { albumState, setAlbum } from "@states/album";
+import { setCurrentRecord } from "@states/refState";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -96,6 +97,7 @@ export const CustomLp = ({
 
             if (dis < 3) {
                 record.position.lerp(RECORD_POS.focus, 2 * speed);
+                setCurrentRecord(record);
             }
         } else {
             const dis = INIT_STATE.position.distanceTo(lpRef.current.position);

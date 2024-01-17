@@ -4,7 +4,7 @@ import { useBounds, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { albumState, setAlbumStatus } from "@states/album";
 import { refState } from "@states/refState";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Vector3 } from "three";
 import { GLTF } from "three-stdlib";
 import { lerp3Vec } from "utils";
@@ -61,8 +61,14 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
     const bounds = useBounds();
 
     useFrame(() => {
-        if (snap.status === "playing" && refState.lpPlayer && refState.root) {
+        if (
+            snap.status === "playing" &&
+            refState.lpPlayer &&
+            refState.currentRecord &&
+            refState.root
+        ) {
             lerp3Vec(refState.root.position, LP_PLAYER_POS);
+            lerp3Vec(refState.currentRecord.position, LP_PLAYER_POS);
 
             if (
                 refState.root.position.distanceTo(LP_PLAYER_POS) <= 0.5 &&
