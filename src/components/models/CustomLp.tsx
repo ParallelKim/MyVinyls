@@ -80,7 +80,7 @@ export const CustomLp = ({
         if (!camera) return;
 
         FollowCam.position.copy(camera.position);
-        const positionRelativeToCamera = new Vector3(2, -2.5, -15);
+        const positionRelativeToCamera = new Vector3(2, -5, -15);
         FollowCam.position.add(
             positionRelativeToCamera.applyQuaternion(camera.quaternion)
         );

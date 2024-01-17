@@ -1,8 +1,13 @@
 import { YoutubeVideo } from "@components/element/YTPlayer";
 import { youtubeState } from "@constants/youtubeState";
 import { useBounds, useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import { albumState, setAlbumStatus } from "@states/album";
+import { refState } from "@states/refState";
+import { useRef, useState } from "react";
+import { Vector3 } from "three";
 import { GLTF } from "three-stdlib";
+import { lerp3Vec } from "utils";
 import { useSnapshot } from "valtio";
 
 type GLTFResult = GLTF & {
@@ -44,19 +49,37 @@ type GLTFResult = GLTF & {
     };
 };
 
+const LP_PLAYER_POS = new Vector3(-26, -25, 10);
+
 export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
     const { nodes, materials } = useGLTF("/ipad.glb") as GLTFResult;
+    const lerped = useRef(false);
 
     const snap = useSnapshot(albumState);
     const query = snap.album?.url.split("=");
 
     const bounds = useBounds();
 
+    useFrame(() => {
+        if (snap.status === "playing" && refState.lpPlayer && refState.root) {
+            lerp3Vec(refState.root.position, LP_PLAYER_POS);
+
+            if (
+                refState.root.position.distanceTo(LP_PLAYER_POS) <= 0.5 &&
+                !lerped.current
+            ) {
+                lerped.current = true;
+
+                bounds.refresh(refState.lpPlayer).fit();
+            }
+        }
+    });
+
     return (
         <group
             {...props}
             dispose={null}
-            position={[15, 25, 0]}
+            position={[15, 25, -10]}
             rotation={[Math.PI / 2, Math.PI / 2, 0]}
         >
             {(() => {
@@ -73,10 +96,6 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
                                     statusStr,
                                     await e.target.getDuration()
                                 );
-
-                                if (statusStr === "playing") {
-                                    bounds.lookAt({ target: [0, -10, 0] });
-                                }
                             }}
                             onError={function () {}}
                             isLoop={false}

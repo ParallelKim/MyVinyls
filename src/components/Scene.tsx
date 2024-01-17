@@ -1,15 +1,10 @@
-import { SoftShadows } from "@react-three/drei";
+import { SoftShadows, useBounds } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { ShelfGroup } from "./groups/ShelfGroup";
 import { DeskGroup } from "./groups/DeskGroup";
 import { useEffect, useRef } from "react";
 import { Group, Vector3 } from "three";
 import { setRoot } from "@states/refState";
-import { albumState } from "@states/album";
-import { useSnapshot } from "valtio";
-import { lerp3Vec } from "utils";
-
-const LP_PLAYER_POS = new Vector3(-25, -16, 20);
 
 export const Scene = () => {
     const { height } = useThree((state) => state.viewport);
@@ -18,15 +13,6 @@ export const Scene = () => {
     useEffect(() => {
         if (rootRef.current) {
             setRoot(rootRef.current);
-        }
-    });
-
-    const snap = useSnapshot(albumState);
-
-    useFrame(() => {
-        if (!rootRef.current) return;
-        if (snap.status === "playing") {
-            lerp3Vec(rootRef.current.position, LP_PLAYER_POS);
         }
     });
 
