@@ -3,6 +3,11 @@
     padding: 2rem;
     text-align: center;
     font-family: Pretendard;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 html {
@@ -43,4 +48,56 @@ html {
 
 .read-the-docs {
     color: #888;
+}
+
+#canvas {
+    z-index: 1;
+}
+#ui {
+    position: relative;
+    z-index: 2;
+}
+
+.yt-controller {
+    position: fixed;
+    top: 50vh;
+    width: 100vw;
+    height: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    fonrtsize: 2rem;
+    flex-direction: column;
+    color: white;
+    gap: 1rem;
+    transition: all 2s ease-out;
+}
+
+.yt-progress {
+    position: relative;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.yt-progress > .yt-progress-bar {
+    height: 0.2rem;
+    width: 110%;
+    background-color: white;
+    transform: translate(calc(-100% + 0.1rem), -100%) !important;
+}
+
+.yt-progress > .yt-progress-indicator {
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.yt-icon:hover {
+    color: #b00;
+    transition: all 0.2s ease-out;
+}
+
+.yt-buttons-disabled > *:hover {
+    color: #888;
+    transition: all 0.1s ease-out;
 }

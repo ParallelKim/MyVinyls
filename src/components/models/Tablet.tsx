@@ -1,4 +1,4 @@
-import { YoutubeVideo } from "@components/element/YTPlayer";
+import { YTPlayer } from "@components/element/YTPlayer";
 import { youtubeState } from "@constants/youtubeState";
 import { useBounds, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -93,7 +93,7 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
                     const playlist = query[query?.length - 1] ?? "";
 
                     return (
-                        <YoutubeVideo
+                        <YTPlayer
                             playlist={playlist}
                             onStateChange={async function (e) {
                                 const statusStr = youtubeState[e.data];

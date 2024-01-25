@@ -9,7 +9,7 @@ interface YTVProps {
     isLoop: boolean;
 }
 
-export const YoutubeVideo = ({
+export const YTPlayer = ({
     playlist,
     onStateChange,
     onError,
