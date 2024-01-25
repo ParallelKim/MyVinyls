@@ -1,5 +1,5 @@
 import { Geometry, Base, Addition, Subtraction, Brush } from "@react-three/csg";
-import { Center, MeshReflectorMaterial, Text3D } from "@react-three/drei";
+import { Center, Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { albumState } from "@states/album";
 import { useEffect, useRef, useState } from "react";
@@ -83,9 +83,9 @@ export const AlbumInfo = () => {
                         position={[0, 0, -5]}
                     >
                         <Center position={[1, 9, 0]}>
-                            <Text3D font="/Pretendard.json">
+                            <Text font="/Pretendard.woff">
                                 {snap.album.title}
-                            </Text3D>
+                            </Text>
                         </Center>
                         <group position={[4, 6.9, 0]}>
                             {snap.album.list.map((song, idx) => {
@@ -121,20 +121,19 @@ export const AlbumInfo = () => {
                                         }}
                                     >
                                         <Center right>
-                                            <Text3D
-                                                font="/Pretendard.json"
+                                            <Text
+                                                font="/Pretendard.woff"
                                                 size={0.5}
                                             >
                                                 {idx + 1}. {song}
-                                            </Text3D>
+                                            </Text>
                                         </Center>
                                         <Center position={[4, 0, 1]}>
                                             <mesh>
                                                 <planeGeometry args={[10, 1]} />
-                                                <MeshReflectorMaterial
+                                                <meshBasicMaterial
                                                     transparent
                                                     opacity={0}
-                                                    mirror={0} // Mirror environment, 0 = texture colors, 1 = pick up env colors
                                                 />
                                             </mesh>
                                         </Center>
