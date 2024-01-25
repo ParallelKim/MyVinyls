@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { RefObject, useRef } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import {
     Euler,
     Group,
@@ -11,7 +11,7 @@ import {
 } from "three";
 import { Album } from "../../types/Album";
 
-import { useGLTF } from "@react-three/drei";
+import { useBounds, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useSnapshot } from "valtio";
 import { albumState, setAlbum } from "@states/album";
@@ -41,6 +41,8 @@ const RECORD_POS = {
 
 const FollowCam = new Object3D();
 
+const gap = 8.9;
+
 export const CustomLp = ({
     album,
     order,
@@ -54,13 +56,11 @@ export const CustomLp = ({
         position: Vector3;
     } = {
         rotation: new Euler(-Math.PI / 8, 0, 0),
-        position: new Vector3(8.9 * order, 0, 0),
+        position: new Vector3(gap * order, 0, 0),
     };
 
     const snap = useSnapshot(albumState);
     const isFocus = snap.album?.id === album.id;
-
-    const camera = useThree((state) => state.camera);
 
     const lpRef = useRef<Group>(null);
 
@@ -72,7 +72,7 @@ export const CustomLp = ({
     const customMaterial: MeshStandardMaterial = materials.Material_25.clone();
     customMaterial.map = texture;
 
-    useFrame(() => {
+    useFrame(({ camera }) => {
         if (!lpRef.current) return;
         const record = lpRef.current.children.find(
             (ch) => ch.name === "record"
@@ -81,19 +81,13 @@ export const CustomLp = ({
         if (!camera) return;
 
         FollowCam.position.copy(camera.position);
-        const positionRelativeToCamera = new Vector3(2, -5, -15);
-        FollowCam.position.add(
-            positionRelativeToCamera.applyQuaternion(camera.quaternion)
-        );
 
         if (isFocus) {
             const dis = FollowCam.position.distanceTo(lpRef.current.position);
             const speed = Math.min(0.1, 1 / dis);
 
             lpRef.current.position.lerp(FollowCam.position, speed);
-            lpRef.current.lookAt(
-                camera.position.clone().add(new Vector3(-2.8, -0.5))
-            );
+            lpRef.current.lookAt(camera.position);
 
             if (dis < 3) {
                 record.position.lerp(RECORD_POS.focus, 2 * speed);
@@ -110,11 +104,17 @@ export const CustomLp = ({
         }
     });
 
+    const bounds = useBounds();
+    useEffect(() => {
+        if (lpRef.current && order === 0)
+            bounds.refresh(lpRef.current).clip().fit();
+    });
+
     return (
         <group
             name={"lpOBJ-" + album.id}
             ref={lpRef}
-            position={[8.9 * order, 0, 0]}
+            position={[gap * order, 0, 0]}
             rotation={INIT_STATE.rotation}
             onClick={(e) => {
                 e.stopPropagation();

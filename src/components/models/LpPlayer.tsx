@@ -38,9 +38,9 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
             ref={lpRef}
             {...props}
             dispose={null}
-            position={[26, 18.5, -3]}
-            scale={2}
-            rotation={[0, -Math.PI / 2, 0]}
+            position={[-0.125, 3.31, 0]}
+            scale={0.4}
+            rotation={[0, Math.PI / 2, 0]}
         >
             <group scale={0.025}>
                 <mesh
