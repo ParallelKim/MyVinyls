@@ -1,3 +1,5 @@
+import { Group, Object3DEventMap } from "three";
+
 export interface Album {
     id: string;
     title: string;
@@ -5,4 +7,8 @@ export interface Album {
     list: string[];
     cover: string;
     url: string;
+}
+
+export interface FocusedAlbum extends Album {
+    lpObject: Group<Object3DEventMap> | null;
 }

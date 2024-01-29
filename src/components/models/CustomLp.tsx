@@ -1,5 +1,4 @@
-import { useFrame, useThree } from "@react-three/fiber";
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import {
     Euler,
     Group,
@@ -10,12 +9,12 @@ import {
     Vector3,
 } from "three";
 import { Album } from "../../types/Album";
-
-import { useBounds, useGLTF } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import { useSnapshot } from "valtio";
+import { subscribe, useSnapshot } from "valtio";
 import { albumState, setAlbum } from "@states/album";
-import { setCurrentRecord } from "@states/refState";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -51,6 +50,14 @@ export const CustomLp = ({
     order: number;
     parent: RefObject<Group<Object3DEventMap>>;
 }) => {
+    const { nodes, materials } = useGLTF(
+        "/lpRecord-transformed.glb"
+    ) as GLTFResult;
+    const textureLoader = new TextureLoader();
+    const texture = textureLoader.load(album.cover);
+    const customMaterial: MeshStandardMaterial = materials.Material_25.clone();
+    customMaterial.map = texture;
+
     const INIT_STATE: {
         rotation: Euler;
         position: Vector3;
@@ -63,52 +70,66 @@ export const CustomLp = ({
     const isFocus = snap.album?.id === album.id;
 
     const lpRef = useRef<Group>(null);
+    const [anim, setAnim] = useState<GSAPTimeline>();
 
-    const { nodes, materials } = useGLTF(
-        "/lpRecord-transformed.glb"
-    ) as GLTFResult;
-    const textureLoader = new TextureLoader();
-    const texture = textureLoader.load(album.cover);
-    const customMaterial: MeshStandardMaterial = materials.Material_25.clone();
-    customMaterial.map = texture;
-
-    useFrame(({ camera }) => {
+    useGSAP(() => {
         if (!lpRef.current) return;
-        const record = lpRef.current.children.find(
-            (ch) => ch.name === "record"
-        );
-        if (!record) return;
-        if (!camera) return;
 
-        FollowCam.position.copy(camera.position);
+        const anim = gsap
+            .timeline({
+                onUpdate: () => {},
+                id: "lpAnim-" + album.id,
+            })
+            .to(lpRef.current.position, {
+                z: 20,
+            })
+            .reverse();
 
-        if (isFocus) {
-            const dis = FollowCam.position.distanceTo(lpRef.current.position);
-            const speed = Math.min(0.1, 1 / dis);
+        setAnim(anim);
+    }, [lpRef.current]);
 
-            lpRef.current.position.lerp(FollowCam.position, speed);
-            lpRef.current.lookAt(camera.position);
+    // useFrame((e) => {
+    //     const { camera, scene } = e;
 
-            if (dis < 3) {
-                record.position.lerp(RECORD_POS.focus, 2 * speed);
-                setCurrentRecord(record);
-            }
-        } else {
-            const dis = INIT_STATE.position.distanceTo(lpRef.current.position);
-            const speed = Math.min(0.1, 2 / dis);
+    //     if (!lpRef.current) return;
+    //     const record = lpRef.current.children.find(
+    //         (ch) => ch.name === "record"
+    //     );
+    //     if (!record) return;
+    //     if (!camera) return;
 
-            lpRef.current.position.lerp(INIT_STATE.position, speed);
-            lpRef.current.rotation.copy(INIT_STATE.rotation);
+    //     scene.attach(camera);
+    //     camera.attach(FollowCam);
+    //     FollowCam.position.set(0, 0, 5);
+    //     FollowCam.quaternion.copy(camera.quaternion);
 
-            record.position.lerp(RECORD_POS.init, speed);
-        }
-    });
+    //     if (isFocus) {
+    //         const dis = FollowCam.position.distanceTo(lpRef.current.position);
+    //         const speed = Math.min(0.1, 1 / dis);
 
-    const bounds = useBounds();
-    useEffect(() => {
-        if (lpRef.current && order === 0)
-            bounds.refresh(lpRef.current).clip().fit();
-    });
+    //         lpRef.current.position.lerp(FollowCam.position, speed);
+    //         lpRef.current.lookAt(camera.position);
+
+    //         if (dis < 3) {
+    //             record.position.lerp(RECORD_POS.focus, 2 * speed);
+    //             setCurrentRecord(record);
+    //         }
+    //     } else {
+    //         const dis = INIT_STATE.position.distanceTo(lpRef.current.position);
+    //         const speed = Math.min(0.1, 2 / dis);
+
+    //         lpRef.current.position.lerp(INIT_STATE.position, speed);
+    //         lpRef.current.rotation.copy(INIT_STATE.rotation);
+
+    //         record.position.lerp(RECORD_POS.init, speed);
+    //     }
+    // });
+
+    // const bounds = useBounds();
+    // useEffect(() => {
+    //     if (lpRef.current && order === 0)
+    //         bounds.refresh(lpRef.current).clip().fit();
+    // });
 
     return (
         <group
@@ -119,11 +140,17 @@ export const CustomLp = ({
             onClick={(e) => {
                 e.stopPropagation();
 
-                if (e.delta <= 2) {
+                console.log(anim);
+
+                if (e.delta <= 2 && anim) {
+                    console.log(anim.reversed() ? "reverse" : "play");
+
+                    anim.reversed() ? anim.play() : anim.reverse();
+
                     if (isFocus) {
                         setAlbum(null);
                     } else {
-                        setAlbum(album);
+                        setAlbum({ ...album, lpObject: lpRef.current });
                     }
                 }
             }}

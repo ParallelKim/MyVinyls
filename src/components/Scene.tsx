@@ -20,6 +20,7 @@ export const Scene = () => {
         <group
             name="root"
             ref={rootRef}
+            position={[0, -7.5, -15]}
         >
             <ambientLight
                 intensity={2}
