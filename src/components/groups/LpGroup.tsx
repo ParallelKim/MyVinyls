@@ -16,6 +16,7 @@ export const LpGroup = () => {
     return (
         <group
             name="lpGroup"
+            ref={shelfRef}
             position={[4, 17.5, 1.8]}
             rotation={[0, Math.PI, 0]}
             scale={0.3}

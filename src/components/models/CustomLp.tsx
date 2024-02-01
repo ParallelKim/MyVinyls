@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import {
     Euler,
     Group,
@@ -8,13 +8,15 @@ import {
     TextureLoader,
     Vector3,
 } from "three";
-import { Album } from "../../types/Album";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import { subscribe, useSnapshot } from "valtio";
+import { useSnapshot } from "valtio";
+import { useFrame, useThree } from "@react-three/fiber";
+
 import { albumState, setAlbum } from "@states/album";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { Album } from "../../types/Album";
+
+import { setCurrentRecord } from "@states/refState";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -39,12 +41,22 @@ const RECORD_POS = {
 };
 
 const FollowCam = new Object3D();
+FollowCam.name = "FollowCam";
+FollowCam.position.z = -5;
+FollowCam.position.x = -1;
+
+// const myMesh = new Mesh(
+//     new PlaneGeometry(3, 3),
+//     new MeshBasicMaterial({ color: "blue" })
+// );
+// FollowCam.add(myMesh);
 
 const gap = 8.9;
 
 export const CustomLp = ({
     album,
     order,
+    parent,
 }: {
     album: Album;
     order: number;
@@ -70,60 +82,52 @@ export const CustomLp = ({
     const isFocus = snap.album?.id === album.id;
 
     const lpRef = useRef<Group>(null);
-    const [anim, setAnim] = useState<GSAPTimeline>();
 
-    useGSAP(() => {
+    const { scene, camera } = useThree();
+
+    useEffect(() => {
+        scene.add(camera);
+        camera.add(FollowCam);
+    });
+
+    useFrame(() => {
         if (!lpRef.current) return;
+        const record = lpRef.current.children.find(
+            (ch) => ch.name === "record"
+        );
 
-        const anim = gsap
-            .timeline({
-                onUpdate: () => {},
-                id: "lpAnim-" + album.id,
-            })
-            .to(lpRef.current.position, {
-                z: 20,
-            })
-            .reverse();
+        if (!record) return;
 
-        setAnim(anim);
-    }, [lpRef.current]);
+        if (isFocus) {
+            const dis = FollowCam.position.distanceTo(lpRef.current.position);
+            const speed = Math.min(0.1, 1 / dis);
 
-    // useFrame((e) => {
-    //     const { camera, scene } = e;
+            camera.attach(lpRef.current);
+            lpRef.current.position.lerp(FollowCam.position, speed);
+            lpRef.current.lookAt(camera.position.clone().sub(new Vector3(-1)));
 
-    //     if (!lpRef.current) return;
-    //     const record = lpRef.current.children.find(
-    //         (ch) => ch.name === "record"
-    //     );
-    //     if (!record) return;
-    //     if (!camera) return;
+            if (dis < 3 && dis >= 0.01) {
+                record.position.lerp(RECORD_POS.focus, 2 * speed);
+                setCurrentRecord(record);
+            }
 
-    //     scene.attach(camera);
-    //     camera.attach(FollowCam);
-    //     FollowCam.position.set(0, 0, 5);
-    //     FollowCam.quaternion.copy(camera.quaternion);
+            if (dis < 0.01 && dis > 0) {
+                lpRef.current.position.copy(FollowCam.position);
+            }
+        } else {
+            if (parent.current) {
+                parent.current.attach(lpRef.current);
+            }
 
-    //     if (isFocus) {
-    //         const dis = FollowCam.position.distanceTo(lpRef.current.position);
-    //         const speed = Math.min(0.1, 1 / dis);
+            const dis = INIT_STATE.position.distanceTo(lpRef.current.position);
+            const speed = Math.min(0.1, 2 / dis);
 
-    //         lpRef.current.position.lerp(FollowCam.position, speed);
-    //         lpRef.current.lookAt(camera.position);
+            lpRef.current.position.lerp(INIT_STATE.position, speed);
+            lpRef.current.rotation.copy(INIT_STATE.rotation);
 
-    //         if (dis < 3) {
-    //             record.position.lerp(RECORD_POS.focus, 2 * speed);
-    //             setCurrentRecord(record);
-    //         }
-    //     } else {
-    //         const dis = INIT_STATE.position.distanceTo(lpRef.current.position);
-    //         const speed = Math.min(0.1, 2 / dis);
-
-    //         lpRef.current.position.lerp(INIT_STATE.position, speed);
-    //         lpRef.current.rotation.copy(INIT_STATE.rotation);
-
-    //         record.position.lerp(RECORD_POS.init, speed);
-    //     }
-    // });
+            record.position.lerp(RECORD_POS.init, speed);
+        }
+    });
 
     // const bounds = useBounds();
     // useEffect(() => {
@@ -140,13 +144,7 @@ export const CustomLp = ({
             onClick={(e) => {
                 e.stopPropagation();
 
-                console.log(anim);
-
-                if (e.delta <= 2 && anim) {
-                    console.log(anim.reversed() ? "reverse" : "play");
-
-                    anim.reversed() ? anim.play() : anim.reverse();
-
+                if (e.delta <= 2) {
                     if (isFocus) {
                         setAlbum(null);
                     } else {

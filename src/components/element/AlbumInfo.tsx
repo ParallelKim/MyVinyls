@@ -1,5 +1,5 @@
 import { Geometry, Base, Addition, Subtraction, Brush } from "@react-three/csg";
-import { Center, Text } from "@react-three/drei";
+import { Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { albumState } from "@states/album";
 import { useEffect, useRef, useState } from "react";
@@ -82,15 +82,17 @@ export const AlbumInfo = () => {
                         scale={0.8}
                         position={[0, 0, -5]}
                     >
-                        <Center position={[1, 9, 0]}>
-                            <Text font="/Pretendard.woff">
-                                {snap.album.title}
-                            </Text>
-                        </Center>
+                        <Text
+                            position={[4, 9, 0]}
+                            fontSize={1.5}
+                            font="/Pretendard.woff"
+                        >
+                            {snap.album.title}
+                        </Text>
                         <group position={[4, 6.9, 0]}>
                             {snap.album.list.map((song, idx) => {
                                 const x =
-                                    10 *
+                                    9.5 *
                                     Math.cos(
                                         Math.asin(
                                             1 - (2 * (idx + 2)) / (len + 3)
@@ -120,23 +122,21 @@ export const AlbumInfo = () => {
                                             }
                                         }}
                                     >
-                                        <Center right>
-                                            <Text
-                                                font="/Pretendard.woff"
-                                                size={0.5}
-                                            >
-                                                {idx + 1}. {song}
-                                            </Text>
-                                        </Center>
-                                        <Center position={[4, 0, 1]}>
-                                            <mesh>
-                                                <planeGeometry args={[10, 1]} />
-                                                <meshBasicMaterial
-                                                    transparent
-                                                    opacity={0}
-                                                />
-                                            </mesh>
-                                        </Center>
+                                        <Text
+                                            font="/Pretendard.woff"
+                                            anchorX="left"
+                                            anchorY="middle"
+                                            fontSize={0.7}
+                                        >
+                                            {idx + 1}. {song}
+                                        </Text>
+                                        <mesh position={[4, 0, 0]}>
+                                            <planeGeometry args={[10, 1]} />
+                                            <meshBasicMaterial
+                                                transparent
+                                                opacity={0}
+                                            />
+                                        </mesh>
                                     </group>
                                 );
                             })}
