@@ -130,7 +130,7 @@ export const AlbumInfo = () => {
                                         >
                                             {idx + 1}. {song}
                                         </Text>
-                                        <mesh position={[4, 0, 0]}>
+                                        <mesh position={[4, 0, 1]}>
                                             <planeGeometry args={[10, 1]} />
                                             <meshBasicMaterial
                                                 transparent

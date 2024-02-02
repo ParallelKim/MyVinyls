@@ -2,13 +2,14 @@ import { RefObject, useEffect, useRef } from "react";
 import {
     Euler,
     Group,
+    Matrix4,
     MeshStandardMaterial,
     Object3D,
     Object3DEventMap,
     TextureLoader,
     Vector3,
 } from "three";
-import { useGLTF } from "@react-three/drei";
+import { useBounds, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useSnapshot } from "valtio";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -17,6 +18,7 @@ import { albumState, setAlbum } from "@states/album";
 import { Album } from "../../types/Album";
 
 import { setCurrentRecord } from "@states/refState";
+import { temp } from "three/examples/jsm/nodes/Nodes.js";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -52,6 +54,8 @@ FollowCam.position.x = -1;
 // FollowCam.add(myMesh);
 
 const gap = 8.9;
+const tempVec = new Vector3();
+const tempCam = new Vector3();
 
 export const CustomLp = ({
     album,
@@ -88,23 +92,26 @@ export const CustomLp = ({
     useEffect(() => {
         scene.add(camera);
         camera.add(FollowCam);
-    });
+    }, [camera, scene]);
 
-    useFrame(() => {
+    useFrame(({ camera }) => {
         if (!lpRef.current) return;
         const record = lpRef.current.children.find(
             (ch) => ch.name === "record"
         );
 
         if (!record) return;
+        if (!parent.current) return;
 
         if (isFocus) {
+            camera.attach(lpRef.current);
+
             const dis = FollowCam.position.distanceTo(lpRef.current.position);
             const speed = Math.min(0.1, 1 / dis);
 
-            camera.attach(lpRef.current);
             lpRef.current.position.lerp(FollowCam.position, speed);
             lpRef.current.lookAt(camera.position.clone().sub(new Vector3(-1)));
+            // scene.attach(FollowCam);
 
             if (dis < 3 && dis >= 0.01) {
                 record.position.lerp(RECORD_POS.focus, 2 * speed);
@@ -114,11 +121,9 @@ export const CustomLp = ({
             if (dis < 0.01 && dis > 0) {
                 lpRef.current.position.copy(FollowCam.position);
             }
-        } else {
-            if (parent.current) {
-                parent.current.attach(lpRef.current);
-            }
 
+            parent.current.attach(lpRef.current);
+        } else {
             const dis = INIT_STATE.position.distanceTo(lpRef.current.position);
             const speed = Math.min(0.1, 2 / dis);
 
