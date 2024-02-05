@@ -1,5 +1,5 @@
 import { Geometry, Base, Addition, Subtraction, Brush } from "@react-three/csg";
-import { Text } from "@react-three/drei";
+import { Center, Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { albumState } from "@states/album";
 import { useEffect, useRef, useState } from "react";
@@ -46,19 +46,12 @@ export const AlbumInfo = () => {
     });
 
     return (
-        <group
-            ref={panelRef}
-            renderOrder={-1}
-        >
+        <group ref={panelRef}>
             {snap.album && (
-                <group
-                    onClick={(e) => {
-                        e.stopPropagation();
-                    }}
-                >
+                <group>
                     <mesh
                         name="panel"
-                        position={[0, 0, -10]}
+                        position={[0, 1, -10]}
                     >
                         <Geometry>
                             <Base>
@@ -83,16 +76,17 @@ export const AlbumInfo = () => {
                         position={[0, 0, -5]}
                     >
                         <Text
-                            position={[4, 9, 0]}
+                            position={[4, 9.5, 0]}
                             fontSize={1.5}
+                            // renderOrder={-1}
                             font="/Pretendard.woff"
                         >
                             {snap.album.title}
                         </Text>
-                        <group position={[4, 6.9, 0]}>
+                        <group position={[4.5, 7.1, 0]}>
                             {snap.album.list.map((song, idx) => {
                                 const x =
-                                    9.5 *
+                                    9 *
                                     Math.cos(
                                         Math.asin(
                                             1 - (2 * (idx + 2)) / (len + 3)
@@ -102,6 +96,7 @@ export const AlbumInfo = () => {
                                 return (
                                     <group
                                         key={song}
+                                        renderOrder={2}
                                         position={[
                                             x,
                                             (-(idx + 1) * 13) / len,
@@ -127,23 +122,31 @@ export const AlbumInfo = () => {
                                             anchorX="left"
                                             anchorY="middle"
                                             fontSize={0.7}
+                                            material-depthTest={false}
                                         >
                                             {idx + 1}. {song}
                                         </Text>
-                                        <mesh position={[4, 0, 1]}>
-                                            <planeGeometry args={[10, 1]} />
-                                            <meshBasicMaterial
-                                                transparent
-                                                opacity={0}
-                                            />
-                                        </mesh>
+                                        <Center
+                                            position={[4, 0, 0]}
+                                            renderOrder={1}
+                                        >
+                                            <mesh>
+                                                <planeGeometry args={[10, 1]} />
+                                                <meshBasicMaterial
+                                                    transparent
+                                                    opacity={0}
+                                                    depthTest={false}
+                                                />
+                                            </mesh>
+                                        </Center>
                                     </group>
                                 );
                             })}
                             {hoveredIndex > 0 && (
                                 <mesh
                                     name="background"
-                                    position={[2.5, -7, 0]}
+                                    position={[2, -7, 0]}
+                                    renderOrder={1}
                                 >
                                     <Geometry>
                                         <Base>
@@ -193,7 +196,6 @@ export const AlbumInfo = () => {
                                         color="#FFF"
                                         transparent
                                         opacity={0.7}
-                                        side={DoubleSide}
                                     />
                                 </mesh>
                             )}

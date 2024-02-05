@@ -22,6 +22,7 @@ export const RoomGroup = (props: JSX.IntrinsicElements["group"]) => {
         <group
             {...props}
             dispose={null}
+            renderOrder={1}
         >
             <mesh
                 geometry={nodes.Cube.geometry}
