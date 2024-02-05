@@ -33,6 +33,7 @@ export const Scene = () => {
             <LpPlayer />
             <LpGroup />
             <YTPlayer />
+
             {/* <group dispose={null}>
                 <ShelfGroup />
                 <DeskGroup />

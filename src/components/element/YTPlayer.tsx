@@ -3,16 +3,10 @@ import { Html, useBounds } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { albumState, setAlbumStatus, setPlayer } from "@states/album";
 import { refState } from "@states/refState";
-import { useRef } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
-import { Vector3 } from "three";
-import { lerp3Vec } from "utils";
 import { useSnapshot } from "valtio";
 
-const LP_PLAYER_POS = new Vector3(-26, -25, 10);
-
 export const YTPlayer = () => {
-    const lerped = useRef(false);
     const isLoop = false;
 
     const snap = useSnapshot(albumState);

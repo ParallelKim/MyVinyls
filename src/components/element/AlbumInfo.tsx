@@ -51,7 +51,7 @@ export const AlbumInfo = () => {
                 <group>
                     <mesh
                         name="panel"
-                        position={[0, 1, -10]}
+                        position={[0, 0, -10]}
                     >
                         <Geometry>
                             <Base>
@@ -76,7 +76,7 @@ export const AlbumInfo = () => {
                         position={[0, 0, -5]}
                     >
                         <Text
-                            position={[4, 9.5, 0]}
+                            position={[4, 9, 0]}
                             fontSize={1.5}
                             font="/Pretendard.woff"
                         >

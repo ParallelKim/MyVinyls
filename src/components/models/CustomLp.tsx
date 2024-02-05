@@ -1,24 +1,21 @@
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useRef } from "react";
 import {
     Euler,
     Group,
-    Matrix4,
     MeshStandardMaterial,
-    Object3D,
     Object3DEventMap,
     TextureLoader,
     Vector3,
 } from "three";
-import { useBounds, useGLTF } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useSnapshot } from "valtio";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 
 import { albumState, setAlbum } from "@states/album";
 import { Album } from "../../types/Album";
 
 import { setCurrentRecord } from "@states/refState";
-import { temp } from "three/examples/jsm/nodes/Nodes.js";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -42,20 +39,10 @@ const RECORD_POS = {
     focus: new Vector3(4.5, 0, 0.03),
 };
 
-const FollowCam = new Object3D();
-FollowCam.name = "FollowCam";
-FollowCam.position.z = -5;
-FollowCam.position.x = -1;
-
-// const myMesh = new Mesh(
-//     new PlaneGeometry(3, 3),
-//     new MeshBasicMaterial({ color: "blue" })
-// );
-// FollowCam.add(myMesh);
+const FollowCam = new Vector3(-1, 0, -6);
+const LookAtPos = new Vector3(-1);
 
 const gap = 8.9;
-const tempVec = new Vector3();
-const tempCam = new Vector3();
 
 export const CustomLp = ({
     album,
@@ -87,13 +74,6 @@ export const CustomLp = ({
 
     const lpRef = useRef<Group>(null);
 
-    const { scene, camera } = useThree();
-
-    useEffect(() => {
-        scene.add(camera);
-        camera.add(FollowCam);
-    }, [camera, scene]);
-
     useFrame(({ camera }) => {
         if (!lpRef.current) return;
         const record = lpRef.current.children.find(
@@ -106,12 +86,11 @@ export const CustomLp = ({
         if (isFocus) {
             camera.attach(lpRef.current);
 
-            const dis = FollowCam.position.distanceTo(lpRef.current.position);
+            const dis = FollowCam.distanceTo(lpRef.current.position);
             const speed = Math.min(0.1, 1 / dis);
 
-            lpRef.current.position.lerp(FollowCam.position, speed);
-            lpRef.current.lookAt(camera.position.clone().sub(new Vector3(-1)));
-            // scene.attach(FollowCam);
+            lpRef.current.position.lerp(FollowCam, speed);
+            lpRef.current.lookAt(camera.position.clone().sub(LookAtPos));
 
             if (dis < 3 && dis >= 0.01) {
                 record.position.lerp(RECORD_POS.focus, 2 * speed);
@@ -119,7 +98,7 @@ export const CustomLp = ({
             }
 
             if (dis < 0.01 && dis > 0) {
-                lpRef.current.position.copy(FollowCam.position);
+                lpRef.current.position.copy(FollowCam);
             }
 
             parent.current.attach(lpRef.current);
@@ -133,12 +112,6 @@ export const CustomLp = ({
             record.position.lerp(RECORD_POS.init, speed);
         }
     });
-
-    // const bounds = useBounds();
-    // useEffect(() => {
-    //     if (lpRef.current && order === 0)
-    //         bounds.refresh(lpRef.current).clip().fit();
-    // });
 
     return (
         <group
@@ -161,34 +134,32 @@ export const CustomLp = ({
             dispose={null}
             renderOrder={10}
         >
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes["Box001_Material_#25_0"].geometry}
-                material={customMaterial}
-                position={[-0.025, 0, 0]}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes["Box001_Material_#37_0"].geometry}
-                material={materials.Material_37}
-                position={[-0.025, 0, 0]}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes["Box001_Material_#49_0"].geometry}
-                material={materials.Material_49}
-                position={[-0.025, 0, 0]}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes["Box001_Material_#73_0"].geometry}
-                material={materials.Material_73}
-                position={[-0.025, 0, 0]}
-            />
+            <group position={[-0.025, 0, 0]}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes["Box001_Material_#25_0"].geometry}
+                    material={customMaterial}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes["Box001_Material_#37_0"].geometry}
+                    material={materials.Material_37}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes["Box001_Material_#49_0"].geometry}
+                    material={materials.Material_49}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes["Box001_Material_#73_0"].geometry}
+                    material={materials.Material_73}
+                />
+            </group>
             <mesh
                 name="record"
                 castShadow
@@ -202,4 +173,4 @@ export const CustomLp = ({
     );
 };
 
-useGLTF.preload("/lpCover-transformed.glb");
+useGLTF.preload("/lpRecord-transformed.glb");
