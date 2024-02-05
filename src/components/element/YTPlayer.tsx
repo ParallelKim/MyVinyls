@@ -1,27 +1,23 @@
+import { youtubeState } from "@constants/youtubeState";
 import { Html, useBounds } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { albumState, setPlayer } from "@states/album";
+import { albumState, setAlbumStatus, setPlayer } from "@states/album";
 import { refState } from "@states/refState";
 import { useRef } from "react";
-import YouTube, { YouTubeEvent, YouTubePlayer } from "react-youtube";
+import YouTube, { YouTubePlayer } from "react-youtube";
 import { Vector3 } from "three";
 import { lerp3Vec } from "utils";
 import { useSnapshot } from "valtio";
 
 const LP_PLAYER_POS = new Vector3(-26, -25, 10);
 
-interface YTVProps {
-    onStateChange: (event: YouTubeEvent<number>) => void;
-    onError: (event: YouTubeEvent<number>) => void;
-    isLoop: boolean;
-}
-
-export const YTPlayer = ({ onStateChange, onError, isLoop }: YTVProps) => {
+export const YTPlayer = () => {
     const lerped = useRef(false);
+    const isLoop = false;
 
     const snap = useSnapshot(albumState);
     const query = snap.album?.url.split("=") ?? [];
-    const playlist = query[query.length - 1] ?? "";
+    const playlist = query.pop();
 
     const bounds = useBounds();
 
@@ -32,26 +28,27 @@ export const YTPlayer = ({ onStateChange, onError, isLoop }: YTVProps) => {
             refState.currentRecord &&
             refState.root
         ) {
-            lerp3Vec(refState.root.position, LP_PLAYER_POS);
-            lerp3Vec(refState.currentRecord.position, LP_PLAYER_POS);
-
-            if (
-                refState.root.position.distanceTo(LP_PLAYER_POS) <= 0.5 &&
-                !lerped.current
-            ) {
-                lerped.current = true;
-
-                bounds.refresh(refState.lpPlayer).fit();
-            }
+            // lerp3Vec(refState.root.position, LP_PLAYER_POS);
+            // lerp3Vec(refState.currentRecord.position, LP_PLAYER_POS);
+            // if (
+            //     refState.root.position.distanceTo(LP_PLAYER_POS) <= 0.5 &&
+            //     !lerped.current
+            // ) {
+            //     lerped.current = true;
+            bounds.refresh(refState.lpPlayer).fit();
+            // }
         }
     });
+
+    if (!playlist) return null;
 
     return (
         <Html
             transform
             occlude="blending"
-            position={[0, 0.2, 0]}
-            rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
+            position={[0, 2.5, -0.16]}
+            rotation={[Math.PI / 4.75, Math.PI, 0]}
+            scale={0.2}
         >
             <YouTube
                 onReady={(event) => {
@@ -61,10 +58,13 @@ export const YTPlayer = ({ onStateChange, onError, isLoop }: YTVProps) => {
                         }
                     );
                 }}
-                onStateChange={onStateChange}
-                onError={onError}
+                onStateChange={async function (e) {
+                    const statusStr = youtubeState[e.data];
+                    console.log(e, statusStr);
+                    setAlbumStatus(statusStr, await e.target.getDuration());
+                }}
                 opts={{
-                    width: 360,
+                    width: 340,
                     height: 270,
                     playerVars: {
                         color: "white",

@@ -88,7 +88,7 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
             position={[15, 25, -10]}
             rotation={[Math.PI / 2, Math.PI / 2, 0]}
         >
-            {(() => {
+            {/* {(() => {
                 if (query?.length && query?.length > 0) {
                     const playlist = query[query?.length - 1] ?? "";
 
@@ -108,7 +108,7 @@ export const Tablet = (props: JSX.IntrinsicElements["group"]) => {
                         />
                     );
                 }
-            })()}
+            })()} */}
             <group position={[0.033, 0, -0.053]}>
                 <mesh
                     castShadow

@@ -32,6 +32,7 @@ export const TableGroup = (props: JSX.IntrinsicElements["group"]) => {
             dispose={null}
         >
             <group
+                name="tablet"
                 position={[-0.589, 5.171, 0.086]}
                 rotation={[-Math.PI / 2, 0, 0]}
                 scale={-1}

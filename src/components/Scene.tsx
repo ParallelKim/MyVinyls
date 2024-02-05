@@ -6,6 +6,7 @@ import { RoomGroup } from "./models/RoomGroup";
 import { AudioGroup } from "./models/AudioGroup";
 import { LpPlayer } from "./models/LpPlayer";
 import { LpGroup } from "./groups/LpGroup";
+import { YTPlayer } from "./element/YTPlayer";
 
 export const Scene = () => {
     const rootRef = useRef<Group>(null);
@@ -31,6 +32,7 @@ export const Scene = () => {
             <AudioGroup scale={5} />
             <LpPlayer />
             <LpGroup />
+            <YTPlayer />
             {/* <group dispose={null}>
                 <ShelfGroup />
                 <DeskGroup />

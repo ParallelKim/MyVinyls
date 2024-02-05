@@ -78,7 +78,6 @@ export const AlbumInfo = () => {
                         <Text
                             position={[4, 9.5, 0]}
                             fontSize={1.5}
-                            // renderOrder={-1}
                             font="/Pretendard.woff"
                         >
                             {snap.album.title}
