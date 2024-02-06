@@ -58,19 +58,31 @@ html {
     z-index: 2;
 }
 
+.ui-wrapper {
+    z-index: 8388636;
+}
+
 .yt-controller {
     position: fixed;
-    top: 50vh;
+    top: calc(50vh - 8rem);
     width: 100vw;
     height: 8rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    fonrtsize: 2rem;
+    font-size: 2rem;
     flex-direction: column;
     color: white;
     gap: 1rem;
-    transition: all 2s ease-out;
+    transition: color 1s ease-out, transform 0.5s ease-out;
+}
+
+.yt-ctrl-hidden {
+    transform: translateY(100%);
+}
+
+.yt-ctrl-visible {
+    transform: translateY(0%);
 }
 
 .yt-progress {

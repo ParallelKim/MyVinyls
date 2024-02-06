@@ -198,7 +198,7 @@ export const AlbumInfo = () => {
                                     />
                                 </mesh>
                             )}
-                            {snap.status === "playing" &&
+                            {snap.player &&
                                 (() => {
                                     const currentIndex =
                                         snap.player?.playerInfo.playlistIndex;
@@ -210,7 +210,7 @@ export const AlbumInfo = () => {
                                             <group>
                                                 <mesh
                                                     name="playingBack"
-                                                    position={[2.5, -7, -0.2]}
+                                                    position={[2, -7, -0.2]}
                                                 >
                                                     <Geometry>
                                                         <Base>

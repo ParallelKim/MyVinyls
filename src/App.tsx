@@ -11,7 +11,8 @@ import {
 } from "@react-three/drei";
 // import { UI } from "@components/element/ui/UI";
 import { Suspense } from "react";
-import { AnimationManager } from "animations/AnimationManager";
+// import { AnimationManager } from "animations/AnimationManager";
+import { UI } from "@components/element/ui/UI";
 
 const App = () => {
     return (
@@ -42,8 +43,7 @@ const App = () => {
                 <gridHelper args={[100, 100]} />
                 <axesHelper args={[8]} />
                 <Preload all />
-                {/* <UI /> */}
-                <AnimationManager />
+                <UI />
             </Canvas>
         </Suspense>
     );

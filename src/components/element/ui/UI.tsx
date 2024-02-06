@@ -3,7 +3,11 @@ import { YTController } from "../YTController";
 
 export const UI = () => {
     return (
-        <Html fullscreen>
+        <Html
+            fullscreen
+            occlude
+            wrapperClass="ui-wrapper" // higher z than three js canvas' z
+        >
             <YTController />
         </Html>
     );

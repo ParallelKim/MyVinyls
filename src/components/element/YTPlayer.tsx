@@ -13,26 +13,26 @@ export const YTPlayer = () => {
     const query = snap.album?.url.split("=") ?? [];
     const playlist = query.pop();
 
-    const bounds = useBounds();
+    // const bounds = useBounds();
 
-    useFrame(() => {
-        if (
-            snap.status === "playing" &&
-            refState.lpPlayer &&
-            refState.currentRecord &&
-            refState.root
-        ) {
-            // lerp3Vec(refState.root.position, LP_PLAYER_POS);
-            // lerp3Vec(refState.currentRecord.position, LP_PLAYER_POS);
-            // if (
-            //     refState.root.position.distanceTo(LP_PLAYER_POS) <= 0.5 &&
-            //     !lerped.current
-            // ) {
-            //     lerped.current = true;
-            bounds.refresh(refState.lpPlayer).fit();
-            // }
-        }
-    });
+    // useFrame(() => {
+    //     if (
+    //         snap.status === "playing" &&
+    //         refState.lpPlayer &&
+    //         refState.currentRecord &&
+    //         refState.root
+    //     ) {
+    //         lerp3Vec(refState.root.position, LP_PLAYER_POS);
+    //         lerp3Vec(refState.currentRecord.position, LP_PLAYER_POS);
+    //         if (
+    //             refState.root.position.distanceTo(LP_PLAYER_POS) <= 0.5 &&
+    //             !lerped.current
+    //         ) {
+    //             lerped.current = true;
+    //         bounds.refresh(refState.lpPlayer).fit();
+    //         }
+    //     }
+    // });
 
     if (!playlist) return null;
 
@@ -54,7 +54,6 @@ export const YTPlayer = () => {
                 }}
                 onStateChange={async function (e) {
                     const statusStr = youtubeState[e.data];
-                    console.log(e, statusStr);
                     setAlbumStatus(statusStr, await e.target.getDuration());
                 }}
                 opts={{
