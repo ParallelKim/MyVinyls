@@ -1,7 +1,8 @@
-import { Geometry, Base, Addition, Subtraction, Brush } from "@react-three/csg";
+import { Geometry, Base, Addition, Subtraction } from "@react-three/csg";
 import { Center, Text } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { albumState } from "@states/album";
+import { animState } from "@states/animation";
 import { useEffect, useRef, useState } from "react";
 import { DoubleSide, Group } from "three";
 import { subscribe, useSnapshot } from "valtio";
@@ -11,7 +12,6 @@ export const AlbumInfo = () => {
     const scene = useThree((state) => state.scene);
 
     const panelRef = useRef<Group>(null);
-    const progressRef = useRef<Brush>(null);
 
     const [hoveredIndex, setHoveredIndex] = useState(0);
 
@@ -34,20 +34,9 @@ export const AlbumInfo = () => {
         [scene]
     );
 
-    useFrame(({ clock }) => {
-        if (progressRef.current) {
-            const cur = clock.getElapsedTime();
-            const duration = snap.duration ?? 1;
-
-            console.log(cur / duration);
-
-            progressRef.current.position.x += (0.01 * cur) / duration;
-        }
-    });
-
     return (
         <group ref={panelRef}>
-            {snap.album && (
+            {snap.album && !animState.currentAnim && (
                 <group>
                     <mesh
                         name="panel"
@@ -112,7 +101,6 @@ export const AlbumInfo = () => {
 
                                             if (player) {
                                                 player.playVideoAt(idx); // player.playerInfo.playerListIndex에 저장됨
-                                                console.log(player);
                                             }
                                         }}
                                     >
@@ -130,7 +118,9 @@ export const AlbumInfo = () => {
                                             renderOrder={1}
                                         >
                                             <mesh>
-                                                <planeGeometry args={[10, 1]} />
+                                                <planeGeometry
+                                                    args={[10, 1.15]}
+                                                />
                                                 <meshBasicMaterial
                                                     transparent
                                                     opacity={0}

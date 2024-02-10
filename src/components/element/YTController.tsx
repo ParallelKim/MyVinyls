@@ -10,7 +10,6 @@ import { useEffect, useRef } from "react";
 
 export const YTController = () => {
     const snap = useSnapshot(albumState);
-
     const ytTimeline = useRef<GSAPTimeline>();
 
     useGSAP(() => {
@@ -20,7 +19,9 @@ export const YTController = () => {
             ease: "none",
             left: "100%",
         });
-    }, [snap.duration]);
+    }, [snap.currentIndex]);
+
+    const lastSongRef = useRef<number | null>(null);
 
     useEffect(() => {
         window.onfocus = async () => {
@@ -39,8 +40,26 @@ export const YTController = () => {
                 anim.play();
             } else if (albumState.status === "paused") {
                 anim.pause();
-            } else if (albumState.status === "unstarted") {
-                anim.seek(0);
+            }
+
+            const curIdx = albumState.currentIndex;
+            const lastSong = lastSongRef.current;
+
+            if (curIdx !== lastSong) {
+                console.group();
+                console.log("new song");
+                console.log(
+                    "old:",
+                    lastSong ? albumState.album?.list[lastSong] : null
+                );
+                console.log(
+                    "new:",
+                    curIdx ? albumState.album?.list[curIdx] : null
+                );
+                console.groupEnd();
+
+                anim.restart();
+                lastSongRef.current = curIdx ?? null;
             }
         });
     });

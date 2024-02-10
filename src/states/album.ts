@@ -19,13 +19,13 @@ export const albumState = proxy<{
     status: YTStatus;
     player: CustomYTPlayer | null;
     duration: number;
-    isNewRecord: boolean;
+    currentIndex: number | null;
 }>({
     album: null,
     player: null,
     status: "unstarted",
     duration: 0,
-    isNewRecord: true,
+    currentIndex: null,
 });
 
 export const setAlbum = (album: FocusedAlbum | null) => {
@@ -40,5 +40,7 @@ export const setAlbumStatus = (status: YTStatus, duration: number) => {
     albumState.status = status;
     if (status === "playing") {
         albumState.duration = duration;
+        albumState.currentIndex =
+            albumState.player?.playerInfo.playlistIndex ?? null;
     }
 };
