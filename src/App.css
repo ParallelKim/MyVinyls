@@ -64,17 +64,20 @@ html {
 
 .yt-controller {
     position: fixed;
-    top: calc(50vh - 8rem);
+    top: calc(50vh - 6rem);
     width: 100vw;
-    height: 8rem;
+    height: 6rem;
+    padding-bottom: 2rem;
+    padding-top: 2rem;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 2rem;
-    flex-direction: column;
     color: white;
     gap: 1rem;
     transition: color 1s ease-out, transform 0.5s ease-out;
+    background-color: #00000080;
 }
 
 .yt-ctrl-hidden {
@@ -88,8 +91,6 @@ html {
 .yt-progress {
     position: relative;
     width: 100%;
-    align-items: center;
-    justify-content: center;
 }
 
 .yt-progress > .yt-progress-bar {
@@ -107,6 +108,13 @@ html {
 .yt-icon:hover {
     color: #b00;
     transition: all 0.2s ease-out;
+}
+
+.yt-buttons {
+    display: flex;
+    gap: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .yt-buttons-disabled > *:hover {

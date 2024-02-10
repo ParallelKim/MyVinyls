@@ -93,8 +93,9 @@ export const YTController = () => {
                 <div className="yt-progress-indicator">⌾</div>
             </div>
             <div
-                className={snap.player ? "yt-buttons" : "yt-buttons-disabled"}
-                style={{ display: "flex", gap: "2rem" }}
+                className={
+                    "yt-buttons " + (snap.player ? "" : "yt-buttons-disabled")
+                }
             >
                 <Prev
                     onClick={() => {

@@ -1,3 +1,4 @@
+import { useGSAP } from "@gsap/react";
 import { Geometry, Base, Addition, Subtraction } from "@react-three/csg";
 import { Center, Text } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
@@ -9,6 +10,7 @@ import { subscribe, useSnapshot } from "valtio";
 
 export const AlbumInfo = () => {
     const snap = useSnapshot(albumState);
+    const animSnap = useSnapshot(animState);
     const scene = useThree((state) => state.scene);
 
     const panelRef = useRef<Group>(null);
@@ -33,6 +35,14 @@ export const AlbumInfo = () => {
             }),
         [scene]
     );
+
+    useGSAP(() => {
+        if (animSnap.currentAnim) {
+            const panel = panelRef.current;
+        } else {
+            const panel = panelRef.current;
+        }
+    }, [animSnap.currentAnim]);
 
     return (
         <group ref={panelRef}>
