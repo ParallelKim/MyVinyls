@@ -7,6 +7,7 @@ import { animState } from "@states/animation";
 import { useEffect, useRef, useState } from "react";
 import { DoubleSide, Group } from "three";
 import { subscribe, useSnapshot } from "valtio";
+import gsap from "gsap";
 
 export const AlbumInfo = () => {
     const snap = useSnapshot(albumState);
@@ -20,6 +21,17 @@ export const AlbumInfo = () => {
     const len = snap.album?.list.length ?? 2;
     const player = snap.player;
 
+    const panelTimeline = useRef<GSAPTimeline>();
+
+    useGSAP(() => {
+        if (panelRef.current) {
+            panelTimeline.current = gsap
+                .timeline()
+                .to(panelRef.current.position, { x: -100, duration: 10 })
+                .pause();
+        }
+    }, [animSnap.currentAnim]);
+
     useEffect(
         () =>
             subscribe(albumState, () => {
@@ -32,17 +44,13 @@ export const AlbumInfo = () => {
                         lpObj.add(panelRef.current);
                     }
                 }
+
+                if (animState.currentAnim === "starting") {
+                    panelTimeline.current?.play();
+                }
             }),
         [scene]
     );
-
-    useGSAP(() => {
-        if (animSnap.currentAnim) {
-            const panel = panelRef.current;
-        } else {
-            const panel = panelRef.current;
-        }
-    }, [animSnap.currentAnim]);
 
     return (
         <group ref={panelRef}>

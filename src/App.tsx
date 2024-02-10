@@ -2,16 +2,9 @@ import "./App.css";
 import { Canvas } from "@react-three/fiber";
 import { Scene } from "@components/Scene";
 import { AlbumInfo } from "./components/element/AlbumInfo";
-import {
-    Bounds,
-    // Bounds,
-    // OrbitControls,
-    Preload,
-    PresentationControls,
-} from "@react-three/drei";
-// import { UI } from "@components/element/ui/UI";
+import { Bounds, Preload, PresentationControls } from "@react-three/drei";
 import { Suspense } from "react";
-// import { AnimationManager } from "animations/AnimationManager";
+import { AnimationManager } from "animations/AnimationManager";
 import { UI } from "@components/element/ui/UI";
 
 const App = () => {
@@ -44,6 +37,7 @@ const App = () => {
                 <axesHelper args={[8]} />
                 <Preload all />
                 <UI />
+                <AnimationManager />
             </Canvas>
         </Suspense>
     );
