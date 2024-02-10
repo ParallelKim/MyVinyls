@@ -10,21 +10,5 @@
 //     const snap = useSnapshot(albumState);
 //     const refSnap = useSnapshot(refState);
 
-//     useEffect(() =>
-//         subscribe(albumState, () => {
-//             (() => {
-//                 const anim = youtubeTimeline.current;
-//                 if (!anim) return;
-//                 if (albumState.status === "playing") {
-//                     anim.play();
-//                 } else if (albumState.status === "paused") {
-//                     anim.pause();
-//                 } else if (albumState.status === "unstarted") {
-//                     anim.seek(0);
-//                 }
-//             })();
-//         })
-//     );
-
 //     return null;
 // };

@@ -1,8 +1,11 @@
 import { youtubeState } from "@constants/youtubeState";
-import { Html, useBounds } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import {
+    Html,
+    // useBounds
+} from "@react-three/drei";
+// import { useFrame } from "@react-three/fiber";
 import { albumState, setAlbumStatus, setPlayer } from "@states/album";
-import { refState } from "@states/refState";
+// import { refState } from "@states/refState";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useSnapshot } from "valtio";
 

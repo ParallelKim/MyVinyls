@@ -3,10 +3,10 @@ import { Next } from "./ui/Next";
 import { Play } from "./ui/Play";
 import { Prev } from "./ui/Prev";
 import { Pause } from "./ui/Pause";
-import { useSnapshot } from "valtio";
+import { subscribe, useSnapshot } from "valtio";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export const YTController = () => {
     const snap = useSnapshot(albumState);
@@ -18,19 +18,44 @@ export const YTController = () => {
             delay: 0,
             duration: snap.duration,
             ease: "none",
+            left: "100%",
         });
     }, [snap.duration]);
+
+    useEffect(() => {
+        window.onfocus = async () => {
+            if (ytTimeline.current && albumState.player) {
+                ytTimeline.current.seek(
+                    await albumState.player.getCurrentTime()
+                );
+            }
+        };
+
+        return subscribe(albumState, () => {
+            const anim = ytTimeline.current;
+            console.log(albumState.status, anim);
+            if (!anim) return;
+            if (albumState.status === "playing") {
+                anim.play();
+            } else if (albumState.status === "paused") {
+                anim.pause();
+            } else if (albumState.status === "unstarted") {
+                anim.seek(0);
+            }
+        });
+    });
 
     const control = (action: "play" | "pause") => async () => {
         if (albumState.player && ytTimeline.current) {
             console.log(action, albumState.player);
+            const anim = ytTimeline.current;
 
             if (action === "play") {
                 await albumState.player.playVideo();
-                ytTimeline.current.play();
+                anim.play();
             } else if (action === "pause") {
                 await albumState.player.pauseVideo();
-                ytTimeline.current.pause();
+                anim.pause();
             }
         }
     };
