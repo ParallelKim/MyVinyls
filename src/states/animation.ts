@@ -9,3 +9,7 @@ export const animState = proxy<{
     lastAnim: null,
     currentAnim: null,
 });
+
+export const setCurrentAnim = (anim: string | null) => {
+    animState.currentAnim = anim;
+};

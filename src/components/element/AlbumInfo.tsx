@@ -1,60 +1,43 @@
-import { useGSAP } from "@gsap/react";
 import { Geometry, Base, Addition, Subtraction } from "@react-three/csg";
 import { Center, Text } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { albumState } from "@states/album";
-import { animState } from "@states/animation";
+import { setPanel } from "@states/refState";
 import { useEffect, useRef, useState } from "react";
 import { DoubleSide, Group } from "three";
 import { subscribe, useSnapshot } from "valtio";
-import gsap from "gsap";
 
 export const AlbumInfo = () => {
-    const snap = useSnapshot(albumState);
-    const animSnap = useSnapshot(animState);
-    const scene = useThree((state) => state.scene);
-
-    const panelRef = useRef<Group>(null);
-
     const [hoveredIndex, setHoveredIndex] = useState(0);
 
+    const snap = useSnapshot(albumState);
     const len = snap.album?.list.length ?? 2;
     const player = snap.player;
 
-    const panelTimeline = useRef<GSAPTimeline>();
+    const scene = useThree((state) => state.scene);
+    const panelRef = useRef<Group>(null);
 
-    useGSAP(() => {
+    useEffect(() => {
         if (panelRef.current) {
-            panelTimeline.current = gsap
-                .timeline()
-                .to(panelRef.current.position, { x: -100, duration: 10 })
-                .pause();
+            setPanel(panelRef.current);
         }
-    }, [animSnap.currentAnim]);
+        return subscribe(albumState, () => {
+            if (albumState.album) {
+                const lpObj = scene.getObjectByName(
+                    "lpOBJ-" + albumState.album.id
+                );
 
-    useEffect(
-        () =>
-            subscribe(albumState, () => {
-                if (albumState.album) {
-                    const lpObj = scene.getObjectByName(
-                        "lpOBJ-" + albumState.album.id
-                    );
-
-                    if (lpObj && panelRef.current) {
-                        lpObj.add(panelRef.current);
-                    }
+                if (lpObj && panelRef.current) {
+                    lpObj.add(panelRef.current);
+                    panelRef.current.position.set(0, 0, 0);
                 }
-
-                if (animState.currentAnim === "starting") {
-                    panelTimeline.current?.play();
-                }
-            }),
-        [scene]
-    );
+            }
+        });
+    }, [scene]);
 
     return (
         <group ref={panelRef}>
-            {snap.album && !animState.currentAnim && (
+            {snap.album && (
                 <group>
                     <mesh
                         name="panel"
@@ -137,7 +120,7 @@ export const AlbumInfo = () => {
                                         >
                                             <mesh>
                                                 <planeGeometry
-                                                    args={[10, 1.15]}
+                                                    args={[10, 13 / len]}
                                                 />
                                                 <meshBasicMaterial
                                                     transparent

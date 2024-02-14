@@ -32,6 +32,10 @@ export const setAlbum = (album: FocusedAlbum | null) => {
     albumState.album = album;
 };
 
+export const setCurrentIndex = (index: number | null) => {
+    albumState.currentIndex = index;
+};
+
 export const setPlayer = (player: CustomYTPlayer) => {
     albumState.player = ref(player);
 };

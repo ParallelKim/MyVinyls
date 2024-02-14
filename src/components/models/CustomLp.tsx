@@ -15,7 +15,7 @@ import { useFrame } from "@react-three/fiber";
 import { albumState, setAlbum } from "@states/album";
 import { Album } from "../../types/Album";
 
-import { setCurrentRecord } from "@states/refState";
+import { setCurrentCover } from "@states/refState";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -39,7 +39,6 @@ const RECORD_POS = {
     focus: new Vector3(4.5, 0, 0.03),
 };
 
-const FollowCam = new Vector3(-1, 0, -6);
 const LookAtPos = new Vector3(-1);
 
 const gap = 8.9;
@@ -74,13 +73,17 @@ export const CustomLp = ({
 
     const lpRef = useRef<Group>(null);
 
+    const FollowCam = new Vector3(-1, 0, -6);
+
     useFrame(({ camera }) => {
         if (!lpRef.current) return;
-        const record = lpRef.current.children.find(
+        const record = lpRef.current?.children.find(
             (ch) => ch.name === "record"
         );
+        const cover = lpRef.current?.children.find((ch) => ch.name === "cover");
 
         if (!record) return;
+        if (!cover) return;
         if (!parent.current) return;
 
         if (isFocus) {
@@ -94,7 +97,7 @@ export const CustomLp = ({
 
             if (dis < 3 && dis >= 0.01) {
                 record.position.lerp(RECORD_POS.focus, 2 * speed);
-                setCurrentRecord(record);
+                setCurrentCover(cover);
             }
 
             if (dis < 0.01 && dis > 0) {
@@ -134,7 +137,10 @@ export const CustomLp = ({
             dispose={null}
             renderOrder={10}
         >
-            <group position={[-0.025, 0, 0]}>
+            <group
+                name="cover"
+                position={[-0.025, 0, 0]}
+            >
                 <mesh
                     castShadow
                     receiveShadow
