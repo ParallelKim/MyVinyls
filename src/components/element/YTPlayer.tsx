@@ -1,11 +1,6 @@
 import { youtubeState } from "@constants/youtubeState";
-import {
-    Html,
-    // useBounds
-} from "@react-three/drei";
-// import { useFrame } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import { albumState, setAlbumStatus, setPlayer } from "@states/album";
-// import { refState } from "@states/refState";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useSnapshot } from "valtio";
 
@@ -15,27 +10,6 @@ export const YTPlayer = () => {
     const snap = useSnapshot(albumState);
     const query = snap.album?.url.split("=") ?? [];
     const playlist = query.pop();
-
-    // const bounds = useBounds();
-
-    // useFrame(() => {
-    //     if (
-    //         snap.status === "playing" &&
-    //         refState.lpPlayer &&
-    //         refState.currentRecord &&
-    //         refState.root
-    //     ) {
-    //         lerp3Vec(refState.root.position, LP_PLAYER_POS);
-    //         lerp3Vec(refState.currentRecord.position, LP_PLAYER_POS);
-    //         if (
-    //             refState.root.position.distanceTo(LP_PLAYER_POS) <= 0.5 &&
-    //             !lerped.current
-    //         ) {
-    //             lerped.current = true;
-    //         bounds.refresh(refState.lpPlayer).fit();
-    //         }
-    //     }
-    // });
 
     if (!playlist) return null;
 
