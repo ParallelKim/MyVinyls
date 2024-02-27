@@ -1,34 +1,94 @@
+import { useFrame, useThree } from "@react-three/fiber";
+import { animState, setCurrentAnim, setIsPlaying } from "@states/animation";
+import { useEffect, useRef } from "react";
+import { subscribe, useSnapshot } from "valtio";
+
 import { useGSAP } from "@gsap/react";
 import { albumState } from "@states/album";
-import { animState, setCurrentAnim } from "@states/animation";
 import { refState } from "@states/refState";
 import gsap from "gsap";
-import { useRef, useEffect } from "react";
-import { useSnapshot, subscribe } from "valtio";
+import { Vector3 } from "three";
+
+const recordNewPos = new Vector3(3.9, -0.2, -28);
 
 export const AnimationManager = () => {
+    const { camera, controls } = useThree();
+
     const snap = useSnapshot(albumState);
+
     const ytTimeline = useRef<GSAPTimeline>();
     const panelTimeline = useRef<GSAPTimeline>();
 
     useGSAP(() => {
         ytTimeline.current = gsap.timeline().to(".yt-progress-indicator", {
+            lazy: true,
             delay: 0,
             duration: snap.duration,
             ease: "none",
             left: "100%",
         });
 
-        const { panel, currentCover } = refState;
-        if (panel && currentCover) {
+        const { root, panel, currentCover, currentRecord } = refState;
+        if (panel && currentCover && currentRecord && root) {
             panelTimeline.current = gsap
-                .timeline()
-                .to([panel.position, currentCover.position], {
-                    x: -40,
-                    duration: 3,
-                });
+                .timeline({
+                    defaults: { ease: "power2" },
+                    onComplete: () => {
+                        console.log("starting is ended");
+
+                        setCurrentAnim("starting-step-2");
+                    },
+                })
+                .to(
+                    root.position,
+                    {
+                        y: 5,
+                        duration: 6,
+                    },
+                    0
+                )
+                .to(
+                    root.rotation,
+                    {
+                        x: (-Math.PI * 3) / 8,
+                        duration: 6,
+                    },
+                    0
+                )
+                .to(
+                    [panel.position, currentCover.position],
+                    {
+                        x: -120,
+                        z: -10,
+                        duration: 6,
+                    },
+                    0
+                );
         }
     }, [snap.currentIndex]);
+
+    useFrame(() => {
+        if (animState.currentAnim === "starting-step-2") {
+            const { currentRecord, station } = refState;
+
+            if (currentRecord) {
+                const dis = currentRecord.position.distanceTo(recordNewPos);
+                const speed = Math.min(0.1, 1 / dis);
+                if (dis < 0.001) {
+                    currentRecord.position.copy(recordNewPos);
+                    currentRecord.up.set(0, 1, 0);
+                    setCurrentAnim("starting-step-3");
+                    console.log("starting-step-2 is ended");
+                    console.log(controls, camera);
+                } else {
+                    currentRecord.position.lerp(recordNewPos, speed);
+                }
+            }
+        }
+
+        camera.updateMatrixWorld();
+        camera.updateProjectionMatrix();
+    });
 
     const lastSongRef = useRef<number | null>(null);
 
@@ -76,19 +136,20 @@ export const AnimationManager = () => {
             }
 
             if (!albumState.album) {
-                setCurrentAnim(null);
+                setCurrentAnim("idle");
                 lastSongRef.current = null;
             }
         });
 
         const animSub = subscribe(animState, () => {
             const currentAnim = animState.currentAnim;
-            console.log(currentAnim, refState.panel);
+            console.log("currentAnim:", currentAnim);
 
-            if (panelTimeline.current) {
-                if (currentAnim === "starting") {
-                    panelTimeline.current.play();
-                }
+            if (currentAnim === "starting") {
+                if (panelTimeline.current) panelTimeline.current.restart();
+                setIsPlaying(true);
+            } else if (currentAnim === "starting-step-3") {
+                setIsPlaying(false);
             }
         });
 

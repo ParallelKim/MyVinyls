@@ -4,6 +4,7 @@ import { proxy } from "valtio";
 export const refState = proxy<{
     root: Group<Object3DEventMap> | null;
     lpPlayer: Group<Object3DEventMap> | null;
+    station: Group<Object3DEventMap> | null;
     shelf: Group<Object3DEventMap> | null;
     currentCover: Object3D | null;
     currentRecord: Object3D | null;
@@ -11,6 +12,7 @@ export const refState = proxy<{
 }>({
     root: null,
     lpPlayer: null,
+    station: null,
     shelf: null,
     currentCover: null,
     currentRecord: null,
@@ -27,6 +29,9 @@ export const setShelf = (shelf: Group<Object3DEventMap>) => {
 
 export const setLpPlayer = (lpPlayer: Group<Object3DEventMap>) => {
     refState.lpPlayer = lpPlayer;
+};
+export const setStation = (station: Group<Object3DEventMap>) => {
+    refState.station = station;
 };
 
 export const setCurrentCover = (cover: Object3D) => {

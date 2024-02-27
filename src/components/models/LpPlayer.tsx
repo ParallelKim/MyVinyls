@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei";
-import { setLpPlayer } from "@states/refState";
+import { setLpPlayer, setStation } from "@states/refState";
 import { useEffect, useRef } from "react";
 import { Group } from "three";
 import { GLTF } from "three-stdlib";
@@ -25,10 +25,12 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
     ) as GLTFResult;
 
     const lpRef = useRef<Group>(null);
+    const stationRef = useRef<Group>(null);
 
     useEffect(() => {
-        if (lpRef.current) {
+        if (lpRef.current && stationRef.current) {
             setLpPlayer(lpRef.current);
+            setStation(stationRef.current);
         }
     });
 
@@ -42,6 +44,11 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
             scale={0.4}
             rotation={[0, Math.PI / 2, 0]}
         >
+            <group
+                ref={stationRef}
+                scale={0.5}
+                position={[0.03, 1.5, 0.75]}
+            />
             <group scale={0.025}>
                 <mesh
                     receiveShadow

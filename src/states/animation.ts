@@ -7,9 +7,13 @@ export const animState = proxy<{
 }>({
     isPlaying: false,
     lastAnim: null,
-    currentAnim: null,
+    currentAnim: "idle",
 });
 
 export const setCurrentAnim = (anim: string | null) => {
     animState.currentAnim = anim;
+};
+
+export const setIsPlaying = (isPlaying: boolean) => {
+    animState.isPlaying = isPlaying;
 };

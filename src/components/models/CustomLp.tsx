@@ -15,7 +15,8 @@ import { useFrame } from "@react-three/fiber";
 import { albumState, setAlbum } from "@states/album";
 import { Album } from "../../types/Album";
 
-import { setCurrentCover } from "@states/refState";
+import { setCurrentCover, setCurrentRecord } from "@states/refState";
+import { animState } from "@states/animation";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -86,33 +87,41 @@ export const CustomLp = ({
         if (!cover) return;
         if (!parent.current) return;
 
-        if (isFocus) {
-            camera.attach(lpRef.current);
+        if (
+            animState.currentAnim === "idle" ||
+            animState.currentAnim === "starting"
+        ) {
+            if (isFocus) {
+                camera.attach(lpRef.current);
 
-            const dis = FollowCam.distanceTo(lpRef.current.position);
-            const speed = Math.min(0.1, 1 / dis);
+                const dis = FollowCam.distanceTo(lpRef.current.position);
+                const speed = Math.min(0.1, 1 / dis);
 
-            lpRef.current.position.lerp(FollowCam, speed);
-            lpRef.current.lookAt(camera.position.clone().sub(LookAtPos));
+                lpRef.current.position.lerp(FollowCam, speed);
+                lpRef.current.lookAt(camera.position.clone().sub(LookAtPos));
 
-            if (dis < 3 && dis >= 0.01) {
-                record.position.lerp(RECORD_POS.focus, 2 * speed);
-                setCurrentCover(cover);
+                if (dis < 3 && dis >= 0.01) {
+                    record.position.lerp(RECORD_POS.focus, 2 * speed);
+                    setCurrentCover(cover);
+                    setCurrentRecord(record);
+                }
+
+                if (dis < 0.01 && dis > 0) {
+                    lpRef.current.position.copy(FollowCam);
+                }
+
+                parent.current.attach(lpRef.current);
+            } else {
+                const dis = INIT_STATE.position.distanceTo(
+                    lpRef.current.position
+                );
+                const speed = Math.min(0.1, 2 / dis);
+
+                lpRef.current.position.lerp(INIT_STATE.position, speed);
+                lpRef.current.rotation.copy(INIT_STATE.rotation);
+
+                record.position.lerp(RECORD_POS.init, speed);
             }
-
-            if (dis < 0.01 && dis > 0) {
-                lpRef.current.position.copy(FollowCam);
-            }
-
-            parent.current.attach(lpRef.current);
-        } else {
-            const dis = INIT_STATE.position.distanceTo(lpRef.current.position);
-            const speed = Math.min(0.1, 2 / dis);
-
-            lpRef.current.position.lerp(INIT_STATE.position, speed);
-            lpRef.current.rotation.copy(INIT_STATE.rotation);
-
-            record.position.lerp(RECORD_POS.init, speed);
         }
     });
 

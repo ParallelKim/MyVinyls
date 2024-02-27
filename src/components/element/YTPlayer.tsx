@@ -1,14 +1,15 @@
-import { youtubeState } from "@constants/youtubeState";
-import { Html } from "@react-three/drei";
 import { albumState, setAlbumStatus, setPlayer } from "@states/album";
 import YouTube, { YouTubePlayer } from "react-youtube";
+
+import { youtubeState } from "@constants/youtubeState";
+import { Html } from "@react-three/drei";
 import { useSnapshot } from "valtio";
 
 export const YTPlayer = () => {
     const isLoop = false;
 
     const snap = useSnapshot(albumState);
-    const query = snap.album?.url.split("=") ?? [];
+    const query = snap.album?.url.split("list=") ?? [];
     const playlist = query.pop();
 
     if (!playlist) return null;
@@ -16,7 +17,7 @@ export const YTPlayer = () => {
     return (
         <Html
             transform
-            occlude="blending"
+            occlude
             position={[0, 2.5, -0.16]}
             rotation={[Math.PI / 4.75, Math.PI, 0]}
             scale={0.2}
