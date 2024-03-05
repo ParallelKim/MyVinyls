@@ -18,7 +18,7 @@ export const CHIE: Artist = {
                 "MAMAMOO - Piano Man",
                 "아이유 - 금요일에 만나요",
             ],
-            cover: "https://source.unsplash.com/random",
+            cover: "",
             url: "https://www.youtube.com/watch?v=qJZdnRqlkk8&list=PLvIutyVhTSpN8YS4UPqPN-Ozt8n5u5mit",
         },
     ],

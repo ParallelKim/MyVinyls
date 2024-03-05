@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { CHIE } from "@constants/chie";
+import { JUNGWOO } from "@constants/jungwoo";
 import { setShelf } from "@states/refState";
 import { Group } from "three";
 import { CustomLp } from "../models/CustomLp";
@@ -22,11 +22,10 @@ export const LpGroup = () => {
             rotation={[0, Math.PI, 0]}
             scale={0.3}
         >
-            {CHIE.albums.map((album, idx) => (
+            {JUNGWOO.albums.map((album, idx) => (
                 <CustomLp
                     key={album.title}
                     order={idx}
-                    parent={shelfRef}
                     album={album}
                 />
             ))}

@@ -1,12 +1,14 @@
 import { useEffect, useRef } from "react";
-import { Group } from "three";
+
 import { setRoot } from "@states/refState";
-import { TableGroup } from "./models/TableGroup";
-import { RoomGroup } from "./models/RoomGroup";
+import { Group } from "three";
+import { Billboard } from "./element/Billboard";
+import { YTPlayer } from "./element/YTPlayer";
+import { LpGroup } from "./groups/LpGroup";
 import { AudioGroup } from "./models/AudioGroup";
 import { LpPlayer } from "./models/LpPlayer";
-import { LpGroup } from "./groups/LpGroup";
-import { YTPlayer } from "./element/YTPlayer";
+import { RoomGroup } from "./models/RoomGroup";
+import { TableGroup } from "./models/TableGroup";
 
 export const Scene = () => {
     const rootRef = useRef<Group>(null);
@@ -33,6 +35,7 @@ export const Scene = () => {
             <LpPlayer />
             <LpGroup />
             <YTPlayer />
+            <Billboard />
         </group>
     );
 };

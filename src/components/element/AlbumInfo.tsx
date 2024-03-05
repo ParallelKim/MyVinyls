@@ -1,43 +1,30 @@
 import { Addition, Base, Geometry, Subtraction } from "@react-three/csg";
 import { Center, Text } from "@react-three/drei";
-import { DoubleSide, Group } from "three";
-import { subscribe, useSnapshot } from "valtio";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { DoubleSide, Vector3 } from "three";
 
 import { albumState } from "@states/album";
-import { setPanel } from "@states/refState";
-import { useThree } from "@react-three/fiber";
+import { useSnapshot } from "valtio";
 
-export const AlbumInfo = () => {
+export const AlbumInfo = ({ position }: { position?: Vector3 }) => {
     const [hoveredIndex, setHoveredIndex] = useState(0);
 
     const snap = useSnapshot(albumState);
     const len = snap.album?.list.length ?? 2;
     const player = snap.player;
 
-    const scene = useThree((state) => state.scene);
-    const panelRef = useRef<Group>(null);
-
     useEffect(() => {
-        if (panelRef.current) {
-            setPanel(panelRef.current);
-        }
-
-        return subscribe(albumState, () => {
-            if (albumState.album) {
-                const lpObj = scene.getObjectByName(
-                    "lpOBJ-" + albumState.album.id
-                );
-
-                if (lpObj && panelRef.current) {
-                    lpObj.add(panelRef.current);
-                }
-            }
-        });
-    }, [scene]);
+        // if (panelRef.current) {
+        //     setPanel(panelRef.current);
+        // }
+        // return subscribe(albumState, () => {});
+    }, []);
 
     return (
-        <group ref={panelRef}>
+        <group
+            name="album info"
+            position={position}
+        >
             {snap.album && (
                 <group>
                     <mesh

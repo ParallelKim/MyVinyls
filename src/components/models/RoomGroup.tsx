@@ -1,5 +1,4 @@
 import { useGLTF } from "@react-three/drei";
-import { MeshBasicMaterial } from "three";
 import { GLTF } from "three-stdlib";
 
 type GLTFResult = GLTF & {
@@ -30,16 +29,22 @@ export const RoomGroup = (props: JSX.IntrinsicElements["group"]) => {
                 position={[0, 1.5, 0.443]}
                 scale={[2, 1, 1]}
             />
-            <mesh
+            {/* <mesh
                 geometry={nodes.Room_baked.geometry}
-                material={new MeshBasicMaterial({ color: "green", side: 1 })}
+                material={
+                    new MeshBasicMaterial({
+                        color: "green",
+                        opacity: 1,
+                        side: 0,
+                    })
+                }
                 position={[-2, 0, 0.454]}
             />
             <mesh
                 geometry={nodes.Floor_baked.geometry}
-                material={new MeshBasicMaterial({ color: "red" })}
+                material={new MeshBasicMaterial({ color: "red", opacity: 1 })}
                 position={[-2, 0, 0.454]}
-            />
+            /> */}
         </group>
     );
 };

@@ -1,22 +1,20 @@
-import { RefObject, useRef } from "react";
+import { albumState, setAlbum } from "@states/album";
 import {
     Euler,
     Group,
     MeshStandardMaterial,
-    Object3DEventMap,
     TextureLoader,
     Vector3,
 } from "three";
+
 import { useGLTF } from "@react-three/drei";
-import { GLTF } from "three-stdlib";
-import { useSnapshot } from "valtio";
 import { useFrame } from "@react-three/fiber";
-
-import { albumState, setAlbum } from "@states/album";
+import { refState } from "@states/refState";
+import { useRef } from "react";
+import { GLTF } from "three-stdlib";
+import { easeOutLerp } from "transform/position";
+import { useSnapshot } from "valtio";
 import { Album } from "../../types/Album";
-
-import { setCurrentCover, setCurrentRecord } from "@states/refState";
-import { animState } from "@states/animation";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -40,19 +38,13 @@ const RECORD_POS = {
     focus: new Vector3(4.5, 0, 0.03),
 };
 
-const LookAtPos = new Vector3(-1);
+// const Origin = new Vector3(0, 0, 0);
 
 const gap = 8.9;
 
-export const CustomLp = ({
-    album,
-    order,
-    parent,
-}: {
-    album: Album;
-    order: number;
-    parent: RefObject<Group<Object3DEventMap>>;
-}) => {
+const temp = new Vector3();
+
+export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
     const { nodes, materials } = useGLTF(
         "/lpRecord-transformed.glb"
     ) as GLTFResult;
@@ -74,54 +66,20 @@ export const CustomLp = ({
 
     const lpRef = useRef<Group>(null);
 
-    const FollowCam = new Vector3(-1, 0, -6);
-
     useFrame(({ camera }) => {
-        if (!lpRef.current) return;
-        const record = lpRef.current?.children.find(
-            (ch) => ch.name === "record"
-        );
-        const cover = lpRef.current?.children.find((ch) => ch.name === "cover");
+        if (!lpRef.current || !refState.board || !refState.shelf) return;
 
-        if (!record) return;
-        if (!cover) return;
-        if (!parent.current) return;
+        if (isFocus) {
+            refState.board.getWorldPosition(temp);
+            lpRef.current.parent?.worldToLocal(temp);
 
-        if (
-            animState.currentAnim === "idle" ||
-            animState.currentAnim === "starting"
-        ) {
-            if (isFocus) {
-                camera.attach(lpRef.current);
-
-                const dis = FollowCam.distanceTo(lpRef.current.position);
-                const speed = Math.min(0.1, 1 / dis);
-
-                lpRef.current.position.lerp(FollowCam, speed);
-                lpRef.current.lookAt(camera.position.clone().sub(LookAtPos));
-
-                if (dis < 3 && dis >= 0.01) {
-                    record.position.lerp(RECORD_POS.focus, 2 * speed);
-                    setCurrentCover(cover);
-                    setCurrentRecord(record);
-                }
-
-                if (dis < 0.01 && dis > 0) {
-                    lpRef.current.position.copy(FollowCam);
-                }
-
-                parent.current.attach(lpRef.current);
-            } else {
-                const dis = INIT_STATE.position.distanceTo(
-                    lpRef.current.position
-                );
-                const speed = Math.min(0.1, 2 / dis);
-
-                lpRef.current.position.lerp(INIT_STATE.position, speed);
-                lpRef.current.rotation.copy(INIT_STATE.rotation);
-
-                record.position.lerp(RECORD_POS.init, speed);
-            }
+            easeOutLerp(lpRef.current.position, temp);
+            lpRef.current.lookAt(
+                camera.position.clone().add(new Vector3(1, 0, 0))
+            );
+        } else {
+            lpRef.current.position.copy(INIT_STATE.position);
+            lpRef.current.rotation.copy(INIT_STATE.rotation);
         }
     });
 
@@ -138,13 +96,12 @@ export const CustomLp = ({
                     if (isFocus) {
                         setAlbum(null);
                     } else {
-                        setAlbum({ ...album, lpObject: lpRef.current });
+                        setAlbum(album);
                     }
                 }
             }}
             scale={0.722}
             dispose={null}
-            renderOrder={10}
         >
             <group
                 name="cover"

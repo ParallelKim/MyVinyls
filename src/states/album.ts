@@ -1,6 +1,7 @@
-import { YouTubePlayer } from "react-youtube";
-import { FocusedAlbum } from "../types/Album";
 import { proxy, ref } from "valtio";
+
+import { YouTubePlayer } from "react-youtube";
+import { Album } from "../types/Album";
 
 export type YTStatus =
     | "unstarted"
@@ -15,7 +16,7 @@ export type CustomYTPlayer = YouTubePlayer & {
 };
 
 export const albumState = proxy<{
-    album: FocusedAlbum | null;
+    album: Album | null;
     status: YTStatus;
     player: CustomYTPlayer | null;
     duration: number;
@@ -28,7 +29,7 @@ export const albumState = proxy<{
     currentIndex: null,
 });
 
-export const setAlbum = (album: FocusedAlbum | null) => {
+export const setAlbum = (album: Album | null) => {
     albumState.album = album;
 };
 

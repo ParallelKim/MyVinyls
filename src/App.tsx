@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { Preload, PresentationControls } from "@react-three/drei";
+import { CameraControls, Preload } from "@react-three/drei";
 
 import { Scene } from "@components/Scene";
 import { UI } from "@components/element/ui/UI";
@@ -9,7 +9,6 @@ import { animState } from "@states/animation";
 import { AnimationManager } from "animations/AnimationManager";
 import { Suspense } from "react";
 import { useSnapshot } from "valtio";
-import { AlbumInfo } from "./components/element/AlbumInfo";
 
 const App = () => {
     const isPlaying = useSnapshot(animState).isPlaying;
@@ -22,20 +21,20 @@ const App = () => {
                 camera={{
                     fov: 45,
                     position: [0, 10, -30],
-                    frustumCulled: true,
+                    // frustumCulled: true,
                 }}
                 // frameloop="demand" // 이거 Presentation control이랑 호환성이 낮음
             >
-                <PresentationControls
+                {/* <PresentationControls
                     enabled={!isPlaying}
                     snap
                     polar={[-Math.PI / 12, Math.PI / 12]}
                     azimuth={[-Math.PI / 6, Math.PI / 6]}
-                >
-                    <Scene />
-                </PresentationControls>
+                > */}
+                <CameraControls />
+                <Scene />
+                {/* </PresentationControls> */}
                 <AnimationManager />
-                <AlbumInfo />
                 <gridHelper args={[100, 100]} />
                 <axesHelper args={[8]} />
                 <Preload all />
