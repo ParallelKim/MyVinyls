@@ -1,4 +1,5 @@
 import { albumState, setAlbum } from "@states/album";
+import { animState, setCurrentAnim } from "@states/animation";
 import {
     Euler,
     Group,
@@ -12,7 +13,7 @@ import { useFrame } from "@react-three/fiber";
 import { refState } from "@states/refState";
 import { useRef } from "react";
 import { GLTF } from "three-stdlib";
-import { easeOutLerp } from "transform/position";
+import { easeOutLerp } from "utils/position";
 import { useSnapshot } from "valtio";
 import { Album } from "../../types/Album";
 
@@ -66,20 +67,53 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
 
     const lpRef = useRef<Group>(null);
 
+    const cover = lpRef.current?.getObjectByName("cover");
+    const record = lpRef.current?.getObjectByName("record");
+
     useFrame(({ camera }) => {
         if (!lpRef.current || !refState.board || !refState.shelf) return;
 
         if (isFocus) {
             refState.board.getWorldPosition(temp);
-            lpRef.current.parent?.worldToLocal(temp);
+            lpRef.current.parent
+                ?.worldToLocal(temp)
+                .add(new Vector3(3, -1, -3));
 
-            easeOutLerp(lpRef.current.position, temp);
+            easeOutLerp({
+                target: lpRef.current.position,
+                goal: temp,
+                onEnded: () => {
+                    setCurrentAnim("focusing");
+                    console.log("포커스 완료");
+                },
+            });
             lpRef.current.lookAt(
-                camera.position.clone().add(new Vector3(1, 0, 0))
+                camera.position.clone().add(new Vector3(0, 0, 0))
             );
+
+            if (!cover || !record) return;
+            if (animState.currentAnim === "focusing") {
+                // lp랑 커버 따로 이동시키기
+                easeOutLerp({ target: cover.position, goal: new Vector3(-5) });
+                easeOutLerp({
+                    target: record.position,
+                    goal: new Vector3(-0.5),
+                });
+            }
         } else {
-            lpRef.current.position.copy(INIT_STATE.position);
             lpRef.current.rotation.copy(INIT_STATE.rotation);
+
+            easeOutLerp({
+                target: lpRef.current.position,
+                goal: INIT_STATE.position,
+            });
+
+            if (!cover || !record) return;
+            easeOutLerp({ target: cover.position });
+            easeOutLerp({
+                target: record.position,
+                goal: new Vector3(0.5),
+            });
         }
     });
 

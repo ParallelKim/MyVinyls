@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { DoubleSide, Vector3 } from "three";
 
 import { albumState } from "@states/album";
+import { animState } from "@states/animation";
 import { useSnapshot } from "valtio";
 
 export const AlbumInfo = ({ position }: { position?: Vector3 }) => {
@@ -12,6 +13,8 @@ export const AlbumInfo = ({ position }: { position?: Vector3 }) => {
     const snap = useSnapshot(albumState);
     const len = snap.album?.list.length ?? 2;
     const player = snap.player;
+
+    const animSnap = useSnapshot(animState);
 
     useEffect(() => {
         // if (panelRef.current) {
@@ -25,7 +28,7 @@ export const AlbumInfo = ({ position }: { position?: Vector3 }) => {
             name="album info"
             position={position}
         >
-            {snap.album && (
+            {snap.album && animSnap.currentAnim === "focusing" && (
                 <group>
                     <mesh
                         name="panel"

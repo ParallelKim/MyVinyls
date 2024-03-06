@@ -3,7 +3,7 @@ import { proxy } from "valtio";
 export const animState = proxy<{
     isPlaying: boolean;
     lastAnim: null;
-    currentAnim: null | string;
+    currentAnim: null | string | "idle" | "focusing";
 }>({
     isPlaying: false,
     lastAnim: null,
