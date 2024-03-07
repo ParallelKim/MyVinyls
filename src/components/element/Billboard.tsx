@@ -6,13 +6,11 @@ import { setObject } from "@states/refState";
 import { easeOutLerp } from "utils/position";
 import { AlbumInfo } from "./AlbumInfo";
 
-const LookAtPos = new Vector3(1);
-
 export const Billboard = () => {
     const boardRef = useRef<Group>(null);
     const wrapperRef = useRef<Group>(null);
 
-    const FollowCam = new Vector3(-1, 0, -6);
+    const FollowCam = new Vector3(0, 0, -6);
 
     useFrame(({ camera }) => {
         if (!boardRef.current || !wrapperRef.current) return;
@@ -21,9 +19,8 @@ export const Billboard = () => {
         easeOutLerp({
             target: boardRef.current.position,
             goal: FollowCam,
-            speedFactor: 0.5,
         });
-        boardRef.current.lookAt(camera.position.clone().add(LookAtPos));
+        boardRef.current.lookAt(camera.position.clone());
 
         wrapperRef.current.attach(boardRef.current);
     });
@@ -40,6 +37,7 @@ export const Billboard = () => {
             scale={0.2}
         >
             <group
+                position={[0, 70, 0]}
                 name="bill board"
                 ref={boardRef}
             >

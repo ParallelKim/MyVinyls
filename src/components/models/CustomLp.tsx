@@ -35,8 +35,13 @@ type GLTFResult = GLTF & {
 };
 
 const RECORD_POS = {
-    init: new Vector3(0.5, 0, 0.03),
-    focus: new Vector3(4.5, 0, 0.03),
+    init: new Vector3(0.5, 0, 0),
+    focus: new Vector3(-0.5, 0, 0),
+};
+
+const COVER_POS = {
+    init: new Vector3(0, 0, 0),
+    focus: new Vector3(-5, 0, 0),
 };
 
 // const Origin = new Vector3(0, 0, 0);
@@ -67,37 +72,40 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
 
     const lpRef = useRef<Group>(null);
 
-    const cover = lpRef.current?.getObjectByName("cover");
-    const record = lpRef.current?.getObjectByName("record");
-
     useFrame(({ camera }) => {
         if (!lpRef.current || !refState.board || !refState.shelf) return;
 
+        const cover = lpRef.current.getObjectByName("cover");
+        const record = lpRef.current.getObjectByName("record");
+
         if (isFocus) {
             refState.board.getWorldPosition(temp);
-            lpRef.current.parent
-                ?.worldToLocal(temp)
-                .add(new Vector3(3, -1, -3));
+            lpRef.current.parent?.worldToLocal(temp);
 
-            easeOutLerp({
-                target: lpRef.current.position,
-                goal: temp,
-                onEnded: () => {
-                    setCurrentAnim("focusing");
-                    console.log("포커스 완료");
-                },
-            });
-            lpRef.current.lookAt(
-                camera.position.clone().add(new Vector3(0, 0, 0))
+            easeOutLerp(
+                animState.currentAnim === "focusing"
+                    ? {
+                          target: lpRef.current.position,
+                          goal: temp,
+                          speedFactor: 6,
+                      }
+                    : {
+                          target: lpRef.current.position,
+                          goal: temp,
+                          onUpdate: (dis) => {
+                              if (dis < 0.1) setCurrentAnim("focusing");
+                          },
+                      }
             );
+            lpRef.current.lookAt(camera.position.clone());
 
             if (!cover || !record) return;
             if (animState.currentAnim === "focusing") {
                 // lp랑 커버 따로 이동시키기
-                easeOutLerp({ target: cover.position, goal: new Vector3(-5) });
+                easeOutLerp({ target: cover.position, goal: COVER_POS.focus });
                 easeOutLerp({
                     target: record.position,
-                    goal: new Vector3(-0.5),
+                    goal: RECORD_POS.focus,
                 });
             }
         } else {
@@ -109,10 +117,10 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
             });
 
             if (!cover || !record) return;
-            easeOutLerp({ target: cover.position });
+            easeOutLerp({ target: cover.position, goal: COVER_POS.init });
             easeOutLerp({
                 target: record.position,
-                goal: new Vector3(0.5),
+                goal: RECORD_POS.init,
             });
         }
     });
@@ -121,7 +129,7 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
         <group
             name={"lpOBJ-" + album.id}
             ref={lpRef}
-            position={[gap * order, 0, 0]}
+            position={[gap * order, 0, 0.03]}
             rotation={INIT_STATE.rotation}
             onClick={(e) => {
                 e.stopPropagation();
@@ -139,7 +147,7 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
         >
             <group
                 name="cover"
-                position={[-0.025, 0, 0]}
+                position={COVER_POS.init}
             >
                 <mesh
                     castShadow
@@ -168,11 +176,11 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
             </group>
             <mesh
                 name="record"
+                position={RECORD_POS.init}
                 castShadow
                 receiveShadow
                 geometry={nodes["Cylinder001_Material_#85_0"].geometry}
                 material={materials.Material_85}
-                position={RECORD_POS.init}
                 scale={4.5}
             />
         </group>

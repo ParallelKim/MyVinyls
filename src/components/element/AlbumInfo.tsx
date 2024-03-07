@@ -1,13 +1,13 @@
 import { Addition, Base, Geometry, Subtraction } from "@react-three/csg";
 import { Center, Text } from "@react-three/drei";
-import { useEffect, useState } from "react";
-import { DoubleSide, Vector3 } from "three";
 
 import { albumState } from "@states/album";
 import { animState } from "@states/animation";
+import { useState } from "react";
+import { DoubleSide } from "three";
 import { useSnapshot } from "valtio";
 
-export const AlbumInfo = ({ position }: { position?: Vector3 }) => {
+export const AlbumInfo = () => {
     const [hoveredIndex, setHoveredIndex] = useState(0);
 
     const snap = useSnapshot(albumState);
@@ -16,20 +16,13 @@ export const AlbumInfo = ({ position }: { position?: Vector3 }) => {
 
     const animSnap = useSnapshot(animState);
 
-    useEffect(() => {
-        // if (panelRef.current) {
-        //     setPanel(panelRef.current);
-        // }
-        // return subscribe(albumState, () => {});
-    }, []);
-
     return (
         <group
             name="album info"
-            position={position}
+            position={[-5, 0, 0]}
         >
-            {snap.album && animSnap.currentAnim === "focusing" && (
-                <group>
+            {snap.album && (
+                <group visible={animSnap.currentAnim === "focusing"}>
                     <mesh
                         name="panel"
                         position={[0, 0, -10]}
@@ -57,7 +50,7 @@ export const AlbumInfo = ({ position }: { position?: Vector3 }) => {
                         position={[0, 0, -5]}
                     >
                         <Text
-                            position={[4, 9, 0]}
+                            position={[4, 9.5, 0]}
                             fontSize={1.5}
                             font="/Pretendard.woff"
                         >
