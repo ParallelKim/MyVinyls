@@ -22,7 +22,11 @@ export const AlbumInfo = () => {
             position={[-5, 0, 0]}
         >
             {snap.album && (
-                <group visible={animSnap.currentAnim === "focusing"}>
+                <group
+                    visible={["focusing", "starting"].includes(
+                        animSnap.currentAnim ?? ""
+                    )}
+                >
                     <mesh
                         name="panel"
                         position={[0, 0, -10]}
@@ -173,93 +177,67 @@ export const AlbumInfo = () => {
                                     />
                                 </mesh>
                             )}
-                            {snap.player &&
-                                (() => {
-                                    const currentIndex =
-                                        snap.player?.playerInfo.playlistIndex;
-                                    if (
-                                        typeof currentIndex === "number" &&
-                                        currentIndex >= 0
-                                    ) {
-                                        return (
-                                            <group>
-                                                <mesh
-                                                    name="playingBack"
-                                                    position={[2, -7, -0.2]}
-                                                >
-                                                    <Geometry>
-                                                        <Base>
-                                                            <planeGeometry
-                                                                args={[10, 20]}
-                                                            />
-                                                        </Base>
-                                                        <Addition
-                                                            position={[5, 0, 0]}
-                                                        >
-                                                            <circleGeometry
-                                                                args={[
-                                                                    10,
-                                                                    64,
-                                                                    -Math.PI /
-                                                                        2,
-                                                                    Math.PI,
-                                                                ]}
-                                                            />
-                                                        </Addition>
-                                                        <Subtraction
-                                                            position={[
-                                                                5,
-                                                                -(
-                                                                    13 *
-                                                                    (currentIndex +
-                                                                        1)
-                                                                ) / len,
-                                                                0,
-                                                            ]}
-                                                        >
-                                                            <Geometry>
-                                                                <Base
-                                                                    position={[
-                                                                        0, 22.5,
-                                                                        0,
-                                                                    ]}
-                                                                >
-                                                                    <boxGeometry
-                                                                        args={[
-                                                                            20,
-                                                                            30,
-                                                                            20,
-                                                                        ]}
-                                                                    />
-                                                                </Base>
-                                                                <Addition
-                                                                    position={[
-                                                                        0, -8.5,
-                                                                        0,
-                                                                    ]}
-                                                                >
-                                                                    <boxGeometry
-                                                                        args={[
-                                                                            20,
-                                                                            30,
-                                                                            20,
-                                                                        ]}
-                                                                    />
-                                                                </Addition>
-                                                            </Geometry>
-                                                        </Subtraction>
-                                                    </Geometry>
-                                                    <meshBasicMaterial
-                                                        color="#FFF"
-                                                        transparent
-                                                        opacity={0.2}
-                                                        side={DoubleSide}
-                                                    />
-                                                </mesh>
-                                            </group>
-                                        );
-                                    }
-                                })()}
+                            {snap.currentIndex && snap.currentIndex >= 0 && (
+                                <group>
+                                    <mesh
+                                        name="playingBack"
+                                        position={[2, -7, -0.2]}
+                                    >
+                                        <Geometry>
+                                            <Base>
+                                                <planeGeometry
+                                                    args={[10, 20]}
+                                                />
+                                            </Base>
+                                            <Addition position={[5, 0, 0]}>
+                                                <circleGeometry
+                                                    args={[
+                                                        10,
+                                                        64,
+                                                        -Math.PI / 2,
+                                                        Math.PI,
+                                                    ]}
+                                                />
+                                            </Addition>
+                                            <Subtraction
+                                                position={[
+                                                    5,
+                                                    -(
+                                                        13 *
+                                                        ((snap.currentIndex ??
+                                                            0) +
+                                                            1)
+                                                    ) / len,
+                                                    0,
+                                                ]}
+                                            >
+                                                <Geometry>
+                                                    <Base
+                                                        position={[0, 22.5, 0]}
+                                                    >
+                                                        <boxGeometry
+                                                            args={[20, 30, 20]}
+                                                        />
+                                                    </Base>
+                                                    <Addition
+                                                        position={[0, -8.5, 0]}
+                                                    >
+                                                        <boxGeometry
+                                                            args={[20, 30, 20]}
+                                                        />
+                                                    </Addition>
+                                                </Geometry>
+                                            </Subtraction>
+                                        </Geometry>
+                                        <meshBasicMaterial
+                                            color="#FFF"
+                                            transparent
+                                            opacity={0.2}
+                                            side={DoubleSide}
+                                        />
+                                    </mesh>
+                                </group>
+                            )}
                         </group>
                     </group>
                 </group>

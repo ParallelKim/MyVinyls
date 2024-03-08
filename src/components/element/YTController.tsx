@@ -1,9 +1,9 @@
 import { albumState } from "@states/album";
+import { useSnapshot } from "valtio";
 import { Next } from "./ui/Next";
+import { Pause } from "./ui/Pause";
 import { Play } from "./ui/Play";
 import { Prev } from "./ui/Prev";
-import { Pause } from "./ui/Pause";
-import { useSnapshot } from "valtio";
 
 export const YTController = () => {
     const snap = useSnapshot(albumState);
