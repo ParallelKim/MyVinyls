@@ -119,5 +119,5 @@ html {
 
 .yt-buttons-disabled > *:hover {
     color: #888;
-    transition: all 0.1s ease-out;
+    transition: all 0.2s ease-out !important;
 }

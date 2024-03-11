@@ -8,15 +8,30 @@ import { Prev } from "./ui/Prev";
 export const YTController = () => {
     const snap = useSnapshot(albumState);
 
-    const control = (action: "play" | "pause") => async () => {
-        if (albumState.player) {
-            if (action === "play") {
-                await albumState.player.playVideo();
-            } else if (action === "pause") {
-                await albumState.player.pauseVideo();
+    const isFirst = albumState.currentIndex === 0;
+    const isLast =
+        albumState.album &&
+        albumState.album.list.length - 1 === albumState.currentIndex;
+
+    const control =
+        (action: "play" | "pause" | "prev" | "next") => async () => {
+            const { player } = albumState;
+            if (player) {
+                if (action === "play") {
+                    await player.playVideo();
+                } else if (action === "pause") {
+                    await player.pauseVideo();
+                } else if (action === "prev") {
+                    if (isFirst) return;
+
+                    await player.previousVideo();
+                } else if (action === "next") {
+                    if (isLast) return;
+
+                    player.nextVideo();
+                }
             }
-        }
-    };
+        };
 
     return (
         <div
@@ -37,11 +52,8 @@ export const YTController = () => {
                 }
             >
                 <Prev
-                    onClick={() => {
-                        if (!snap.player) return;
-                        console.log("prev");
-                        snap.player.previousVideo();
-                    }}
+                    className={isFirst ? "yt-icon-disabled" : "yt-icon"}
+                    onClick={control("prev")}
                 />
                 {snap.status !== "paused" ? (
                     <Pause onClick={control("pause")} />
@@ -49,12 +61,8 @@ export const YTController = () => {
                     <Play onClick={control("play")} />
                 )}
                 <Next
-                    className={!snap.player ? "yt-icon-disabled" : undefined}
-                    onClick={() => {
-                        if (!snap.player) return;
-                        console.log("next");
-                        snap.player.nextVideo();
-                    }}
+                    className={isLast ? "yt-icon-disabled" : "yt-icon"}
+                    onClick={control("next")}
                 />
             </div>
         </div>

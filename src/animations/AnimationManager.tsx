@@ -6,23 +6,26 @@ import { useGSAP } from "@gsap/react";
 import { albumState } from "@states/album";
 import gsap from "gsap";
 
+gsap.registerPlugin(useGSAP);
+
 export const AnimationManager = () => {
     const snap = useSnapshot(albumState);
 
     const ytTimeline = useRef<GSAPTimeline>();
     const panelTimeline = useRef<GSAPTimeline>();
 
-    useGSAP(() => {
-        ytTimeline.current = gsap.timeline().to(".yt-progress-indicator", {
-            lazy: true,
-            delay: 0,
-            duration: snap.duration,
-            ease: "none",
-            left: "100%",
-        });
-
-        ytTimeline.current.seek(0);
-    }, [snap.currentIndex]);
+    useGSAP(
+        () => {
+            ytTimeline.current = gsap.timeline().to(".yt-progress-indicator", {
+                lazy: true,
+                delay: 0,
+                duration: snap.duration,
+                ease: "none",
+                left: "100%",
+            });
+        },
+        { dependencies: [snap.currentIndex], revertOnUpdate: true }
+    );
 
     const lastSongRef = useRef<number | null>(null);
 
@@ -57,7 +60,9 @@ export const AnimationManager = () => {
                 );
                 console.log(
                     "new:",
-                    curIdx ? albumState.album?.list[curIdx] : null
+                    typeof curIdx === "number" && curIdx >= 0
+                        ? albumState.album?.list[curIdx]
+                        : null
                 );
                 console.groupEnd();
 
