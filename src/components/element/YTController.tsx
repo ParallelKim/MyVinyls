@@ -28,7 +28,7 @@ export const YTController = () => {
                 } else if (action === "next") {
                     if (isLast) return;
 
-                    player.nextVideo();
+                    await player.nextVideo();
                 }
             }
         };

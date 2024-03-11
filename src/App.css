@@ -105,9 +105,12 @@ html {
     transform: translate(-50%, -50%);
 }
 
+.yt-icon {
+    transition: all 0.2s ease-out;
+}
 .yt-icon:hover {
     color: #b00;
-    transition: all 0.2s ease-out;
+    cursor: pointer;
 }
 
 .yt-buttons {
@@ -117,7 +120,8 @@ html {
     padding-bottom: 1rem;
 }
 
-.yt-buttons-disabled > *:hover {
+.yt-buttons-disabled > *,
+.yt-icon-disabled {
+    transition: all 0.2s ease-out;
     color: #888;
-    transition: all 0.2s ease-out !important;
 }
