@@ -52,25 +52,35 @@ export const AnimationManager = () => {
             const lastSong = lastSongRef.current;
 
             if (curIdx !== lastSong) {
-                console.group();
-                console.log("new song");
-                console.log(
-                    "old:",
-                    lastSong ? albumState.album?.list[lastSong] : null
-                );
-                console.log(
-                    "new:",
-                    typeof curIdx === "number" && curIdx >= 0
-                        ? albumState.album?.list[curIdx]
-                        : null
-                );
-                console.groupEnd();
+                if (typeof curIdx === "number") {
+                    console.group();
+                    console.log("new song");
+                    console.log(
+                        "old:",
+                        typeof lastSong === "number" && lastSong >= 0
+                            ? albumState.album?.list[lastSong]
+                            : null
+                    );
+                    console.log(
+                        "new:",
+                        typeof curIdx === "number" && curIdx >= 0
+                            ? albumState.album?.list[curIdx]
+                            : null
+                    );
+                    console.groupEnd();
 
-                anim.restart();
-                lastSongRef.current = curIdx ?? null;
+                    anim.restart();
+                    lastSongRef.current = curIdx ?? null;
 
-                if (!lastSong) {
-                    setCurrentAnim("starting");
+                    if (animState.currentAnim === "focusing") {
+                        setCurrentAnim("starting");
+                    }
+                } else {
+                    lastSongRef.current = null;
+                    anim.restart();
+                    anim.seek(0);
+                    console.log("end of album");
+                    setCurrentAnim("idle");
                 }
             }
 
