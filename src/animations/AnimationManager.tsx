@@ -12,7 +12,6 @@ export const AnimationManager = () => {
     const snap = useSnapshot(albumState);
 
     const ytTimeline = useRef<GSAPTimeline>();
-    const panelTimeline = useRef<GSAPTimeline>();
 
     useGSAP(
         () => {
@@ -95,7 +94,6 @@ export const AnimationManager = () => {
             console.log("currentAnim:", currentAnim);
 
             if (currentAnim === "starting") {
-                if (panelTimeline.current) panelTimeline.current.restart();
                 setIsPlaying(true);
             } else if (currentAnim === "starting-step-3") {
                 setIsPlaying(false);
