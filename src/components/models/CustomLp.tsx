@@ -79,6 +79,14 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
         const record = lpRef.current.getObjectByName("record");
 
         if (isFocus) {
+            if (!cover || !record) return;
+            if (
+                animState.currentAnim === "starting" &&
+                albumState.status === "playing"
+            ) {
+                record.rotation.z += (1 / 108) * Math.PI;
+            }
+
             refState.board.getWorldPosition(temp);
             lpRef.current.parent?.worldToLocal(temp);
 
@@ -99,7 +107,6 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
             );
             lpRef.current.lookAt(camera.position.clone());
 
-            if (!cover || !record) return;
             if (animState.currentAnim === "focusing") {
                 // lp랑 커버 따로 이동시키기
                 easeOutLerp({ target: cover.position, goal: COVER_POS.focus });
