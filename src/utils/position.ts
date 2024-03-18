@@ -22,6 +22,10 @@ export const easeOutLerp = ({
 
     onUpdate?.(dis);
 
+    if (speedFactor < 0) {
+        target.copy(goal);
+    }
+
     if (dis < 0.001 && dis > 0) {
         target.copy(goal);
         onEnded?.();

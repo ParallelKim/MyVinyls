@@ -1,5 +1,3 @@
-import { albumState, setAlbum } from "@states/album";
-import { animState, setCurrentAnim } from "@states/animation";
 import {
     Euler,
     Group,
@@ -7,15 +5,17 @@ import {
     TextureLoader,
     Vector3,
 } from "three";
+import { albumState, setAlbum } from "@states/album";
+import { animState, setCurrentAnim } from "@states/animation";
 
-import { useGLTF } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { refState } from "@states/refState";
-import { useRef } from "react";
+import { Album } from "../../types/Album";
 import { GLTF } from "three-stdlib";
 import { easeOutLerp } from "utils/position";
+import { refState } from "@states/refState";
+import { useFrame } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
+import { useRef } from "react";
 import { useSnapshot } from "valtio";
-import { Album } from "../../types/Album";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -37,17 +37,20 @@ type GLTFResult = GLTF & {
 const RECORD_POS = {
     init: new Vector3(0.5, 0, 0),
     focus: new Vector3(-0.5, 0, 0),
+    play: new Vector3(0, 0, 0),
 };
 
 const COVER_POS = {
     init: new Vector3(0, 0, 0),
     focus: new Vector3(-5, 0, 0),
+    play: new Vector3(-50, 0, 0),
 };
 
 // const Origin = new Vector3(0, 0, 0);
 
 const gap = 8.9;
 
+const FollowCam = new Vector3();
 const temp = new Vector3();
 
 export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
@@ -73,48 +76,70 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
     const lpRef = useRef<Group>(null);
 
     useFrame(({ camera }) => {
-        if (!lpRef.current || !refState.board || !refState.shelf) return;
+        if (
+            !lpRef.current ||
+            !refState.board ||
+            !refState.shelf ||
+            !refState.lpPlayer
+        )
+            return;
 
         const cover = lpRef.current.getObjectByName("cover");
         const record = lpRef.current.getObjectByName("record");
 
         if (isFocus) {
             if (!cover || !record) return;
-            if (
-                animState.currentAnim === "starting" &&
-                albumState.status === "playing"
-            ) {
-                record.rotation.z += (1 / 108) * Math.PI;
-            }
 
-            refState.board.getWorldPosition(temp);
-            lpRef.current.parent?.worldToLocal(temp);
+            refState.board.getWorldPosition(FollowCam);
+            lpRef.current.parent?.worldToLocal(FollowCam);
 
-            easeOutLerp(
-                animState.currentAnim === "focusing"
-                    ? {
-                          target: lpRef.current.position,
-                          goal: temp,
-                          speedFactor: 6,
-                      }
-                    : {
-                          target: lpRef.current.position,
-                          goal: temp,
-                          onUpdate: (dis) => {
-                              if (dis < 0.1) setCurrentAnim("focusing");
-                          },
-                      }
-            );
-            lpRef.current.lookAt(camera.position.clone());
+            refState.lpPlayer.getWorldPosition(temp);
+            record.parent?.worldToLocal(temp);
 
             if (animState.currentAnim === "focusing") {
+                easeOutLerp({
+                    target: lpRef.current.position,
+                    goal: FollowCam,
+                    speedFactor: 6,
+                });
                 // lp랑 커버 따로 이동시키기
                 easeOutLerp({ target: cover.position, goal: COVER_POS.focus });
                 easeOutLerp({
                     target: record.position,
                     goal: RECORD_POS.focus,
                 });
+            } else if (animState.currentAnim === "starting") {
+                // lpRef.current.quaternion.slerp(new Quaternion(), 0.05);
+                easeOutLerp({
+                    target: lpRef.current.position,
+                    goal: FollowCam,
+                    speedFactor: -1,
+                });
+                easeOutLerp({ target: cover.position, goal: COVER_POS.play });
+                easeOutLerp({
+                    target: record.position,
+                    goal: RECORD_POS.play,
+                });
+            } else if (animState.currentAnim === "playing") {
+                record.rotation.z += (1 / 108) * Math.PI;
+
+                easeOutLerp({
+                    target: record.position,
+                    goal: temp,
+                });
+
+                return;
+            } else {
+                easeOutLerp({
+                    target: lpRef.current.position,
+                    goal: FollowCam,
+                    onUpdate: (dis) => {
+                        if (dis < 0.1) setCurrentAnim("focusing");
+                    },
+                });
             }
+
+            lpRef.current.lookAt(camera.position.clone());
         } else {
             lpRef.current.rotation.copy(INIT_STATE.rotation);
 

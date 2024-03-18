@@ -3,13 +3,17 @@ import { useEffect, useRef } from "react";
 import { subscribe, useSnapshot } from "valtio";
 
 import { useGSAP } from "@gsap/react";
+import { CameraControls } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import { albumState } from "@states/album";
+import { refState } from "@states/refState";
 import gsap from "gsap";
 
 gsap.registerPlugin(useGSAP);
 
 export const AnimationManager = () => {
     const snap = useSnapshot(albumState);
+    const controls = useThree((state) => state.controls);
 
     const ytTimeline = useRef<GSAPTimeline>();
 
@@ -91,12 +95,40 @@ export const AnimationManager = () => {
 
         const animSub = subscribe(animState, () => {
             const currentAnim = animState.currentAnim;
-            console.log("currentAnim:", currentAnim);
+            const cameraControls = controls as unknown as CameraControls;
+            console.log(
+                "currentAnim:",
+                currentAnim,
+                "cameraControls",
+                cameraControls
+            );
 
-            if (currentAnim === "starting") {
+            if (!cameraControls) return;
+
+            if (currentAnim === "focusing") {
+            } else if (currentAnim === "starting") {
                 setIsPlaying(true);
+                cameraControls.smoothTime = 1;
+
+                if (refState.lpPlayer) {
+                    const { x, y, z } = refState.lpPlayer.position;
+
+                    cameraControls.setOrbitPoint(x, y, z);
+                    cameraControls.fitToBox(refState.lpPlayer, true, {
+                        paddingBottom: 2,
+                        paddingTop: 2,
+                    });
+                }
+
+                cameraControls.rotateAzimuthTo(Math.PI, true);
+                cameraControls.rotatePolarTo(0, true).then(() => {
+                    setCurrentAnim("playing");
+                });
+            } else if (currentAnim === "playing") {
+                cameraControls.smoothTime = 0.25;
             } else if (currentAnim === "starting-step-3") {
                 setIsPlaying(false);
+            } else {
             }
         });
 

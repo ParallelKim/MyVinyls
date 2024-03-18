@@ -1,17 +1,15 @@
 import "./App.css";
 
 import { CameraControls, Preload } from "@react-three/drei";
+import { Suspense } from "react";
 
 import { Scene } from "@components/Scene";
 import { UI } from "@components/element/ui/UI";
 import { Canvas } from "@react-three/fiber";
-import { animState } from "@states/animation";
 import { AnimationManager } from "animations/AnimationManager";
-import { Suspense } from "react";
-import { useSnapshot } from "valtio";
 
 const App = () => {
-    const isPlaying = useSnapshot(animState).isPlaying;
+    // const isPlaying = useSnapshot(animState).isPlaying;
 
     return (
         <Suspense fallback={null}>
@@ -31,7 +29,7 @@ const App = () => {
                     polar={[-Math.PI / 12, Math.PI / 12]}
                     azimuth={[-Math.PI / 6, Math.PI / 6]}
                 > */}
-                <CameraControls />
+                <CameraControls makeDefault />
                 <Scene />
                 {/* </PresentationControls> */}
                 <AnimationManager />

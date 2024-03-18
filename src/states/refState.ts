@@ -1,5 +1,6 @@
 import { Group, Object3D, Object3DEventMap } from "three";
 
+import { CameraControls } from "@react-three/drei";
 import { proxy } from "valtio";
 
 export const refState = proxy<{
@@ -13,6 +14,7 @@ export const refState = proxy<{
     [key: string]: Object3D | Group<Object3DEventMap> | null;
 }>({
     root: null,
+    cameraControls: null,
     lpPlayer: null,
     station: null,
     shelf: null,
@@ -49,4 +51,14 @@ export const setPanel = (panel: Object3D) => {
 
 export const setObject = (name: string, obj: Object3D) => {
     refState[name] = obj;
+};
+
+export const controlRefState = proxy<{ cameraControls: CameraControls | null }>(
+    {
+        cameraControls: null,
+    }
+);
+
+export const setCameraControls = (cameraControls: CameraControls) => {
+    controlRefState.cameraControls = cameraControls;
 };

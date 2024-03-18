@@ -24,9 +24,7 @@ export const AlbumInfo = () => {
         >
             {snap.album && (
                 <group
-                    visible={["focusing", "starting"].includes(
-                        animSnap.currentAnim ?? ""
-                    )}
+                    visible={["focusing"].includes(animSnap.currentAnim ?? "")}
                 >
                     <mesh
                         name="panel"
