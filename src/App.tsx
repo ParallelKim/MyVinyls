@@ -1,12 +1,12 @@
 import "./App.css";
 
 import { CameraControls, Preload } from "@react-three/drei";
-import { Suspense } from "react";
 
 import { Scene } from "@components/Scene";
 import { UI } from "@components/element/ui/UI";
 import { Canvas } from "@react-three/fiber";
 import { AnimationManager } from "animations/AnimationManager";
+import { Suspense } from "react";
 
 const App = () => {
     // const isPlaying = useSnapshot(animState).isPlaying;
@@ -36,8 +36,8 @@ const App = () => {
                 <gridHelper args={[100, 100]} />
                 <axesHelper args={[8]} />
                 <Preload all />
-                <UI />
             </Canvas>
+            <UI />
         </Suspense>
     );
 };

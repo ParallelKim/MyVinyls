@@ -1,3 +1,5 @@
+import { albumState, setAlbum } from "@states/album";
+import { animState, setCurrentAnim } from "@states/animation";
 import {
     Euler,
     Group,
@@ -5,17 +7,15 @@ import {
     TextureLoader,
     Vector3,
 } from "three";
-import { albumState, setAlbum } from "@states/album";
-import { animState, setCurrentAnim } from "@states/animation";
 
-import { Album } from "../../types/Album";
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { refState } from "@states/refState";
+import { useRef } from "react";
 import { GLTF } from "three-stdlib";
 import { easeOutLerp } from "utils/position";
-import { refState } from "@states/refState";
-import { useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
-import { useRef } from "react";
 import { useSnapshot } from "valtio";
+import { Album } from "../../types/Album";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -122,6 +122,8 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
                 });
             } else if (animState.currentAnim === "playing") {
                 record.rotation.z += (1 / 108) * Math.PI;
+
+                temp.add(new Vector3(-1.4, 0, 2.1));
 
                 easeOutLerp({
                     target: record.position,

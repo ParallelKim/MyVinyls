@@ -59,12 +59,15 @@ html {
 }
 
 .ui-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     z-index: 8388636;
 }
 
 .yt-controller {
     position: fixed;
-    top: calc(50vh - 6rem);
+    top: calc(100vh - 6rem);
     width: 100vw;
     height: 6rem;
     padding-bottom: 2rem;
@@ -82,6 +85,10 @@ html {
 
 .yt-ctrl-hidden {
     transform: translateY(100%);
+}
+
+.yt-ctrl-hidden > .yt-progress {
+    opacity: 0;
 }
 
 .yt-ctrl-visible {
@@ -116,8 +123,8 @@ html {
 .yt-buttons {
     display: flex;
     gap: 2rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 1.5rem;
 }
 
 .yt-buttons-disabled > *,
