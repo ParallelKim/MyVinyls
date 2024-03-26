@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { CameraControls, Preload } from "@react-three/drei";
+import { Bvh, CameraControls, Preload } from "@react-three/drei";
 
 import { Scene } from "@components/Scene";
 import { UI } from "@components/element/ui/UI";
@@ -12,7 +12,7 @@ const App = () => {
     // const isPlaying = useSnapshot(animState).isPlaying;
 
     return (
-        <Suspense fallback={null}>
+        <>
             <Canvas
                 id="canvas"
                 shadows
@@ -23,22 +23,26 @@ const App = () => {
                 }}
                 // frameloop="demand" // 이거 Presentation control이랑 호환성이 낮음
             >
-                {/* <PresentationControls
-                    enabled={!isPlaying}
-                    snap
-                    polar={[-Math.PI / 12, Math.PI / 12]}
-                    azimuth={[-Math.PI / 6, Math.PI / 6]}
-                > */}
-                <CameraControls makeDefault />
-                <Scene />
-                {/* </PresentationControls> */}
-                <AnimationManager />
-                <gridHelper args={[100, 100]} />
-                <axesHelper args={[8]} />
-                <Preload all />
+                <Suspense fallback={null}>
+                    {/* <PresentationControls
+                        enabled={!isPlaying}
+                        snap
+                        polar={[-Math.PI / 12, Math.PI / 12]}
+                        azimuth={[-Math.PI / 6, Math.PI / 6]}
+                    > */}
+                    <CameraControls makeDefault />
+                    <Bvh firstHitOnly>
+                        <Scene />
+                    </Bvh>
+                    {/* </PresentationControls> */}
+                    <AnimationManager />
+                    <gridHelper args={[100, 100]} />
+                    <axesHelper args={[8]} />
+                    <Preload all />
+                </Suspense>
             </Canvas>
             <UI />
-        </Suspense>
+        </>
     );
 };
 

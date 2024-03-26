@@ -132,3 +132,24 @@ html {
     transition: all 0.2s ease-out;
     color: #888;
 }
+
+.loading-screen {
+    visibility: hidden;
+    animation: fadein 1.5s;
+    animation-fill-mode: forwards;
+    animation-delay: 0.5s; /* no spinner flickering for fast load times */
+    display: flex;
+    justify-content: center;
+    align-itmes: center;
+}
+
+@keyframes fadein {
+    from {
+        visibility: visible;
+        opacity: 0;
+    }
+    to {
+        visibility: visible;
+        opacity: 1;
+    }
+}

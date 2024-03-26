@@ -125,7 +125,17 @@ export const AnimationManager = () => {
                     setCurrentAnim("playing");
                 });
             } else if (currentAnim === "playing") {
-                cameraControls.smoothTime = 0.25;
+                cameraControls.rotatePolarTo(Math.PI / 3, true).then(() => {
+                    if (refState.currentRecord) {
+                        cameraControls
+                            .fitToBox(refState.currentRecord, true, {
+                                cover: true,
+                            })
+                            .then(() => {
+                                cameraControls.smoothTime = 0.25;
+                            });
+                    }
+                });
             } else if (currentAnim === "starting-step-3") {
                 setIsPlaying(false);
             } else {
