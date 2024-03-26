@@ -1,3 +1,4 @@
+import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { albumState, setAlbum } from "@states/album";
 import { animState, setCurrentAnim } from "@states/animation";
 import {
@@ -9,7 +10,6 @@ import {
 } from "three";
 
 import { useGLTF } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
 import { refState } from "@states/refState";
 import { useRef } from "react";
 import { GLTF } from "three-stdlib";
@@ -100,10 +100,13 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
                 easeOutLerp({
                     target: lpRef.current.position,
                     goal: FollowCam,
-                    speedFactor: 6,
+                    speedFactor: 10,
                 });
                 // lp랑 커버 따로 이동시키기
-                easeOutLerp({ target: cover.position, goal: COVER_POS.focus });
+                easeOutLerp({
+                    target: cover.position,
+                    goal: COVER_POS.focus,
+                });
                 easeOutLerp({
                     target: record.position,
                     goal: RECORD_POS.focus,
@@ -135,6 +138,7 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
                 easeOutLerp({
                     target: lpRef.current.position,
                     goal: FollowCam,
+
                     onUpdate: (dis) => {
                         if (dis < 0.1) setCurrentAnim("focusing");
                     },
@@ -159,23 +163,52 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
         }
     });
 
+    let timer: number | null = null;
+
+    const onClick = (e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation();
+
+        if (e.delta <= 2) {
+            if (!isFocus) {
+                setAlbum(album);
+            }
+
+            if (timer) {
+                cancelTimer();
+            }
+        }
+    };
+
+    const onPress = () => {
+        if (isFocus) {
+            timer = setTimeout(onLongPress, 1000);
+        }
+    };
+
+    const onLongPress = () => {
+        setAlbum(null);
+        cancelTimer();
+    };
+
+    const cancelTimer = () => {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+    };
+
     return (
         <group
             name={"lpOBJ-" + album.id}
             ref={lpRef}
             position={[gap * order, 0, 0.03]}
             rotation={INIT_STATE.rotation}
-            onClick={(e) => {
-                e.stopPropagation();
-
-                if (e.delta <= 2) {
-                    if (isFocus) {
-                        setAlbum(null);
-                    } else {
-                        setAlbum(album);
-                    }
-                }
-            }}
+            onClick={onClick}
+            onPointerDown={onPress}
+            onPointerCancel={cancelTimer}
+            onPointerUp={cancelTimer}
+            onPointerLeave={cancelTimer}
+            onPointerOut={cancelTimer}
             scale={0.722}
             dispose={null}
         >
