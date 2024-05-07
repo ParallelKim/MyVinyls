@@ -31,7 +31,7 @@ const App = () => {
                         azimuth={[-Math.PI / 6, Math.PI / 6]}
                     > */}
                     <CameraControls makeDefault />
-                    <Bvh firstHitOnly>
+                    <Bvh maxDepth={3}>
                         <Scene />
                     </Bvh>
                     {/* </PresentationControls> */}

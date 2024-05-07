@@ -19,7 +19,9 @@ export const Billboard = () => {
         easeOutLerp({
             target: boardRef.current.position,
             goal: FollowCam,
+            speedFactor: 10,
         });
+
         boardRef.current.lookAt(camera.position.clone());
 
         wrapperRef.current.attach(boardRef.current);

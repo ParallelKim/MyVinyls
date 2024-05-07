@@ -31,7 +31,7 @@ export const easeOutLerp = ({
         onEnded?.();
     }
 
-    const alpha = Math.min(1, Math.min(0.2, speedFactor / dis));
+    const alpha = Math.min(1, Math.min(0.3, speedFactor / dis));
 
     target.lerp(goal, alpha);
 };

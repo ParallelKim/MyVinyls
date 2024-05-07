@@ -84,11 +84,19 @@ export const AlbumInfo = () => {
                                         onPointerLeave={() =>
                                             setHoveredIndex(0)
                                         }
-                                        onClick={(e) => {
+                                        onClick={async (e) => {
+                                            console.log(
+                                                "clicked",
+                                                e,
+                                                "player",
+                                                player
+                                            );
+
                                             e.stopPropagation();
 
                                             if (player) {
-                                                player.playVideoAt(idx); // player.playerInfo.playerListIndex에 저장됨
+                                                await player.playVideoAt(idx); // player.playerInfo.playerListIndex에 저장됨
+                                                // player.pauseVideo();
                                             }
                                         }}
                                     >

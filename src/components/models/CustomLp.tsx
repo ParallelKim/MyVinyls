@@ -123,6 +123,8 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
                     target: record.position,
                     goal: RECORD_POS.play,
                 });
+
+                // TODO: 카메라와 별개로 움직이도록 변경할 것
             } else if (animState.currentAnim === "playing") {
                 record.rotation.z += (1 / 108) * Math.PI;
 
@@ -133,6 +135,9 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
                     goal: temp,
                 });
 
+                return;
+            } else if (animState.currentAnim === "ready") {
+                // lpRef.current.lookAt(new Vector3(0, 1, 0));
                 return;
             } else {
                 easeOutLerp({
@@ -163,37 +168,13 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
         }
     });
 
-    let timer: number | null = null;
-
     const onClick = (e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-
         if (e.delta <= 2) {
             if (!isFocus) {
                 setAlbum(album);
+            } else {
+                setAlbum(null);
             }
-
-            if (timer) {
-                cancelTimer();
-            }
-        }
-    };
-
-    const onPress = () => {
-        if (isFocus) {
-            timer = setTimeout(onLongPress, 1000);
-        }
-    };
-
-    const onLongPress = () => {
-        setAlbum(null);
-        cancelTimer();
-    };
-
-    const cancelTimer = () => {
-        if (timer) {
-            clearTimeout(timer);
-            timer = null;
         }
     };
 
@@ -204,11 +185,6 @@ export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
             position={[gap * order, 0, 0.03]}
             rotation={INIT_STATE.rotation}
             onClick={onClick}
-            onPointerDown={onPress}
-            onPointerCancel={cancelTimer}
-            onPointerUp={cancelTimer}
-            onPointerLeave={cancelTimer}
-            onPointerOut={cancelTimer}
             scale={0.722}
             dispose={null}
         >

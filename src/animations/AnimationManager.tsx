@@ -122,20 +122,21 @@ export const AnimationManager = () => {
 
                 cameraControls.rotateAzimuthTo(Math.PI, true);
                 cameraControls.rotatePolarTo(0, true).then(() => {
-                    setCurrentAnim("playing");
+                    setCurrentAnim("ready");
                 });
+            } else if (currentAnim === "ready") {
+                if (refState.currentRecord) {
+                    cameraControls
+                        .fitToBox(refState.currentRecord, true, {
+                            cover: true,
+                        })
+                        .then(() => {
+                            cameraControls.smoothTime = 0.25;
+                            setCurrentAnim("playing");
+                        });
+                }
             } else if (currentAnim === "playing") {
-                cameraControls.rotatePolarTo(Math.PI / 3, true).then(() => {
-                    if (refState.currentRecord) {
-                        cameraControls
-                            .fitToBox(refState.currentRecord, true, {
-                                cover: true,
-                            })
-                            .then(() => {
-                                cameraControls.smoothTime = 0.25;
-                            });
-                    }
-                });
+                cameraControls.rotatePolarTo(Math.PI / 3, true).then(() => {});
             } else if (currentAnim === "starting-step-3") {
                 setIsPlaying(false);
             } else {
