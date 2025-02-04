@@ -1,5 +1,6 @@
-import { create } from 'zustand';
-import { YouTubePlayer } from 'react-youtube';
+import { create } from "zustand";
+import { YouTubePlayer } from "react-youtube";
+import { AnimationStatus } from "Scene/animations/states/AnimationStateManager";
 
 interface Album {
     title: string;
@@ -13,11 +14,15 @@ interface AlbumState {
     player: (YouTubePlayer & { playerInfo: { playlistIndex: number } }) | null;
     currentIndex: number;
     duration: number;
-    status: string;
+    status: AnimationStatus;
     setAlbum: (album: Album | null) => void;
-    setPlayer: (player: (YouTubePlayer & { playerInfo: { playlistIndex: number } }) | null) => void;
+    setPlayer: (
+        player:
+            | (YouTubePlayer & { playerInfo: { playlistIndex: number } })
+            | null
+    ) => void;
     setCurrentIndex: (index: number) => void;
-    setStatus: (status: string, duration: number) => void;
+    setStatus: (status: AnimationStatus, duration: number) => void;
 }
 
 const useAlbumStore = create<AlbumState>()((set) => ({
@@ -25,7 +30,7 @@ const useAlbumStore = create<AlbumState>()((set) => ({
     player: null,
     currentIndex: 0,
     duration: 0,
-    status: '',
+    status: "idle",
     setAlbum: (album) => set({ album }),
     setPlayer: (player) => set({ player }),
     setCurrentIndex: (currentIndex) => set({ currentIndex }),

@@ -1,14 +1,15 @@
-import { create } from 'zustand';
+import { AnimationStatus } from "Scene/animations/states/AnimationStateManager";
+import { create } from "zustand";
 
 interface AnimationState {
-    currentAnim: string;
+    currentAnim: AnimationStatus;
     isPlaying: boolean;
-    setCurrentAnim: (anim: string) => void;
+    setCurrentAnim: (anim: AnimationStatus) => void;
     setIsPlaying: (isPlaying: boolean) => void;
 }
 
 const useAnimationStore = create<AnimationState>()((set) => ({
-    currentAnim: '',
+    currentAnim: "ready",
     isPlaying: false,
     setCurrentAnim: (currentAnim) => set({ currentAnim }),
     setIsPlaying: (isPlaying) => set({ isPlaying }),

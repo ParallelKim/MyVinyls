@@ -14,13 +14,7 @@ export const YTPlayer = () => {
     if (!playlist) return null;
 
     return (
-        <Html
-            transform
-            occlude
-            position={[0, 2.5, -0.16]}
-            rotation={[Math.PI / 4.75, Math.PI, 0]}
-            scale={0.2}
-        >
+        <Html transform occlude scale={0.05}>
             <YouTube
                 onReady={(event) => {
                     setPlayer(

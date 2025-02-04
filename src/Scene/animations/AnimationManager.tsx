@@ -8,6 +8,8 @@ import { Group } from "three";
 import useAlbumStore from "@states/albumStore";
 import useAnimationStore from "@states/animationStore";
 import useSceneStore from "@states/sceneStore";
+import { AnimationStateManager } from "./states/AnimationStateManager";
+import { TimelineManager } from "./core/TimelineManager";
 
 type ExtendedGroup = Group & {
     lpPlayer?: Group;
@@ -22,26 +24,33 @@ export const AnimationManager = () => {
     const root = useSceneStore((state) => state.root) as ExtendedGroup | null;
     const controls = useThree((state) => state.controls) as unknown as CameraControls;
 
-    const ytTimeline = useRef<gsap.core.Timeline>();
-    const lastSongRef = useRef<number | null>(null);
+    const timelineManager = useRef<TimelineManager>(new TimelineManager());
+    const stateManager = useRef<AnimationStateManager | null>(null);
 
+    // Initialize timeline
     useGSAP(
         () => {
-            ytTimeline.current = gsap.timeline().to(".yt-progress-indicator", {
-                lazy: true,
-                delay: 0,
-                duration: duration,
-                ease: "none",
-                left: "100%",
-            });
+            timelineManager.current.initialize(duration);
         },
         { dependencies: [currentIndex], revertOnUpdate: true }
     );
 
+    // Initialize state manager
+    useEffect(() => {
+        if (!controls || !root) return;
+
+        stateManager.current = new AnimationStateManager(
+            { controls, root },
+            setIsPlaying,
+            setCurrentAnim
+        );
+    }, [controls, root, setIsPlaying, setCurrentAnim]);
+
+    // Handle window focus for YouTube sync
     useEffect(() => {
         window.onfocus = async () => {
-            if (ytTimeline.current && player) {
-                ytTimeline.current.seek(await player.getCurrentTime());
+            if (player) {
+                await timelineManager.current.syncWithYouTube(player);
             }
         };
 
@@ -50,114 +59,34 @@ export const AnimationManager = () => {
         };
     }, [player]);
 
+    // Handle animation state changes
     useEffect(() => {
-        const anim = ytTimeline.current;
-        if (!anim) return;
+        if (!stateManager.current) return;
+        stateManager.current.handleState(currentAnim);
+    }, [currentAnim]);
 
-        if (status === "playing") {
-            anim.play();
-        } else if (status === "paused") {
-            anim.pause();
-        }
+    // Handle playback state changes
+    useEffect(() => {
+        timelineManager.current.handlePlaybackStateChange(status);
     }, [status]);
 
+    // Handle song changes
     useEffect(() => {
-        if (!controls || !root) return;
+        timelineManager.current.handleSongChange(currentIndex);
 
-        // const targetPosition = { x: 0, y: 0, z: 0 };
-        // const targetRotation = { x: 0, y: 0 };
-
-        if (currentAnim === "focusing") {
-            // NEED TO IMPLEMENT
-        } else if (currentAnim === "starting") {
-            setIsPlaying(true);
-            controls.smoothTime = 1;
-
-            if (root.lpPlayer) {
-                const { x, y, z } = root.lpPlayer.position;
-
-                controls.setOrbitPoint(x, y, z);
-                controls.fitToBox(root.lpPlayer, true, {
-                    paddingBottom: 2,
-                    paddingTop: 2,
-                });
-            }
-
-            controls.rotateAzimuthTo(Math.PI, true);
-            controls.rotatePolarTo(0, true).then(() => {
-                setCurrentAnim("ready");
-            });
-        } else if (currentAnim === "ready") {
-            if (root.currentRecord) {
-                controls
-                    .fitToBox(root.currentRecord, true, {
-                        cover: true,
-                    })
-                    .then(() => {
-                        controls.smoothTime = 0.25;
-                        setCurrentAnim("playing");
-                    });
-            }
-        } else if (currentAnim === "playing") {
-            controls.rotatePolarTo(Math.PI / 3, true).then(() => {});
-        } else if (currentAnim === "starting-step-3") {
-            setIsPlaying(false);
-        } else {
-            // NEED TO IMPLEMENT
+        if (currentIndex === null && !album) {
+            setCurrentAnim('idle');
+        } else if (currentAnim === 'focusing') {
+            setCurrentAnim('starting');
         }
-    }, [controls, currentAnim, root, setCurrentAnim, setIsPlaying]);
+    }, [currentIndex, album, currentAnim, setCurrentAnim]);
 
+    // Cleanup
     useEffect(() => {
-        const anim = ytTimeline.current;
-
-        if (!anim) return;
-        if (status === "playing") {
-            anim.play();
-        } else if (status === "paused") {
-            anim.pause();
-        }
-
-        const curIdx = currentIndex;
-        const lastSong = lastSongRef.current;
-
-        if (curIdx !== lastSong) {
-            if (typeof curIdx === "number") {
-                console.group();
-                console.log("new song");
-                console.log(
-                    "old:",
-                    typeof lastSong === "number" && lastSong >= 0
-                        ? album?.list[lastSong]
-                        : null
-                );
-                console.log(
-                    "new:",
-                    typeof curIdx === "number" && curIdx >= 0
-                        ? album?.list[curIdx]
-                        : null
-                );
-                console.groupEnd();
-
-                anim.restart();
-                lastSongRef.current = curIdx ?? null;
-
-                if (currentAnim === "focusing") {
-                    setCurrentAnim("starting");
-                }
-            } else {
-                lastSongRef.current = null;
-                anim.restart();
-                anim.seek(0);
-                console.log("end of album");
-                setCurrentAnim("idle");
-            }
-        }
-
-        if (!album) {
-            setCurrentAnim("idle");
-            lastSongRef.current = null;
-        }
-    }, [currentIndex, setCurrentAnim, album, status, currentAnim]);
+        return () => {
+            timelineManager.current.cleanup();
+        };
+    }, []);
 
     return null;
 };

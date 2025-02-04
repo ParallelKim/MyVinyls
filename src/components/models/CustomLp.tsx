@@ -34,7 +34,7 @@ type GLTFResult = GLTF & {
 };
 
 const RECORD_POS = {
-    init: new Vector3(0.5, 0, 0),
+    init: new Vector3(0.5, 0, 0.1),
     focus: new Vector3(-0.5, 0, 0),
     play: new Vector3(0, 0, 0),
 };
@@ -83,10 +83,10 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
 
     const handleClick = async (e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
-        if (!root || currentAnim === "play") return;
+        if (!root || currentAnim === "playing") return;
 
         setAlbum(album);
-        setCurrentAnim("focus");
+        setCurrentAnim("focusing");
 
         const targetRotation = new Euler(0, Math.PI + Math.PI / 2, 0);
 
