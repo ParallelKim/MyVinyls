@@ -9,7 +9,7 @@ import { AlbumInfo } from "./AlbumInfo";
 export const Billboard = () => {
     const boardRef = useRef<Group>(null);
     const wrapperRef = useRef<Group>(null);
-    const { setCurrentRecord } = useSceneStore();
+    const { setBillboard } = useSceneStore();
 
     const FollowCam = new Vector3(0, 0, -6);
 
@@ -30,13 +30,10 @@ export const Billboard = () => {
 
     useEffect(() => {
         if (boardRef.current) {
-            setCurrentRecord(boardRef.current);
+            setBillboard(boardRef.current);
         }
-
-        return () => {
-            setCurrentRecord(null);
-        };
-    }, [setCurrentRecord]);
+        return () => setBillboard(null);
+    }, [setBillboard]);
 
     // 1. Album Panel // 2. LP Cover // 3. LP Record
     return (
@@ -44,9 +41,10 @@ export const Billboard = () => {
             name="board wrapper"
             ref={wrapperRef}
             scale={0.2}
+            position={[0, 2, 0]}
         >
             <group
-                position={[0, 70, 0]}
+                position={[0, 0, 0]}
                 name="bill board"
                 ref={boardRef}
             >

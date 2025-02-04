@@ -10,6 +10,8 @@ import useAnimationStore from "@states/animationStore";
 import useSceneStore from "@states/sceneStore";
 import { AnimationStateManager } from "./states/AnimationStateManager";
 import { TimelineManager } from "./core/TimelineManager";
+import { YOUTUBE_STATES, youtubeState } from "@constants/youtubeState";
+import { lpEventManager, LpEvent } from "./core/LpEventManager";
 
 type ExtendedGroup = Group & {
     lpPlayer?: Group;
@@ -19,20 +21,30 @@ type ExtendedGroup = Group & {
 gsap.registerPlugin(useGSAP);
 
 export const AnimationManager = () => {
-    const { player, status, currentIndex, duration, album } = useAlbumStore();
+    const { player, status, currentIndex, duration, album, setAlbum } =
+        useAlbumStore();
     const { currentAnim, setCurrentAnim, setIsPlaying } = useAnimationStore();
     const root = useSceneStore((state) => state.root) as ExtendedGroup | null;
-    const controls = useThree((state) => state.controls) as unknown as CameraControls;
+    const controls = useThree(
+        (state) => state.controls
+    ) as unknown as CameraControls;
 
-    const timelineManager = useRef<TimelineManager>(new TimelineManager());
+    const timelineManager = useRef<TimelineManager>(
+        new TimelineManager((error) => {
+            console.error("[AnimationManager] Timeline error:", error);
+            setCurrentAnim("error");
+        })
+    );
     const stateManager = useRef<AnimationStateManager | null>(null);
 
     // Initialize timeline
     useGSAP(
         () => {
-            timelineManager.current.initialize(duration);
+            if (duration > 0) {
+                timelineManager.current.initialize(duration);
+            }
         },
-        { dependencies: [currentIndex], revertOnUpdate: true }
+        { dependencies: [currentIndex, duration], revertOnUpdate: true }
     );
 
     // Initialize state manager
@@ -48,21 +60,28 @@ export const AnimationManager = () => {
 
     // Handle window focus for YouTube sync
     useEffect(() => {
-        window.onfocus = async () => {
-            if (player) {
+        const handleFocus = async () => {
+            if (player && currentAnim === "playing") {
                 await timelineManager.current.syncWithYouTube(player);
             }
         };
 
+        window.addEventListener("focus", handleFocus);
         return () => {
-            window.onfocus = null;
+            window.removeEventListener("focus", handleFocus);
         };
-    }, [player]);
+    }, [player, currentAnim]);
 
     // Handle animation state changes
     useEffect(() => {
         if (!stateManager.current) return;
-        stateManager.current.handleState(currentAnim);
+
+        try {
+            stateManager.current.handleState(currentAnim);
+        } catch (error) {
+            console.error("[AnimationManager] State handling error:", error);
+            setCurrentAnim("error");
+        }
     }, [currentAnim]);
 
     // Handle playback state changes
@@ -75,11 +94,62 @@ export const AnimationManager = () => {
         timelineManager.current.handleSongChange(currentIndex);
 
         if (currentIndex === null && !album) {
-            setCurrentAnim('idle');
-        } else if (currentAnim === 'focusing') {
-            setCurrentAnim('starting');
+            setCurrentAnim("idle");
         }
-    }, [currentIndex, album, currentAnim, setCurrentAnim]);
+    }, [currentIndex, album, setCurrentAnim]);
+
+    // Handle YouTube player state
+    useEffect(() => {
+        if (!player) return;
+
+        const handlePlayerStateChange = (event: any) => {
+            const state = event?.data;
+            const newStatus = youtubeState[state];
+
+            // 상태 전환 로직 개선
+            if (state === YOUTUBE_STATES.PLAYING) {
+                if (currentAnim === "loading") {
+                    setCurrentAnim("starting");
+                } else if (currentAnim === "ready") {
+                    setCurrentAnim("playing");
+                }
+            } else if (
+                state === YOUTUBE_STATES.PAUSED &&
+                currentAnim === "playing"
+            ) {
+                setCurrentAnim("ready");
+            } else if (state === YOUTUBE_STATES.ENDED) {
+                setCurrentAnim("returning");
+            } else {
+                setCurrentAnim("error");
+            }
+        };
+
+        player.addEventListener("onStateChange", handlePlayerStateChange);
+    }, [player, currentAnim, setCurrentAnim]);
+
+    // LP 선택 이벤트 구독
+    useEffect(() => {
+        const unsubscribe = lpEventManager.subscribe((event: LpEvent) => {
+            if (event.type === "LP_SELECTED") {
+                setAlbum(event.payload.album);
+                setCurrentAnim("focusing");
+
+                if (stateManager.current) {
+                    stateManager.current.handleState("focusing");
+                }
+            } else if (event.type === "LP_UNSELECTED") {
+                setAlbum(null);
+                setCurrentAnim("idle"); // unselect 시 idle 상태로 변경
+
+                if (stateManager.current) {
+                    stateManager.current.handleState("idle");
+                }
+            }
+        });
+
+        return () => unsubscribe();
+    }, [setAlbum, setCurrentAnim]);
 
     // Cleanup
     useEffect(() => {

@@ -1,10 +1,19 @@
-import { YTStatus } from "@states/album";
+import { AnimationStatus } from "Scene/animations/states/AnimationStateManager";
 
-export const youtubeState: { [key: number]: YTStatus } = {
-    "-1": "unstarted",
-    0: "ended",
-    1: "playing",
-    2: "paused",
-    3: "buffering",
-    5: "video cued",
+export const YOUTUBE_STATES = {
+    UNSTARTED: -1,
+    ENDED: 0,
+    PLAYING: 1,
+    PAUSED: 2,
+    BUFFERING: 3,
+    VIDEO_CUED: 5,
+} as const;
+
+export const youtubeState: { [key: number]: AnimationStatus } = {
+    [YOUTUBE_STATES.UNSTARTED]: "loading",
+    [YOUTUBE_STATES.ENDED]: "returning",
+    [YOUTUBE_STATES.PLAYING]: "playing",
+    [YOUTUBE_STATES.PAUSED]: "ready",
+    [YOUTUBE_STATES.BUFFERING]: "loading",
+    [YOUTUBE_STATES.VIDEO_CUED]: "ready",
 };

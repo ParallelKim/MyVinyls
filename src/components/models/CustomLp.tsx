@@ -1,20 +1,14 @@
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
-import { useRef } from "react";
-import {
-    Euler,
-    Group,
-    MeshStandardMaterial,
-    TextureLoader,
-    Vector3,
-} from "three";
+import { useRef, useEffect, useMemo } from "react";
+import { Group, MeshStandardMaterial, TextureLoader } from "three";
 import { GLTF } from "three-stdlib";
 
-import useAlbumStore from "@states/albumStore";
 import useAnimationStore from "@states/animationStore";
 import useSceneStore from "@states/sceneStore";
 import { Album } from "../../types/Album";
-import { easeOutLerp } from "utils/position";
+import { LpAnimationManager } from "../../Scene/animations/core/LpAnimationManager";
+import { lpEventManager } from "../../Scene/animations/core/LpEventManager";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -33,88 +27,55 @@ type GLTFResult = GLTF & {
     };
 };
 
-const RECORD_POS = {
-    init: new Vector3(0.5, 0, 0.1),
-    focus: new Vector3(-0.5, 0, 0),
-    play: new Vector3(0, 0, 0),
-};
-
-const COVER_POS = {
-    init: new Vector3(0, 0, 0),
-    focus: new Vector3(-5, 0, 0),
-    play: new Vector3(-50, 0, 0),
-};
-
-const gap = -10;
+const gap = -12;
 
 export function CustomLp({ album, order }: { album: Album; order: number }) {
     const { nodes, materials } = useGLTF(
         "/lpRecord-transformed.glb"
     ) as GLTFResult;
     const groupRef = useRef<Group>(null);
-    const coverRef = useRef<Group>(null);
-    const recordRef = useRef<Group>(null);
+    const { currentAnim } = useAnimationStore();
 
-    const root = useSceneStore((state) => state.root);
-    const { setAlbum } = useAlbumStore();
-    const { currentAnim, setCurrentAnim } = useAnimationStore();
+    // useTexture를 사용하여 텍스처 로드
+    const albumTexture = useTexture(album.cover);
+    const coverMaterial = useMemo(() => {
+        return new MeshStandardMaterial({ map: albumTexture });
+    }, [albumTexture]);
 
-    useFrame(() => {
-        if (!groupRef.current || !coverRef.current || !recordRef.current)
-            return;
-
-        const targetCoverPos =
-            COVER_POS[currentAnim as keyof typeof COVER_POS] || COVER_POS.init;
-        const targetRecordPos =
-            RECORD_POS[currentAnim as keyof typeof RECORD_POS] ||
-            RECORD_POS.init;
-
-        easeOutLerp({
-            target: coverRef.current.position,
-            goal: targetCoverPos,
-            speedFactor: 0.1,
-        });
-        easeOutLerp({
-            target: recordRef.current.position,
-            goal: targetRecordPos,
-            speedFactor: 0.1,
-        });
-    });
-
-    const handleClick = async (e: ThreeEvent<MouseEvent>) => {
+    const handleClick = (e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
-        if (!root || currentAnim === "playing") return;
+        if (!groupRef.current || currentAnim === "playing") return;
 
-        setAlbum(album);
-        setCurrentAnim("focusing");
-
-        const targetRotation = new Euler(0, Math.PI + Math.PI / 2, 0);
-
-        if (root && groupRef.current) {
-            root.rotation.y = targetRotation.y;
+        const isSelected = lpEventManager.isSelected(album.id);
+        if (isSelected) {
+            lpEventManager.unselect();
+        } else {
+            lpEventManager.emit({
+                type: "LP_SELECTED",
+                payload: {
+                    album,
+                    lpId: album.id,
+                },
+            });
         }
     };
 
     return (
         <group
-            scale={0.8}
+            name={`lpOBJ-${album.id}`}
             ref={groupRef}
             position-x={order * gap}
             rotation-x={Math.PI / 8}
             onClick={handleClick}
         >
-            <group ref={coverRef}>
+            <group name="cover">
                 <mesh
                     geometry={nodes["Box001_Material_#25_0"].geometry}
                     material={materials.Material_25}
                 />
                 <mesh
                     geometry={nodes["Box001_Material_#37_0"].geometry}
-                    material={
-                        new MeshStandardMaterial({
-                            map: new TextureLoader().load(album.cover),
-                        })
-                    }
+                    material={coverMaterial}
                 />
                 <mesh
                     geometry={nodes["Box001_Material_#49_0"].geometry}
@@ -125,10 +86,14 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
                     material={materials.Material_73}
                 />
             </group>
-            <group ref={recordRef}>
+            <group
+                name="record"
+                position-z={0.05}
+            >
                 <mesh
                     geometry={nodes["Cylinder001_Material_#85_0"].geometry}
                     material={materials.Material_85}
+                    scale={4}
                 />
             </group>
         </group>

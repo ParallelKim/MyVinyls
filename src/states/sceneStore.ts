@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { Group } from 'three';
+import { create } from "zustand";
+import { Group } from "three";
 
 interface SceneState {
     root: Group | null;
@@ -8,12 +8,14 @@ interface SceneState {
     currentRecord: Group | null;
     isPlaying: boolean;
     currentTrack: string | null;
+    billboard: Group | null;
     setRoot: (root: Group | null) => void;
     setLpPlayer: (lpPlayer: Group | null) => void;
     setStation: (station: Group | null) => void;
     setCurrentRecord: (record: Group | null) => void;
     setIsPlaying: (isPlaying: boolean) => void;
     setCurrentTrack: (track: string | null) => void;
+    setBillboard: (billboard: Group | null) => void;
 }
 
 const useSceneStore = create<SceneState>()((set) => ({
@@ -23,12 +25,14 @@ const useSceneStore = create<SceneState>()((set) => ({
     currentRecord: null,
     isPlaying: false,
     currentTrack: null,
+    billboard: null,
     setRoot: (root) => set({ root }),
     setLpPlayer: (lpPlayer) => set({ lpPlayer }),
     setStation: (station) => set({ station }),
     setCurrentRecord: (record) => set({ currentRecord: record }),
     setIsPlaying: (isPlaying) => set({ isPlaying }),
     setCurrentTrack: (track) => set({ currentTrack: track }),
+    setBillboard: (billboard) => set({ billboard }),
 }));
 
 export default useSceneStore;
