@@ -1,8 +1,8 @@
 import useAlbumStore from "@states/albumStore";
-import { Next } from "./ui/Next";
-import { Pause } from "./ui/Pause";
-import { Play } from "./ui/Play";
-import { Prev } from "./ui/Prev";
+import { Next } from "./Next";
+import { Pause } from "./Pause";
+import { Play } from "./Play";
+import { Prev } from "./Prev";
 
 export const YTController = () => {
     const { player, album, currentIndex, duration, status } = useAlbumStore();

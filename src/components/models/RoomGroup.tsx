@@ -14,7 +14,7 @@ type GLTFResult = GLTF & {
     };
 };
 
-export const RoomGroup = (props: JSX.IntrinsicElements["group"]) => {
+export const RoomGroup = ({children, ...props}: JSX.IntrinsicElements["group"] & {children?: React.ReactNode}) => {
     const { nodes, materials } = useGLTF("/room-transformed.glb") as GLTFResult;
 
     return (
@@ -45,6 +45,7 @@ export const RoomGroup = (props: JSX.IntrinsicElements["group"]) => {
                 material={new MeshBasicMaterial({ color: "red", opacity: 1 })}
                 position={[-2, 0, 0.454]}
             /> */}
+            {children}
         </group>
     );
 };

@@ -4,11 +4,11 @@ import { Bvh, CameraControls, Preload } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 
-import { Scene } from "@components/Scene";
-import { ErrorBoundary } from "@components/element/ErrorBoundary";
-import { LoadingFallback } from "@components/element/LoadingFallback";
-import { UI } from "@components/element/ui/UI";
-import { AnimationManager } from "animations/AnimationManager";
+import { Scene } from "Scene";
+import { ErrorBoundary } from "@components/groups/ErrorBoundary";
+import { LoadingFallback } from "@components/groups/LoadingFallback";
+import { UI } from "@components/ui/UI";
+import { AnimationManager } from "Scene/animations/AnimationManager";
 import { CAMERA_SETTINGS, PERFORMANCE_SETTINGS } from "./constants/sceneConstants";
 import useSceneStore from "./states/sceneStore";
 

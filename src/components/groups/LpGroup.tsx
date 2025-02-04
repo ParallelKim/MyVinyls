@@ -23,16 +23,11 @@ export const LpGroup = () => {
         <group
             name="lpGroup"
             ref={shelfRef}
-            position={[4, 17.5, 1.8]}
-            rotation={[0, Math.PI, 0]}
-            scale={0.3}
+            position={[0.7, 3.5, 0.35]}
+            scale={0.05}
         >
             {JUNGWOO.albums.map((album, idx) => (
-                <CustomLp
-                    key={album.title}
-                    order={idx}
-                    album={album}
-                />
+                <CustomLp key={album.title} order={idx} album={album} />
             ))}
         </group>
     );

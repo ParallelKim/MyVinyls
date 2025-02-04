@@ -47,8 +47,8 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
             ref={lpRef}
             {...props}
             dispose={null}
-            position={[-0.125, 3.31, 0]}
-            scale={0.01}
+            position={[-0.025, 0.665, 0]}
+            scale={0.002}
             rotation={[0, Math.PI / 2, 0]}
         >
             <mesh
@@ -71,11 +71,7 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
                 geometry={nodes.Cylinder004.geometry}
                 material={materials.PaletteMaterial003}
             />
-            <group
-                ref={stationRef}
-                scale={0.5}
-                position={[0.03, 1.5, 0.75]}
-            />
+            <group ref={stationRef} scale={0.5} position={[0.03, 1.5, 0.75]} />
         </group>
     );
 };

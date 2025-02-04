@@ -1,5 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
+import { YTPlayer } from "@components/groups/YTPlayer";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -22,51 +23,22 @@ type GLTFResult = GLTF & {
     };
 };
 
-export const TableGroup = (props: JSX.IntrinsicElements["group"]) => {
-    const { nodes, materials } = useGLTF(
-        "/table-transformed.glb"
-    ) as GLTFResult;
+export const TableGroup = ({ children, ...props }: JSX.IntrinsicElements["group"]) => {
+    const { nodes, materials } = useGLTF("/table-transformed.glb") as GLTFResult;
     return (
-        <group
-            {...props}
-            dispose={null}
-        >
-            <group
-                name="tablet"
-                position={[-0.589, 5.171, 0.086]}
-                rotation={[-Math.PI / 2, 0, 0]}
-                scale={-1}
-            >
-                <mesh
-                    geometry={nodes.Mesh043.geometry}
-                    material={materials["20 - Default.001"]}
-                />
-                <mesh
-                    geometry={nodes.Mesh043_1.geometry}
-                    material={materials.PaletteMaterial002}
-                />
-                <mesh
-                    geometry={nodes.Mesh043_2.geometry}
-                    material={materials.PaletteMaterial001}
-                />
-                <mesh
-                    geometry={nodes.Mesh043_3.geometry}
-                    material={materials["14 - Default.001"]}
-                />
+        <group {...props} dispose={null}>
+            {children}
+            <group name="tablet" position={[-0.589, 5.171, 0.086]} rotation={[-Math.PI / 2, 0, 0]} scale={-1}>
+                <mesh geometry={nodes.Mesh043.geometry} material={materials["20 - Default.001"]} />
+                <mesh geometry={nodes.Mesh043_1.geometry} material={materials.PaletteMaterial002} />
+                <mesh geometry={nodes.Mesh043_2.geometry} material={materials.PaletteMaterial001} />
+                <mesh geometry={nodes.Mesh043_3.geometry} material={materials["14 - Default.001"]} />
+                <YTPlayer />
             </group>
             <group scale={0.001}>
-                <mesh
-                    geometry={nodes.table_1.geometry}
-                    material={materials.PaletteMaterial003}
-                />
-                <mesh
-                    geometry={nodes.table_2.geometry}
-                    material={materials.PaletteMaterial004}
-                />
-                <mesh
-                    geometry={nodes.table_3.geometry}
-                    material={materials.PaletteMaterial005}
-                />
+                <mesh geometry={nodes.table_1.geometry} material={materials.PaletteMaterial003} />
+                <mesh geometry={nodes.table_2.geometry} material={materials.PaletteMaterial004} />
+                <mesh geometry={nodes.table_3.geometry} material={materials.PaletteMaterial005} />
             </group>
         </group>
     );
