@@ -1,18 +1,23 @@
 import { useEffect, useRef } from "react";
+import { Group } from "three";
 
 import { JUNGWOO } from "@constants/jungwoo";
-import { setShelf } from "@states/refState";
-import { Group } from "three";
+import useSceneStore from "@states/sceneStore";
 import { CustomLp } from "../models/CustomLp";
 
 export const LpGroup = () => {
     const shelfRef = useRef<Group>(null);
+    const setRoot = useSceneStore((state) => state.setRoot);
 
     useEffect(() => {
         if (shelfRef.current) {
-            setShelf(shelfRef.current);
+            setRoot(shelfRef.current);
         }
-    }, []);
+
+        return () => {
+            setRoot(null);
+        };
+    }, [setRoot]);
 
     return (
         <group

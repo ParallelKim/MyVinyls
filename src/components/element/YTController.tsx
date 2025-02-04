@@ -1,43 +1,36 @@
-import { albumState } from "@states/album";
-import { useSnapshot } from "valtio";
+import useAlbumStore from "@states/albumStore";
 import { Next } from "./ui/Next";
 import { Pause } from "./ui/Pause";
 import { Play } from "./ui/Play";
 import { Prev } from "./ui/Prev";
 
 export const YTController = () => {
-    const snap = useSnapshot(albumState);
+    const { player, album, currentIndex, duration, status } = useAlbumStore();
 
-    const isFirst = albumState.currentIndex === 0;
-    const isLast =
-        albumState.album &&
-        albumState.album.list.length - 1 === albumState.currentIndex;
+    const isFirst = currentIndex === 0;
+    const isLast = album && album.list.length - 1 === currentIndex;
 
-    const control =
-        (action: "play" | "pause" | "prev" | "next") => async () => {
-            const { player } = albumState;
-            if (player) {
-                if (action === "play") {
-                    await player.playVideo();
-                } else if (action === "pause") {
-                    await player.pauseVideo();
-                } else if (action === "prev") {
-                    if (isFirst) return;
-
-                    await player.previousVideo();
-                } else if (action === "next") {
-                    if (isLast) return;
-
-                    await player.nextVideo();
-                }
+    const control = (action: "play" | "pause" | "prev" | "next") => async () => {
+        if (player) {
+            if (action === "play") {
+                await player.playVideo();
+            } else if (action === "pause") {
+                await player.pauseVideo();
+            } else if (action === "prev") {
+                if (isFirst) return;
+                await player.previousVideo();
+            } else if (action === "next") {
+                if (isLast) return;
+                await player.nextVideo();
             }
-        };
+        }
+    };
 
     return (
         <div
             className={
                 "yt-controller " +
-                (snap.player && snap.album && snap.duration
+                (player && album && duration
                     ? "yt-ctrl-visible"
                     : "yt-ctrl-hidden")
             }
@@ -46,24 +39,14 @@ export const YTController = () => {
                 <div className="yt-progress-bar yt-progress-indicator" />
                 <div className="yt-progress-indicator">⌾</div>
             </div>
-            <div
-                className={
-                    "yt-buttons " + (snap.player ? "" : "yt-buttons-disabled")
-                }
-            >
-                <Prev
-                    className={isFirst ? "yt-icon-disabled" : "yt-icon"}
-                    onClick={control("prev")}
-                />
-                {snap.status !== "paused" ? (
+            <div className={"yt-buttons " + (player ? "" : "yt-buttons-disabled")}>
+                <Prev onClick={control("prev")}/>
+                {status !== "paused" ? (
                     <Pause onClick={control("pause")} />
                 ) : (
                     <Play onClick={control("play")} />
                 )}
-                <Next
-                    className={isLast ? "yt-icon-disabled" : "yt-icon"}
-                    onClick={control("next")}
-                />
+                <Next onClick={control("next")}/>
             </div>
         </div>
     );

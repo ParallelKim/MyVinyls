@@ -1,153 +1,163 @@
-import { animState, setCurrentAnim, setIsPlaying } from "@states/animation";
 import { useEffect, useRef } from "react";
-import { subscribe, useSnapshot } from "valtio";
-
 import { useGSAP } from "@gsap/react";
 import { CameraControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { albumState } from "@states/album";
-import { refState } from "@states/refState";
 import gsap from "gsap";
+import { Group } from "three";
+
+import useAlbumStore from "@states/albumStore";
+import useAnimationStore from "@states/animationStore";
+import useSceneStore from "@states/sceneStore";
+
+type ExtendedGroup = Group & {
+    lpPlayer?: Group;
+    currentRecord?: Group;
+};
 
 gsap.registerPlugin(useGSAP);
 
 export const AnimationManager = () => {
-    const snap = useSnapshot(albumState);
-    const controls = useThree((state) => state.controls);
+    const { player, status, currentIndex, duration, album } = useAlbumStore();
+    const { currentAnim, setCurrentAnim, setIsPlaying } = useAnimationStore();
+    const root = useSceneStore((state) => state.root) as ExtendedGroup | null;
+    const controls = useThree((state) => state.controls) as unknown as CameraControls;
 
-    const ytTimeline = useRef<GSAPTimeline>();
+    const ytTimeline = useRef<gsap.core.Timeline>();
+    const lastSongRef = useRef<number | null>(null);
 
     useGSAP(
         () => {
             ytTimeline.current = gsap.timeline().to(".yt-progress-indicator", {
                 lazy: true,
                 delay: 0,
-                duration: snap.duration,
+                duration: duration,
                 ease: "none",
                 left: "100%",
             });
         },
-        { dependencies: [snap.currentIndex], revertOnUpdate: true }
+        { dependencies: [currentIndex], revertOnUpdate: true }
     );
-
-    const lastSongRef = useRef<number | null>(null);
 
     useEffect(() => {
         window.onfocus = async () => {
-            if (ytTimeline.current && albumState.player) {
-                ytTimeline.current.seek(
-                    await albumState.player.getCurrentTime()
-                );
+            if (ytTimeline.current && player) {
+                ytTimeline.current.seek(await player.getCurrentTime());
             }
         };
-
-        const albumSub = subscribe(albumState, () => {
-            const anim = ytTimeline.current;
-
-            if (!anim) return;
-            if (albumState.status === "playing") {
-                anim.play();
-            } else if (albumState.status === "paused") {
-                anim.pause();
-            }
-
-            const curIdx = albumState.currentIndex;
-            const lastSong = lastSongRef.current;
-
-            if (curIdx !== lastSong) {
-                if (typeof curIdx === "number") {
-                    console.group();
-                    console.log("new song");
-                    console.log(
-                        "old:",
-                        typeof lastSong === "number" && lastSong >= 0
-                            ? albumState.album?.list[lastSong]
-                            : null
-                    );
-                    console.log(
-                        "new:",
-                        typeof curIdx === "number" && curIdx >= 0
-                            ? albumState.album?.list[curIdx]
-                            : null
-                    );
-                    console.groupEnd();
-
-                    anim.restart();
-                    lastSongRef.current = curIdx ?? null;
-
-                    if (animState.currentAnim === "focusing") {
-                        setCurrentAnim("starting");
-                    }
-                } else {
-                    lastSongRef.current = null;
-                    anim.restart();
-                    anim.seek(0);
-                    console.log("end of album");
-                    setCurrentAnim("idle");
-                }
-            }
-
-            if (!albumState.album) {
-                setCurrentAnim("idle");
-                lastSongRef.current = null;
-            }
-        });
-
-        const animSub = subscribe(animState, () => {
-            const currentAnim = animState.currentAnim;
-            const cameraControls = controls as unknown as CameraControls;
-            console.log(
-                "currentAnim:",
-                currentAnim,
-                "cameraControls",
-                cameraControls
-            );
-
-            if (!cameraControls) return;
-
-            if (currentAnim === "focusing") {
-            } else if (currentAnim === "starting") {
-                setIsPlaying(true);
-                cameraControls.smoothTime = 1;
-
-                if (refState.lpPlayer) {
-                    const { x, y, z } = refState.lpPlayer.position;
-
-                    cameraControls.setOrbitPoint(x, y, z);
-                    cameraControls.fitToBox(refState.lpPlayer, true, {
-                        paddingBottom: 2,
-                        paddingTop: 2,
-                    });
-                }
-
-                cameraControls.rotateAzimuthTo(Math.PI, true);
-                cameraControls.rotatePolarTo(0, true).then(() => {
-                    setCurrentAnim("ready");
-                });
-            } else if (currentAnim === "ready") {
-                if (refState.currentRecord) {
-                    cameraControls
-                        .fitToBox(refState.currentRecord, true, {
-                            cover: true,
-                        })
-                        .then(() => {
-                            cameraControls.smoothTime = 0.25;
-                            setCurrentAnim("playing");
-                        });
-                }
-            } else if (currentAnim === "playing") {
-                cameraControls.rotatePolarTo(Math.PI / 3, true).then(() => {});
-            } else if (currentAnim === "starting-step-3") {
-                setIsPlaying(false);
-            } else {
-            }
-        });
 
         return () => {
-            albumSub();
-            animSub();
+            window.onfocus = null;
         };
-    });
+    }, [player]);
+
+    useEffect(() => {
+        const anim = ytTimeline.current;
+        if (!anim) return;
+
+        if (status === "playing") {
+            anim.play();
+        } else if (status === "paused") {
+            anim.pause();
+        }
+    }, [status]);
+
+    useEffect(() => {
+        if (!controls || !root) return;
+
+        // const targetPosition = { x: 0, y: 0, z: 0 };
+        // const targetRotation = { x: 0, y: 0 };
+
+        if (currentAnim === "focusing") {
+            // NEED TO IMPLEMENT
+        } else if (currentAnim === "starting") {
+            setIsPlaying(true);
+            controls.smoothTime = 1;
+
+            if (root.lpPlayer) {
+                const { x, y, z } = root.lpPlayer.position;
+
+                controls.setOrbitPoint(x, y, z);
+                controls.fitToBox(root.lpPlayer, true, {
+                    paddingBottom: 2,
+                    paddingTop: 2,
+                });
+            }
+
+            controls.rotateAzimuthTo(Math.PI, true);
+            controls.rotatePolarTo(0, true).then(() => {
+                setCurrentAnim("ready");
+            });
+        } else if (currentAnim === "ready") {
+            if (root.currentRecord) {
+                controls
+                    .fitToBox(root.currentRecord, true, {
+                        cover: true,
+                    })
+                    .then(() => {
+                        controls.smoothTime = 0.25;
+                        setCurrentAnim("playing");
+                    });
+            }
+        } else if (currentAnim === "playing") {
+            controls.rotatePolarTo(Math.PI / 3, true).then(() => {});
+        } else if (currentAnim === "starting-step-3") {
+            setIsPlaying(false);
+        } else {
+            // NEED TO IMPLEMENT
+        }
+    }, [controls, currentAnim, root, setCurrentAnim, setIsPlaying]);
+
+    useEffect(() => {
+        const anim = ytTimeline.current;
+
+        if (!anim) return;
+        if (status === "playing") {
+            anim.play();
+        } else if (status === "paused") {
+            anim.pause();
+        }
+
+        const curIdx = currentIndex;
+        const lastSong = lastSongRef.current;
+
+        if (curIdx !== lastSong) {
+            if (typeof curIdx === "number") {
+                console.group();
+                console.log("new song");
+                console.log(
+                    "old:",
+                    typeof lastSong === "number" && lastSong >= 0
+                        ? album?.list[lastSong]
+                        : null
+                );
+                console.log(
+                    "new:",
+                    typeof curIdx === "number" && curIdx >= 0
+                        ? album?.list[curIdx]
+                        : null
+                );
+                console.groupEnd();
+
+                anim.restart();
+                lastSongRef.current = curIdx ?? null;
+
+                if (currentAnim === "focusing") {
+                    setCurrentAnim("starting");
+                }
+            } else {
+                lastSongRef.current = null;
+                anim.restart();
+                anim.seek(0);
+                console.log("end of album");
+                setCurrentAnim("idle");
+            }
+        }
+
+        if (!album) {
+            setCurrentAnim("idle");
+            lastSongRef.current = null;
+        }
+    }, [currentIndex, setCurrentAnim, album, status, currentAnim]);
 
     return null;
 };

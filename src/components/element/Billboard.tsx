@@ -1,14 +1,15 @@
 import { useEffect, useRef } from "react";
 import { Group, Vector3 } from "three";
-
 import { useFrame } from "@react-three/fiber";
-import { setObject } from "@states/refState";
+
+import useSceneStore from "@states/sceneStore";
 import { easeOutLerp } from "utils/position";
 import { AlbumInfo } from "./AlbumInfo";
 
 export const Billboard = () => {
     const boardRef = useRef<Group>(null);
     const wrapperRef = useRef<Group>(null);
+    const { setCurrentRecord } = useSceneStore();
 
     const FollowCam = new Vector3(0, 0, -6);
 
@@ -28,8 +29,14 @@ export const Billboard = () => {
     });
 
     useEffect(() => {
-        if (boardRef.current) setObject("board", boardRef.current);
-    });
+        if (boardRef.current) {
+            setCurrentRecord(boardRef.current);
+        }
+
+        return () => {
+            setCurrentRecord(null);
+        };
+    }, [setCurrentRecord]);
 
     // 1. Album Panel // 2. LP Cover // 3. LP Record
     return (

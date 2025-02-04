@@ -1,6 +1,6 @@
+import { useGLTF } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
-import { albumState, setAlbum } from "@states/album";
-import { animState, setCurrentAnim } from "@states/animation";
+import { useRef } from "react";
 import {
     Euler,
     Group,
@@ -8,14 +8,13 @@ import {
     TextureLoader,
     Vector3,
 } from "three";
-
-import { useGLTF } from "@react-three/drei";
-import { refState } from "@states/refState";
-import { useRef } from "react";
 import { GLTF } from "three-stdlib";
-import { easeOutLerp } from "utils/position";
-import { useSnapshot } from "valtio";
+
+import useAlbumStore from "@states/albumStore";
+import useAnimationStore from "@states/animationStore";
+import useSceneStore from "@states/sceneStore";
 import { Album } from "../../types/Album";
+import { easeOutLerp } from "utils/position";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -46,188 +45,90 @@ const COVER_POS = {
     play: new Vector3(-50, 0, 0),
 };
 
-// const Origin = new Vector3(0, 0, 0);
-
 const gap = 8.9;
 
-const FollowCam = new Vector3();
-const temp = new Vector3();
+export function CustomLp({ album, order }: { album: Album; order: number }) {
+    const { nodes, materials } = useGLTF("/lpRecord-transformed.glb") as GLTFResult;
+    const groupRef = useRef<Group>(null);
+    const coverRef = useRef<Group>(null);
+    const recordRef = useRef<Group>(null);
 
-export const CustomLp = ({ album, order }: { album: Album; order: number }) => {
-    const { nodes, materials } = useGLTF(
-        "/lpRecord-transformed.glb"
-    ) as GLTFResult;
-    const textureLoader = new TextureLoader();
-    const texture = textureLoader.load(album.cover);
-    const customMaterial: MeshStandardMaterial = materials.Material_25.clone();
-    customMaterial.map = texture;
+    const root = useSceneStore((state) => state.root);
+    const { setAlbum } = useAlbumStore();
+    const { currentAnim, setCurrentAnim } = useAnimationStore();
 
-    const INIT_STATE: {
-        rotation: Euler;
-        position: Vector3;
-    } = {
-        rotation: new Euler(-Math.PI / 8, 0, 0),
-        position: new Vector3(gap * order, 0, 0),
-    };
+    useFrame(() => {
+        if (!groupRef.current || !coverRef.current || !recordRef.current) return;
 
-    const snap = useSnapshot(albumState);
-    const isFocus = snap.album?.id === album.id;
+        const targetCoverPos = COVER_POS[currentAnim as keyof typeof COVER_POS] || COVER_POS.init;
+        const targetRecordPos = RECORD_POS[currentAnim as keyof typeof RECORD_POS] || RECORD_POS.init;
 
-    const lpRef = useRef<Group>(null);
-
-    useFrame(({ camera }) => {
-        if (
-            !lpRef.current ||
-            !refState.board ||
-            !refState.shelf ||
-            !refState.lpPlayer
-        )
-            return;
-
-        const cover = lpRef.current.getObjectByName("cover");
-        const record = lpRef.current.getObjectByName("record");
-
-        if (isFocus) {
-            if (!cover || !record) return;
-
-            refState.board.getWorldPosition(FollowCam);
-            lpRef.current.parent?.worldToLocal(FollowCam);
-
-            refState.lpPlayer.getWorldPosition(temp);
-            record.parent?.worldToLocal(temp);
-
-            if (animState.currentAnim === "focusing") {
-                easeOutLerp({
-                    target: lpRef.current.position,
-                    goal: FollowCam,
-                    speedFactor: 10,
-                });
-                // lp랑 커버 따로 이동시키기
-                easeOutLerp({
-                    target: cover.position,
-                    goal: COVER_POS.focus,
-                });
-                easeOutLerp({
-                    target: record.position,
-                    goal: RECORD_POS.focus,
-                });
-            } else if (animState.currentAnim === "starting") {
-                // lpRef.current.quaternion.slerp(new Quaternion(), 0.05);
-                easeOutLerp({
-                    target: lpRef.current.position,
-                    goal: FollowCam,
-                    speedFactor: -1,
-                });
-                easeOutLerp({ target: cover.position, goal: COVER_POS.play });
-                easeOutLerp({
-                    target: record.position,
-                    goal: RECORD_POS.play,
-                });
-
-                // TODO: 카메라와 별개로 움직이도록 변경할 것
-            } else if (animState.currentAnim === "playing") {
-                record.rotation.z += (1 / 108) * Math.PI;
-
-                temp.add(new Vector3(-1.4, 0, 2.1));
-
-                easeOutLerp({
-                    target: record.position,
-                    goal: temp,
-                });
-
-                return;
-            } else if (animState.currentAnim === "ready") {
-                // lpRef.current.lookAt(new Vector3(0, 1, 0));
-                return;
-            } else {
-                easeOutLerp({
-                    target: lpRef.current.position,
-                    goal: FollowCam,
-
-                    onUpdate: (dis) => {
-                        if (dis < 0.1) setCurrentAnim("focusing");
-                    },
-                });
-            }
-
-            lpRef.current.lookAt(camera.position.clone());
-        } else {
-            lpRef.current.rotation.copy(INIT_STATE.rotation);
-
-            easeOutLerp({
-                target: lpRef.current.position,
-                goal: INIT_STATE.position,
-            });
-
-            if (!cover || !record) return;
-            easeOutLerp({ target: cover.position, goal: COVER_POS.init });
-            easeOutLerp({
-                target: record.position,
-                goal: RECORD_POS.init,
-            });
-        }
+        easeOutLerp({
+            target: coverRef.current.position,
+            goal : targetCoverPos,
+            speedFactor: 0.1
+        });
+        easeOutLerp({
+            target: recordRef.current.position,
+            goal : targetRecordPos,
+            speedFactor: 0.1
+        });
     });
 
-    const onClick = (e: ThreeEvent<MouseEvent>) => {
-        if (e.delta <= 2) {
-            if (!isFocus) {
-                setAlbum(album);
-            } else {
-                setAlbum(null);
-            }
+    const handleClick = async (e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation();
+        if (!root || currentAnim === "play") return;
+
+        setAlbum(album);
+        setCurrentAnim("focus");
+
+        const targetRotation = new Euler(
+            0,
+            Math.PI + Math.PI / 2,
+            0
+        );
+
+        if (root && groupRef.current) {
+            root.rotation.y = targetRotation.y;
         }
     };
 
     return (
         <group
-            name={"lpOBJ-" + album.id}
-            ref={lpRef}
-            position={[gap * order, 0, 0.03]}
-            rotation={INIT_STATE.rotation}
-            onClick={onClick}
-            scale={0.722}
-            dispose={null}
+            ref={groupRef}
+            position-z={order * gap}
+            onClick={handleClick}
         >
-            <group
-                name="cover"
-                position={COVER_POS.init}
-            >
+            <group ref={coverRef}>
                 <mesh
-                    castShadow
-                    receiveShadow
                     geometry={nodes["Box001_Material_#25_0"].geometry}
-                    material={customMaterial}
+                    material={materials.Material_25}
                 />
                 <mesh
-                    castShadow
-                    receiveShadow
                     geometry={nodes["Box001_Material_#37_0"].geometry}
-                    material={materials.Material_37}
+                    material={
+                        new MeshStandardMaterial({
+                            map: new TextureLoader().load(album.cover),
+                        })
+                    }
                 />
                 <mesh
-                    castShadow
-                    receiveShadow
                     geometry={nodes["Box001_Material_#49_0"].geometry}
                     material={materials.Material_49}
                 />
                 <mesh
-                    castShadow
-                    receiveShadow
                     geometry={nodes["Box001_Material_#73_0"].geometry}
                     material={materials.Material_73}
                 />
             </group>
-            <mesh
-                name="record"
-                position={RECORD_POS.init}
-                castShadow
-                receiveShadow
-                geometry={nodes["Cylinder001_Material_#85_0"].geometry}
-                material={materials.Material_85}
-                scale={4.5}
-            />
+            <group ref={recordRef}>
+                <mesh
+                    geometry={nodes["Cylinder001_Material_#85_0"].geometry}
+                    material={materials.Material_85}
+                />
+            </group>
         </group>
     );
-};
+}
 
 useGLTF.preload("/lpRecord-transformed.glb");

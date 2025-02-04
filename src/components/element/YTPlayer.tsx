@@ -1,15 +1,14 @@
-import { albumState, setAlbumStatus, setPlayer } from "@states/album";
+import { Html } from "@react-three/drei";
 import YouTube, { YouTubePlayer } from "react-youtube";
 
 import { youtubeState } from "@constants/youtubeState";
-import { Html } from "@react-three/drei";
-import { useSnapshot } from "valtio";
+import useAlbumStore from "@states/albumStore";
 
 export const YTPlayer = () => {
+    const { album, setPlayer, setStatus } = useAlbumStore();
     const isLoop = false;
 
-    const snap = useSnapshot(albumState);
-    const query = snap.album?.url.split("list=") ?? [];
+    const query = album?.url.split("list=") ?? [];
     const playlist = query.pop();
 
     if (!playlist) return null;
@@ -32,7 +31,7 @@ export const YTPlayer = () => {
                 }}
                 onStateChange={async function (e) {
                     const statusStr = youtubeState[e.data];
-                    setAlbumStatus(statusStr, await e.target.getDuration());
+                    setStatus(statusStr, await e.target.getDuration());
                 }}
                 opts={{
                     width: 340,

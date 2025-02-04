@@ -1,20 +1,17 @@
 import { Addition, Base, Geometry, Subtraction } from "@react-three/csg";
 import { Center, Text } from "@react-three/drei";
-
-import { albumState } from "@states/album";
-import { animState } from "@states/animation";
 import { useState } from "react";
 import { DoubleSide } from "three";
-import { useSnapshot } from "valtio";
+
+import useAlbumStore from "@states/albumStore";
+import useAnimationStore from "@states/animationStore";
 
 export const AlbumInfo = () => {
     const [hoveredIndex, setHoveredIndex] = useState(0);
+    const { album, player, currentIndex } = useAlbumStore();
+    const { currentAnim } = useAnimationStore();
 
-    const snap = useSnapshot(albumState);
-    const len = snap.album?.list.length ?? 2;
-    const player = snap.player;
-
-    const animSnap = useSnapshot(animState);
+    const len = album?.list.length ?? 2;
 
     return (
         <group
@@ -22,10 +19,8 @@ export const AlbumInfo = () => {
             position={[-5, 0, 0]}
             scale={1.1}
         >
-            {snap.album && (
-                <group
-                    visible={["focusing"].includes(animSnap.currentAnim ?? "")}
-                >
+            {album && (
+                <group visible={["focusing"].includes(currentAnim ?? "")}>
                     <mesh
                         name="panel"
                         position={[0, 0, -10]}
@@ -47,20 +42,16 @@ export const AlbumInfo = () => {
                             side={DoubleSide}
                         />
                     </mesh>
-                    <group
-                        name="text"
-                        scale={0.8}
-                        position={[0, 0, -5]}
-                    >
+                    <group name="text" scale={0.8} position={[0, 0, -5]}>
                         <Text
                             position={[4, 9.5, 0]}
                             fontSize={1.5}
                             font="/Pretendard.woff"
                         >
-                            {snap.album.title}
+                            {album.title}
                         </Text>
                         <group position={[4.5, 7.1, 0]}>
-                            {snap.album.list.map((song, idx) => {
+                            {album.list.map((song, idx) => {
                                 const x =
                                     9 *
                                     Math.cos(
@@ -184,8 +175,8 @@ export const AlbumInfo = () => {
                                     />
                                 </mesh>
                             )}
-                            {typeof snap.currentIndex === "number" &&
-                                snap.currentIndex >= 0 && (
+                            {typeof currentIndex === "number" &&
+                                currentIndex >= 0 && (
                                     <group>
                                         <mesh
                                             name="playingBack"
@@ -212,7 +203,7 @@ export const AlbumInfo = () => {
                                                         5,
                                                         -(
                                                             13 *
-                                                            ((snap.currentIndex ??
+                                                            ((currentIndex ??
                                                                 0) +
                                                                 1)
                                                         ) / len,
