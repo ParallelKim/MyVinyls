@@ -1,10 +1,9 @@
 import { Artist } from "../types/Artist";
 
 export const JUNGWOO: Artist = {
-    profile:
-        "https://image.genie.co.kr/Y/IMAGE/IMG_MUZICAT/IV2/Genie_Magazine/13746/Mgz_Main_Top_20231109104820.jpg/dims/resize/Q_80,0",
     albums: [
         {
+            id: "JW001",
             title: "여섯 번째 토요일",
             artist: "정우",
             list: [
@@ -24,6 +23,7 @@ export const JUNGWOO: Artist = {
             url: "https://www.youtube.com/watch?v=RR3UGT_Y3xY&list=OLAK5uy_kwUBAtUZb46mNA16pZV0qTh5Yqk6X5byc",
         },
         {
+            id: "JW002",
             title: "클라우드 쿠쿠 랜드",
             artist: "정우",
             list: [

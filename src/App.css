@@ -3,6 +3,11 @@
     padding: 2rem;
     text-align: center;
     font-family: Pretendard;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 html {
@@ -43,4 +48,108 @@ html {
 
 .read-the-docs {
     color: #888;
+}
+
+#canvas {
+    z-index: 1;
+}
+#ui {
+    position: relative;
+    z-index: 2;
+}
+
+.ui-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 8388636;
+}
+
+.yt-controller {
+    position: fixed;
+    top: calc(100vh - 6rem);
+    width: 100vw;
+    height: 6rem;
+    padding-bottom: 2rem;
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: white;
+    gap: 1rem;
+    transition: color 1s ease-out, transform 0.5s ease-out;
+    background-color: #00000080;
+}
+
+.yt-ctrl-hidden {
+    transform: translateY(100%);
+}
+
+.yt-ctrl-hidden > .yt-progress {
+    opacity: 0;
+}
+
+.yt-ctrl-visible {
+    transform: translateY(0%);
+}
+
+.yt-progress {
+    position: relative;
+    width: 100%;
+}
+
+.yt-progress > .yt-progress-bar {
+    height: 0.2rem;
+    width: 110%;
+    background-color: white;
+    transform: translate(calc(-100% + 0.1rem), -100%) !important;
+}
+
+.yt-progress > .yt-progress-indicator {
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.yt-icon {
+    transition: all 0.2s ease-out;
+}
+.yt-icon:hover {
+    color: #b00;
+    cursor: pointer;
+}
+
+.yt-buttons {
+    display: flex;
+    gap: 2rem;
+    padding-top: 0.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.yt-buttons-disabled > *,
+.yt-icon-disabled {
+    transition: all 0.2s ease-out;
+    color: #888;
+}
+
+.loading-screen {
+    visibility: hidden;
+    animation: fadein 1.5s;
+    animation-fill-mode: forwards;
+    animation-delay: 0.5s; /* no spinner flickering for fast load times */
+    display: flex;
+    justify-content: center;
+    align-itmes: center;
+}
+
+@keyframes fadein {
+    from {
+        visibility: visible;
+        opacity: 0;
+    }
+    to {
+        visibility: visible;
+        opacity: 1;
+    }
 }

@@ -20,7 +20,6 @@ export const Desk = (props: JSX.IntrinsicElements["group"]) => {
         >
             <mesh
                 receiveShadow
-                castShadow
                 geometry={nodes.Cylinder02.geometry}
                 material={materials["IKEA-Gustav_Desk-3D_Material__8.001"]}
                 scale={0.025}
