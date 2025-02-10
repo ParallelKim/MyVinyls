@@ -54,13 +54,21 @@ export class LpAnimationManager {
         isSelected,
         initialState,
     }: UpdateParams) {
-        // 선택되지 않은 상태일 때의 처리
+        // 선택되지 않은 상태일 때의 처리 (Deselection 시 애니메이션 실행)
         if (!isSelected && initialState) {
             easeOutLerp({
                 target: lpGroup.position,
                 goal: initialState.position,
-                speedFactor: 0.1,
+                speedFactor: 15,
             });
+
+            // 회전값도 부드럽게 초기 상태로 복귀 (lpGroup.rotation는 Euler 타입입니다)
+            lpGroup.rotation.x +=
+                (initialState.rotation.x - lpGroup.rotation.x) * 0.1;
+            lpGroup.rotation.y +=
+                (initialState.rotation.y - lpGroup.rotation.y) * 0.1;
+            lpGroup.rotation.z +=
+                (initialState.rotation.z - lpGroup.rotation.z) * 0.1;
 
             easeOutLerp({
                 target: coverRef.position,
@@ -73,7 +81,7 @@ export class LpAnimationManager {
                 goal: this.RECORD_POS.init,
                 speedFactor: 0.1,
             });
-            return; // 여기서 early return하여 focusing 로직이 실행되지 않도록 함
+            return; // deselection의 경우 focusing 등의 나머지 로직은 실행하지 않음
         }
 
         if (currentAnim === "focusing" && isSelected) {
@@ -102,7 +110,7 @@ export class LpAnimationManager {
             lpGroup.lookAt(camera.position);
         }
 
-        // playing 상태의 애니메이션은 선택된 상태에서만 실행
+        // playing 상태의 애니메이션
         if (currentAnim === "playing" && isSelected) {
             recordRef.rotation.y += delta * 2;
         }

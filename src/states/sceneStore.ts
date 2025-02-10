@@ -3,6 +3,7 @@ import { Group } from "three";
 
 interface SceneState {
     root: Group | null;
+    shelf: Group | null;
     lpPlayer: Group | null;
     station: Group | null;
     currentRecord: Group | null;
@@ -10,6 +11,7 @@ interface SceneState {
     currentTrack: string | null;
     billboard: Group | null;
     setRoot: (root: Group | null) => void;
+    setShelf: (shelf: Group | null) => void;
     setLpPlayer: (lpPlayer: Group | null) => void;
     setStation: (station: Group | null) => void;
     setCurrentRecord: (record: Group | null) => void;
@@ -20,6 +22,7 @@ interface SceneState {
 
 const useSceneStore = create<SceneState>()((set) => ({
     root: null,
+    shelf: null,
     lpPlayer: null,
     station: null,
     currentRecord: null,
@@ -27,6 +30,7 @@ const useSceneStore = create<SceneState>()((set) => ({
     currentTrack: null,
     billboard: null,
     setRoot: (root) => set({ root }),
+    setShelf: (shelf) => set({ shelf }),
     setLpPlayer: (lpPlayer) => set({ lpPlayer }),
     setStation: (station) => set({ station }),
     setCurrentRecord: (record) => set({ currentRecord: record }),

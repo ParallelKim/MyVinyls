@@ -11,7 +11,7 @@ import { lpEventManager } from "../../Scene/animations/core/LpEventManager";
 
 export const LpGroup = () => {
     const shelfRef = useRef<Group>(null);
-    const setRoot = useSceneStore((state) => state.setRoot);
+    const setShelf = useSceneStore((state) => state.setShelf);
     const { currentAnim } = useAnimationStore();
     const animationManager = useRef<LpAnimationManager>(
         new LpAnimationManager()
@@ -34,7 +34,10 @@ export const LpGroup = () => {
         rotation: Vector3;
     } | null>(null);
 
-    // LP 선택 이벤트 구독
+    // LP의 선택 상태를 관리하는 플래그 (deselection 애니메이션 처리를 위해 사용)
+    const isSelectedRef = useRef<boolean>(false);
+
+    // LP 선택 이벤트 구독 및 설정
     useEffect(() => {
         const unsubscribe = lpEventManager.subscribe((event) => {
             if (event.type === "LP_SELECTED") {
@@ -54,42 +57,40 @@ export const LpGroup = () => {
                     coverRef: lpGroup.getObjectByName("cover") as Group,
                     recordRef: lpGroup.getObjectByName("record") as Group,
                 };
+                isSelectedRef.current = true; // 선택 상태로 설정
             } else if (event.type === "LP_UNSELECTED") {
-                selectedRefs.current = {
-                    lpGroup: null,
-                    coverRef: null,
-                    recordRef: null,
-                };
-                initialState.current = null;
+                // deselect 시 LP 참조는 유지하여 deselection 애니메이션이 진행되도록 함
+                isSelectedRef.current = false;
+                // (필요에 따라 애니메이션 완료 후 selectedRefs 및 initialState를 초기화할 수 있음)
             }
         });
 
         return () => unsubscribe();
     }, []);
 
-    // 선택된 LP만 애니메이션 업데이트
+    // LP 애니메이션 업데이트 (선택 여부와 관계없이 LP가 존재한다면 update 호출)
     useFrame(({ camera }, delta) => {
         const { lpGroup, coverRef, recordRef } = selectedRefs.current;
-        if (!lpGroup || !coverRef || !recordRef) return;
-
-        animationManager.current.update({
-            delta,
-            currentAnim,
-            camera,
-            lpGroup,
-            coverRef,
-            recordRef,
-            isSelected: true,
-            initialState: initialState.current,
-        });
+        if (lpGroup) {
+            animationManager.current.update({
+                delta,
+                currentAnim,
+                camera,
+                lpGroup,
+                coverRef: coverRef!,
+                recordRef: recordRef!,
+                isSelected: isSelectedRef.current,
+                initialState: initialState.current,
+            });
+        }
     });
 
     useEffect(() => {
         if (shelfRef.current) {
-            setRoot(shelfRef.current);
+            setShelf(shelfRef.current);
         }
-        return () => setRoot(null);
-    }, [setRoot]);
+        return () => setShelf(null);
+    }, [setShelf]);
 
     return (
         <group
