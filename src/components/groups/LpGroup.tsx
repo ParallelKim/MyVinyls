@@ -7,7 +7,7 @@ import useSceneStore from "@states/sceneStore";
 import useAnimationStore from "@states/animationStore";
 import { CustomLp } from "../models/CustomLp";
 import { LpAnimationManager } from "../../Scene/animations/core/LpAnimationManager";
-import { lpEventManager } from "../../Scene/animations/core/LpEventManager";
+import { unifiedEventManager } from "Scene/animations/AnimationEngine";
 
 export const LpGroup = () => {
     const shelfRef = useRef<Group>(null);
@@ -39,7 +39,7 @@ export const LpGroup = () => {
 
     // LP 선택 이벤트 구독 및 설정
     useEffect(() => {
-        const unsubscribe = lpEventManager.subscribe((event) => {
+        const unsubscribe = unifiedEventManager.subscribe((event) => {
             if (event.type === "LP_SELECTED") {
                 const lpGroup = shelfRef.current?.getObjectByName(
                     `lpOBJ-${event.payload.lpId}`

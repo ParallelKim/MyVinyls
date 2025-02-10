@@ -1,6 +1,7 @@
 import { Group, Vector3, Matrix4, Object3D, Camera } from "three";
 import { AnimationStatus } from "../states/AnimationStateManager";
 import { easeOutLerp } from "utils/position";
+import useSceneStore from "@states/sceneStore";
 
 type UpdateParams = {
     delta: number;
@@ -29,7 +30,7 @@ export class LpAnimationManager {
     private readonly RECORD_POS = {
         init: new Vector3(0.5, 0, 0.3),
         focus: new Vector3(0, 0, 0.1),
-        play: new Vector3(0, 0, 0),
+        play: new Vector3(0, 1.5, 0),
     };
 
     private readonly CAMERA_DISTANCE = -5; // 원하는 카메라와의 거리
@@ -100,6 +101,23 @@ export class LpAnimationManager {
     }
 
     private updatePlayingAnimation(delta: number, recordRef: Group) {
+        // LP Player(예, station)의 위치를 기준으로 LP 레코드 이동
+        const station = useSceneStore((state) => state.station);
+        if (station) {
+            const targetPos = new Vector3();
+            station.getWorldPosition(targetPos);
+            targetPos.y += 0.5; // 오프셋 조절
+            if (recordRef.parent) {
+                recordRef.parent.worldToLocal(targetPos);
+            }
+            easeOutLerp({
+                target: recordRef.position,
+                goal: targetPos,
+                speedFactor: 10,
+            });
+        }
+
+        // 지속적인 회전 애니메이션을 적용합니다.
         recordRef.rotation.y += delta * 2;
     }
 

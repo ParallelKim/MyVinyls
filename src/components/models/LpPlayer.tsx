@@ -33,6 +33,8 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
         if (lpRef.current && stationRef.current) {
             setLpPlayer(lpRef.current);
             setStation(stationRef.current);
+
+            console.log(stationRef.current);
         }
 
         return () => {

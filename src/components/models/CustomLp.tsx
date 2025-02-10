@@ -1,14 +1,12 @@
 import { useGLTF, useTexture } from "@react-three/drei";
-import { ThreeEvent, useFrame } from "@react-three/fiber";
-import { useRef, useEffect, useMemo } from "react";
-import { Group, MeshStandardMaterial, TextureLoader } from "three";
+import { ThreeEvent } from "@react-three/fiber";
+import { useRef, useMemo } from "react";
+import { Group, MeshStandardMaterial } from "three";
 import { GLTF } from "three-stdlib";
 
 import useAnimationStore from "@states/animationStore";
-import useSceneStore from "@states/sceneStore";
 import { Album } from "../../types/Album";
-import { LpAnimationManager } from "../../Scene/animations/core/LpAnimationManager";
-import { lpEventManager } from "../../Scene/animations/core/LpEventManager";
+import { unifiedEventManager } from "Scene/animations/AnimationEngine";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -46,11 +44,11 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
         e.stopPropagation();
         if (!groupRef.current || currentAnim === "playing") return;
 
-        const isSelected = lpEventManager.isSelected(album.id);
+        const isSelected = unifiedEventManager.isSelected(album.id);
         if (isSelected) {
-            lpEventManager.unselect();
+            unifiedEventManager.unselect();
         } else {
-            lpEventManager.emit({
+            unifiedEventManager.emit({
                 type: "LP_SELECTED",
                 payload: {
                     album,

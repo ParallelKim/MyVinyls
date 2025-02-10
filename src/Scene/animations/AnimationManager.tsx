@@ -8,10 +8,14 @@ import { Group } from "three";
 import useAlbumStore from "@states/albumStore";
 import useAnimationStore from "@states/animationStore";
 import useSceneStore from "@states/sceneStore";
-import { AnimationStateManager } from "./states/AnimationStateManager";
-import { TimelineManager } from "./core/TimelineManager";
+import {
+    BaseAnimationStateManager,
+    BaseTimelineManager,
+    UnifiedEventManager,
+    AnimationEvent,
+    unifiedEventManager,
+} from "./AnimationEngine";
 import { YOUTUBE_STATES, youtubeState } from "@constants/youtubeState";
-import { lpEventManager, LpEvent } from "./core/LpEventManager";
 
 type ExtendedGroup = Group & {
     lpPlayer?: Group;
@@ -29,13 +33,13 @@ export const AnimationManager = () => {
         (state) => state.controls
     ) as unknown as CameraControls;
 
-    const timelineManager = useRef<TimelineManager>(
-        new TimelineManager((error) => {
+    const timelineManager = useRef<BaseTimelineManager>(
+        new BaseTimelineManager((error) => {
             console.error("[AnimationManager] Timeline error:", error);
             setCurrentAnim("error");
         })
     );
-    const stateManager = useRef<AnimationStateManager | null>(null);
+    const stateManager = useRef<BaseAnimationStateManager | null>(null);
 
     // Initialize timeline
     useGSAP(
@@ -51,7 +55,7 @@ export const AnimationManager = () => {
     useEffect(() => {
         if (!controls || !root) return;
 
-        stateManager.current = new AnimationStateManager(
+        stateManager.current = new BaseAnimationStateManager(
             { controls, root },
             setIsPlaying,
             setCurrentAnim
@@ -128,26 +132,25 @@ export const AnimationManager = () => {
         player.addEventListener("onStateChange", handlePlayerStateChange);
     }, [player, currentAnim, setCurrentAnim]);
 
-    // LP 선택 이벤트 구독
+    // unifiedEventManager를 이용한 LP 선택 이벤트 처리
     useEffect(() => {
-        const unsubscribe = lpEventManager.subscribe((event: LpEvent) => {
-            if (event.type === "LP_SELECTED") {
-                setAlbum(event.payload.album);
-                setCurrentAnim("focusing");
-
-                if (stateManager.current) {
-                    stateManager.current.handleState("focusing");
-                }
-            } else if (event.type === "LP_UNSELECTED") {
-                setAlbum(null);
-                setCurrentAnim("idle"); // unselect 시 idle 상태로 변경
-
-                if (stateManager.current) {
-                    stateManager.current.handleState("idle");
+        const unsubscribe = unifiedEventManager.subscribe(
+            (event: AnimationEvent) => {
+                if (event.type === "LP_SELECTED") {
+                    setAlbum(event.payload.album);
+                    setCurrentAnim("focusing");
+                    if (stateManager.current) {
+                        stateManager.current.handleState("focusing");
+                    }
+                } else if (event.type === "LP_UNSELECTED") {
+                    setAlbum(null);
+                    setCurrentAnim("idle");
+                    if (stateManager.current) {
+                        stateManager.current.handleState("idle");
+                    }
                 }
             }
-        });
-
+        );
         return () => unsubscribe();
     }, [setAlbum, setCurrentAnim]);
 
