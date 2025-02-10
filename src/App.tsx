@@ -15,13 +15,9 @@ import {
 } from "./constants/sceneConstants";
 import useSceneStore from "./states/sceneStore";
 import { JUNGWOO } from "@constants/jungwoo"; // 앨범 데이터 import
-import useAnimationStore from "./states/animationStore";
 
 const App = () => {
     const isPlaying = useSceneStore((state) => state.isPlaying);
-    const { currentAnim } = useAnimationStore();
-
-    const needsContinuousUpdate = isPlaying || currentAnim === "focusing";
 
     // 앨범 커버 이미지 프리로드
     useTexture.preload(JUNGWOO.albums.map((album) => album.cover));
@@ -36,7 +32,7 @@ const App = () => {
                     position: CAMERA_SETTINGS.POSITION,
                     frustumCulled: true,
                 }}
-                frameloop={needsContinuousUpdate ? "always" : "demand"}
+                frameloop={"always"}
                 performance={{
                     min: PERFORMANCE_SETTINGS.MIN,
                     max: PERFORMANCE_SETTINGS.MAX,

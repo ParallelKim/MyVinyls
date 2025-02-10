@@ -22,16 +22,34 @@ export class LpEventManager {
     }
 
     emit(event: LpEvent) {
-        // LP_SELECTED 이벤트일 때 이전 선택과 다른 LP라면 자동으로 교체
-        if (
-            event.type === "LP_SELECTED" &&
-            event.payload.lpId !== this.selectedLpId
-        ) {
-            this.selectedLpId = event.payload.lpId;
-            this.handlers.forEach((handler) => handler(event));
-        } else if (event.type === "LP_UNSELECTED") {
-            this.selectedLpId = null;
-            this.handlers.forEach((handler) => handler(event));
+        try {
+            if (event.type === "LP_SELECTED") {
+                if (
+                    this.selectedLpId &&
+                    this.selectedLpId !== event.payload.lpId
+                ) {
+                    // 기존 앨범이 선택되어 있다면 먼저 deselection 이벤트 발행
+                    this.handlers.forEach((handler) =>
+                        handler({
+                            type: "LP_UNSELECTED",
+                            payload: { album: null, lpId: this.selectedLpId },
+                        })
+                    );
+                    // deselection 애니메이션이 실행될 시간을 주기 위해 딜레이 후 새 선택 이벤트 발행
+                    setTimeout(() => {
+                        this.selectedLpId = event.payload.lpId;
+                        this.handlers.forEach((handler) => handler(event));
+                    }, 500);
+                } else {
+                    this.selectedLpId = event.payload.lpId;
+                    this.handlers.forEach((handler) => handler(event));
+                }
+            } else if (event.type === "LP_UNSELECTED") {
+                this.selectedLpId = null;
+                this.handlers.forEach((handler) => handler(event));
+            }
+        } catch (error) {
+            console.error("LP 이벤트 발행 중 에러 발생: ", error);
         }
     }
 
