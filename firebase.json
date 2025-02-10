@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "my-vinyls",
     "public": "public",
     "ignore": [
       "firebase.json",

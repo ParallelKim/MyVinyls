@@ -71,7 +71,11 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
                 geometry={nodes.Cylinder004.geometry}
                 material={materials.PaletteMaterial003}
             />
-            <group ref={stationRef} scale={0.5} position={[0.03, 1.5, 0.75]} />
+            <group
+                ref={stationRef}
+                scale={0.5}
+                position={[0.03, 1.5, 0.75]}
+            />
         </group>
     );
 };
