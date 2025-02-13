@@ -79,7 +79,18 @@ export const AlbumInfo = () => {
                                         e.stopPropagation();
 
                                         if (player) {
+                                            // 곡 선택 시 로딩 상태로 전환하여 레코드 이동 애니메이션 시작
                                             setCurrentAnim("loading");
+
+                                            // 애니메이션이 완료될 때까지 대기 (여기서는 1000ms)
+                                            await new Promise((resolve) =>
+                                                setTimeout(resolve, 1000)
+                                            );
+
+                                            // 애니메이션 완료 후 playing 상태로 전환
+                                            setCurrentAnim("playing");
+
+                                            // 이후 선택한 곡의 재생 시작
                                             await player.playVideoAt(idx);
                                         }
                                     }}

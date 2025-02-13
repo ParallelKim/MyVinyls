@@ -11,7 +11,8 @@ import { unifiedEventManager } from "Scene/animations/AnimationEngine";
 
 export const LpGroup = () => {
     const shelfRef = useRef<Group>(null);
-    const setShelf = useSceneStore((state) => state.setShelf);
+    const { station, setShelf } = useSceneStore();
+
     const { currentAnim } = useAnimationStore();
     const animationManager = useRef<LpAnimationManager>(
         new LpAnimationManager()
@@ -81,6 +82,7 @@ export const LpGroup = () => {
                 recordRef: recordRef!,
                 isSelected: isSelectedRef.current,
                 initialState: initialState.current,
+                station: station!,
             });
         }
     });

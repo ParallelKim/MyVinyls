@@ -1,5 +1,5 @@
-import { Group, Vector3, Matrix4, Object3D, Camera } from "three";
-import { AnimationStatus } from "../states/AnimationStateManager";
+import { Group, Vector3, Camera } from "three";
+import { AnimationStatus } from "../AnimationEngine";
 import { easeOutLerp } from "utils/position";
 import useSceneStore from "@states/sceneStore";
 
@@ -11,6 +11,7 @@ type UpdateParams = {
     coverRef: Group;
     recordRef: Group;
     isSelected: boolean;
+    station: Group;
     initialState: {
         position: Vector3;
         rotation: Vector3;
@@ -100,24 +101,32 @@ export class LpAnimationManager {
         lpGroup.lookAt(camera.position.clone().negate());
     }
 
-    private updatePlayingAnimation(delta: number, recordRef: Group) {
-        // LP Player(예, station)의 위치를 기준으로 LP 레코드 이동
-        const station = useSceneStore((state) => state.station);
+    // loading 상태일 때, LP 레코드가 LP Player(예, station) 위로 이동하도록 함
+    private updateLoadingAnimation(
+        delta: number,
+        recordRef: Group,
+        station: Group
+    ) {
         if (station) {
-            const targetPos = new Vector3();
-            station.getWorldPosition(targetPos);
-            targetPos.y += 0.5; // 오프셋 조절
+            station.getWorldPosition(this.temp);
+
+            this.temp.y += 0.5; // 오프셋 조절
             if (recordRef.parent) {
-                recordRef.parent.worldToLocal(targetPos);
+                recordRef.parent.worldToLocal(this.temp);
             }
+
             easeOutLerp({
                 target: recordRef.position,
-                goal: targetPos,
+                goal: this.temp,
                 speedFactor: 10,
             });
+            this.temp.y += 10;
+            recordRef.lookAt(this.temp);
         }
+    }
 
-        // 지속적인 회전 애니메이션을 적용합니다.
+    // playing 상태에서는 지속적인 회전만 적용합니다.
+    private updatePlayingAnimation(delta: number, recordRef: Group) {
         recordRef.rotation.y += delta * 2;
     }
 
@@ -130,6 +139,7 @@ export class LpAnimationManager {
         recordRef,
         isSelected,
         initialState,
+        station,
     }: UpdateParams) {
         if (!isSelected && initialState) {
             this.updateDeselectionAnimation(
@@ -151,7 +161,9 @@ export class LpAnimationManager {
             );
         }
 
-        if (currentAnim === "playing" && isSelected) {
+        if (currentAnim === "loading") {
+            this.updateLoadingAnimation(delta, recordRef, station);
+        } else if (currentAnim === "playing") {
             this.updatePlayingAnimation(delta, recordRef);
         }
     }

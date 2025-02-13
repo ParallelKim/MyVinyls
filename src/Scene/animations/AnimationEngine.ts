@@ -3,7 +3,7 @@
  */
 
 import gsap from "gsap";
-import { Group, Vector3, Camera } from "three";
+import { Group } from "three";
 import { YouTubePlayer } from "react-youtube";
 
 // -----------------------------------------
