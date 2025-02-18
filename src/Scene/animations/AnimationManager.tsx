@@ -9,11 +9,10 @@ import useAlbumStore from "@states/albumStore";
 import useAnimationStore from "@states/animationStore";
 import useSceneStore from "@states/sceneStore";
 import {
-    BaseAnimationStateManager,
-    BaseTimelineManager,
-    UnifiedEventManager,
     AnimationEvent,
-    unifiedEventManager,
+    AnimationStateManager,
+    TimelineManager,
+    eventManager,
 } from "./AnimationEngine";
 import { YOUTUBE_STATES, youtubeState } from "@constants/youtubeState";
 
@@ -27,19 +26,19 @@ gsap.registerPlugin(useGSAP);
 export const AnimationManager = () => {
     const { player, status, currentIndex, duration, album, setAlbum } =
         useAlbumStore();
-    const { currentAnim, setCurrentAnim, setIsPlaying } = useAnimationStore();
+    const { currentAnim, setCurrentAnim } = useAnimationStore();
     const root = useSceneStore((state) => state.root) as ExtendedGroup | null;
     const controls = useThree(
         (state) => state.controls
     ) as unknown as CameraControls;
 
-    const timelineManager = useRef<BaseTimelineManager>(
-        new BaseTimelineManager((error) => {
+    const timelineManager = useRef<TimelineManager>(
+        new TimelineManager((error) => {
             console.error("[AnimationManager] Timeline error:", error);
             setCurrentAnim("error");
         })
     );
-    const stateManager = useRef<BaseAnimationStateManager | null>(null);
+    const stateManager = useRef<AnimationStateManager | null>(null);
 
     // Initialize timeline
     useGSAP(
@@ -55,12 +54,8 @@ export const AnimationManager = () => {
     useEffect(() => {
         if (!controls || !root) return;
 
-        stateManager.current = new BaseAnimationStateManager(
-            { controls, root },
-            setIsPlaying,
-            setCurrentAnim
-        );
-    }, [controls, root, setIsPlaying, setCurrentAnim]);
+        stateManager.current = new AnimationStateManager({ controls, root });
+    }, [controls, root]);
 
     // Handle window focus for YouTube sync
     useEffect(() => {
@@ -134,23 +129,21 @@ export const AnimationManager = () => {
 
     // unifiedEventManager를 이용한 LP 선택 이벤트 처리
     useEffect(() => {
-        const unsubscribe = unifiedEventManager.subscribe(
-            (event: AnimationEvent) => {
-                if (event.type === "LP_SELECTED") {
-                    setAlbum(event.payload.album);
-                    setCurrentAnim("focusing");
-                    if (stateManager.current) {
-                        stateManager.current.handleState("focusing");
-                    }
-                } else if (event.type === "LP_UNSELECTED") {
-                    setAlbum(null);
-                    setCurrentAnim("idle");
-                    if (stateManager.current) {
-                        stateManager.current.handleState("idle");
-                    }
+        const unsubscribe = eventManager.subscribe((event: AnimationEvent) => {
+            if (event.type === "LP_SELECTED") {
+                setAlbum(event.payload.album);
+                setCurrentAnim("focusing");
+                if (stateManager.current) {
+                    stateManager.current.handleState("focusing");
+                }
+            } else if (event.type === "LP_UNSELECTED") {
+                setAlbum(null);
+                setCurrentAnim("idle");
+                if (stateManager.current) {
+                    stateManager.current.handleState("idle");
                 }
             }
-        );
+        });
         return () => unsubscribe();
     }, [setAlbum, setCurrentAnim]);
 

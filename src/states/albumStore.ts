@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { YouTubePlayer } from "react-youtube";
-import { AnimationStatus } from "Scene/animations/states/AnimationStateManager";
+import { AnimationStatus } from "../Scene/animations/AnimationEngine";
 
 interface Album {
     title: string;

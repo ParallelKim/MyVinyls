@@ -30,9 +30,9 @@ export type AnimationEvent = {
 };
 
 // -----------------------------------------
-// 3. UnifiedEventManager
+// 3. EventManager
 //    LP 선택/해제 이벤트의 구독 및 발행을 통합 관리합니다.
-export class UnifiedEventManager {
+export class EventManager {
     private handlers: ((event: AnimationEvent) => void)[] = [];
     private selectedLpId: string | null = null;
 
@@ -91,14 +91,16 @@ export class UnifiedEventManager {
 }
 
 // -----------------------------------------
-// 4. BaseAnimationStateManager
+// 4. AnimationStateManager
 //    애니메이션 상태 전환을 위한 공통 로직 (UI 업데이트, 인터랙션 제어 등)
-export class BaseAnimationStateManager {
-    constructor(
-        private context: { controls: any; root: Group },
-        private setIsPlaying: (isPlaying: boolean) => void,
-        private setCurrentAnim: (state: AnimationStatus) => void
-    ) {}
+export class AnimationStateManager {
+    context: { controls: any; root: Group };
+    isPlaying: boolean = false;
+    currentAnim: AnimationStatus = "idle";
+
+    constructor(context: { controls: any; root: Group }) {
+        this.context = context;
+    }
 
     async handleState(currentState: AnimationStatus) {
         // 상태 전환 시 공통 처리 로직 (예: 인터랙션 제한, UI 업데이트 등)
@@ -137,9 +139,9 @@ export class BaseAnimationStateManager {
 }
 
 // -----------------------------------------
-// 5. BaseTimelineManager
+// 5. TimelineManager
 //    GSAP 타임라인을 관리하고, YouTube 동기화, 상태 업데이트 및 에러 핸들링을 일원화합니다.
-export class BaseTimelineManager {
+export class TimelineManager {
     private timeline: gsap.core.Timeline | null = null;
     private lastSongIndex: number | null = null;
 
@@ -244,5 +246,5 @@ export class BaseTimelineManager {
     }
 }
 
-// unifiedEventManager 싱글톤 인스턴스 추가
-export const unifiedEventManager = new UnifiedEventManager();
+// EventManager 싱글톤 인스턴스 추가
+export const eventManager = new EventManager();
