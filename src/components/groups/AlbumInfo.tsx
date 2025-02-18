@@ -3,13 +3,15 @@ import { Center, Text } from "@react-three/drei";
 import { useState } from "react";
 import { DoubleSide } from "three";
 
-import useAlbumStore from "@/states/albumStore";
+import usePlayerStore from "@/states/playerStore";
 import useAnimationStore from "@/states/animationStore";
+import { ThreeEvent } from "@react-three/fiber";
+import { eventManager } from "@/Scene/animations/EventManager";
 
 export const AlbumInfo = () => {
     const [hoveredIndex, setHoveredIndex] = useState(0);
-    const { album, player, currentIndex } = useAlbumStore();
-    const { currentAnim, setCurrentAnim } = useAnimationStore();
+    const { album, currentIndex } = usePlayerStore();
+    const { currentAnim } = useAnimationStore();
 
     // 앨범이 없거나 focusing 상태가 아니면 렌더링하지 않음
     if (!album || currentAnim !== "focusing") {
@@ -18,6 +20,18 @@ export const AlbumInfo = () => {
 
     const len = album?.list.length ?? 2;
 
+    const handlePlay = async (e: ThreeEvent<MouseEvent>, idx: number) => {
+        e.stopPropagation();
+
+        eventManager.emit({
+            type: "LP_PLAYING",
+            payload: {
+                album,
+                lpId: album.id,
+                songIndex: idx,
+            },
+        });
+    };
     return (
         <group
             name="album info"
@@ -75,25 +89,7 @@ export const AlbumInfo = () => {
                                         setHoveredIndex(idx + 1)
                                     }
                                     onPointerLeave={() => setHoveredIndex(0)}
-                                    onClick={async (e) => {
-                                        e.stopPropagation();
-
-                                        if (player) {
-                                            // 곡 선택 시 로딩 상태로 전환하여 레코드 이동 애니메이션 시작
-                                            setCurrentAnim("loading");
-
-                                            // 애니메이션이 완료될 때까지 대기 (여기서는 1000ms)
-                                            await new Promise((resolve) =>
-                                                setTimeout(resolve, 1000)
-                                            );
-
-                                            // 애니메이션 완료 후 playing 상태로 전환
-                                            setCurrentAnim("playing");
-
-                                            // 이후 선택한 곡의 재생 시작
-                                            await player.playVideoAt(idx);
-                                        }
-                                    }}
+                                    onClick={(e) => handlePlay(e, idx)}
                                 >
                                     <Text
                                         font="/Pretendard.woff"

@@ -1,4 +1,4 @@
-import { AnimationStatus } from "Scene/animations/AnimationEngine";
+import { AnimationStatus } from "@/Scene/animations/EventManager";
 import { create } from "zustand";
 
 interface AnimationState {

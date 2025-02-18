@@ -1,92 +1,11 @@
 import gsap from "gsap";
+
 import { YouTubePlayer } from "react-youtube";
-import { Album } from "@/types/Album"
-
-export type AnimationStatus =
-    | "idle"
-    | "focusing"
-    | "loading"
-    | "starting"
-    | "ready"
-    | "playing"
-    | "changing"
-    | "returning"
-    | "error";
-
-export type AnimationEvent = {
-    type: "LP_SELECTED" | "LP_UNSELECTED";
-    payload: {
-        album: any; // 실제 타입에 맞게 수정 (예: Album)
-        lpId: string | null;
-    };
-};
-
-export class EventManager {
-    private handlers: ((event: AnimationEvent) => void)[] = [];
-    private selectedLpId: string | null = null;
-
-    subscribe(handler: (event: AnimationEvent) => void) {
-        this.handlers.push(handler);
-        return () => {
-            this.handlers = this.handlers.filter((h) => h !== handler);
-        };
-    }
-
-    emit(event: AnimationEvent) {
-        try {
-            if (event.type === "LP_SELECTED") {
-                if (
-                    this.selectedLpId &&
-                    this.selectedLpId !== event.payload.lpId
-                ) {
-                    // 기존 LP 해제 이벤트 발행
-                    this.handlers.forEach((handler) =>
-                        handler({
-                            type: "LP_UNSELECTED",
-                            payload: { album: null, lpId: this.selectedLpId },
-                        })
-                    );
-                }
-
-                this.selectedLpId = event.payload.lpId;
-            } else if (event.type === "LP_UNSELECTED") {
-                this.selectedLpId = null;
-            }
-            this.handlers.forEach((handler) => handler(event));
-        } catch (error) {
-            console.error("UnifiedEventManager - 이벤트 발행 중 에러:", error);
-        }
-    }
-
-    isSelected(lpId: string): boolean {
-        return this.selectedLpId === lpId;
-    }
-
-    unselect() {
-        this.handlers.forEach((handler) =>
-            handler({
-                type: "LP_UNSELECTED",
-                payload: { album: null, lpId: this.selectedLpId },
-            })
-        );
-        this.selectedLpId = null;
-    }
-
-    select(album: Album) {
-        this.emit({
-            type: "LP_SELECTED",
-            payload: { album, lpId: album.id },
-        });
-    }
-}
+import { AnimationStatus } from "./EventManager";
 
 export class TimelineManager {
     private timeline: gsap.core.Timeline | null = null;
     private lastSongIndex: number | null = null;
-
-    constructor(
-        private onError?: (error: { code: string; message: string }) => void
-    ) {}
 
     initialize(duration: number) {
         try {
@@ -122,7 +41,7 @@ export class TimelineManager {
         }
     }
 
-    handlePlaybackStateChange(status: AnimationStatus) {
+    handleStateChange(status: AnimationStatus) {
         if (!this.timeline) return;
         try {
             switch (status) {
@@ -180,9 +99,8 @@ export class TimelineManager {
     }
 
     private handleError(error: { code: string; message: string }) {
-        console.error("[BaseTimelineManager]", error);
-        this.onError?.(error);
+        console.error("[TimelineManager]", error);
     }
 }
 
-export const eventManager = new EventManager();
+export const timelineManager = new TimelineManager();

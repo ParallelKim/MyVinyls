@@ -7,12 +7,12 @@ import { easeOutLerp } from "@/utils/position";
 
 import { AlbumInfo } from "./AlbumInfo";
 
+const FollowCam = new Vector3(0, 0, -6);
+
 export const Billboard = () => {
     const boardRef = useRef<Group>(null);
     const wrapperRef = useRef<Group>(null);
     const { setBillboard } = useSceneStore();
-
-    const FollowCam = new Vector3(0, 0, -6);
 
     useFrame(({ camera }) => {
         if (!boardRef.current || !wrapperRef.current) return;
@@ -24,8 +24,7 @@ export const Billboard = () => {
             speedFactor: 10,
         });
 
-        boardRef.current.lookAt(camera.position.clone());
-
+        boardRef.current.lookAt(camera.position);
         wrapperRef.current.attach(boardRef.current);
     });
 
@@ -36,7 +35,6 @@ export const Billboard = () => {
         return () => setBillboard(null);
     }, [setBillboard]);
 
-    // 1. Album Panel // 2. LP Cover // 3. LP Record
     return (
         <group
             name="board wrapper"

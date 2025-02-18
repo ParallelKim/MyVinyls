@@ -72,9 +72,12 @@ export const returnLp = (
         speedFactor: 0.1,
     });
 
-    if (temp.distanceTo(lpGroup.position) < 0.1) {
+    if (temp.distanceTo(lpGroup.position) < 0.01) {
         lpGroup.position.copy(temp);
         lpGroup.rotation.set(Math.PI / 8, 0, 0);
+        recordRef.rotation.set(0, 0, 0);
+        recordRef.position.copy(RECORD_POS.init);
+        coverRef.position.copy(COVER_POS.init);
         callback();
     }
 };

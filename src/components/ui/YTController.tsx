@@ -1,11 +1,11 @@
-import useAlbumStore from "@/states/albumStore";
+import usePlayerStore from "@/states/playerStore";
 import { Next } from "./Next";
 import { Pause } from "./Pause";
 import { Play } from "./Play";
 import { Prev } from "./Prev";
 
 export const YTController = () => {
-    const { player, album, currentIndex, duration, status } = useAlbumStore();
+    const { player, album, currentIndex, status, duration } = usePlayerStore();
 
     const isFirst = currentIndex === 0;
     const isLast = album && album.list.length - 1 === currentIndex;
