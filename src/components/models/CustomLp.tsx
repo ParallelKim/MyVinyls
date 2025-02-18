@@ -6,10 +6,11 @@ import { GLTF } from "three-stdlib";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import useAnimationStore from "@/states/animationStore";
-import { eventManager } from "@/Scene/animations/EventManager";
-import { focusLp, returnLp } from "Scene/animations/lp";
+import { eventManager } from "@/Scene/managers/EventManager";
+import { focusLp, placeLp, returnLp } from "Scene/animations/lp";
 
 import { Album } from "@/types/Album";
+import useSceneStore from "@/states/sceneStore";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -40,10 +41,14 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
         return new MeshStandardMaterial({ map: albumTexture });
     }, [albumTexture]);
 
-    const lpState = useRef<"idle" | "focus" | "returning">("idle");
+    const lpState = useRef<
+        "idle" | "focus" | "returning" | "playing" | "placing"
+    >("idle");
     const groupRef = useRef<Group>(null);
+
     const { currentAnim } = useAnimationStore();
     const { camera } = useThree();
+    const { station } = useSceneStore();
 
     // 각 CustomLp가 자신의 애니메이션을 업데이트함
     useFrame(() => {
@@ -60,6 +65,9 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
                 returnLp(groupRef.current, coverRef, recordRef, order, () => {
                     lpState.current = "idle";
                 });
+            } else if (lpState.current === "placing") {
+                if (!station) return;
+                placeLp(coverRef, recordRef, station);
             }
         }
     });
@@ -75,8 +83,14 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
             eventManager.unselect();
         } else {
             lpState.current = "focus";
-            eventManager.select(album, () => {
-                lpState.current = "returning";
+            eventManager.select({
+                album,
+                onUnselect: () => {
+                    lpState.current = "returning";
+                },
+                onPlaying: () => {
+                    lpState.current = "placing";
+                },
             });
         }
     };

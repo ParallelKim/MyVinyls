@@ -1,4 +1,4 @@
-import { AnimationStatus } from "@/Scene/animations/EventManager";
+import { AnimationStatus } from "@/Scene/managers/EventManager";
 import { Album } from "@/types/Album";
 import { YouTubePlayer } from "react-youtube";
 import { create } from "zustand";

@@ -6,7 +6,7 @@ import { DoubleSide } from "three";
 import usePlayerStore from "@/states/playerStore";
 import useAnimationStore from "@/states/animationStore";
 import { ThreeEvent } from "@react-three/fiber";
-import { eventManager } from "@/Scene/animations/EventManager";
+import { eventManager } from "@/Scene/managers/EventManager";
 
 export const AlbumInfo = () => {
     const [hoveredIndex, setHoveredIndex] = useState(0);

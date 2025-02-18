@@ -7,6 +7,7 @@ const COVER_POS = {
     init: new Vector3(0, 0, 0),
     focus: new Vector3(3.5, 0, 0),
     play: new Vector3(-50, 0, 0),
+    placing: new Vector3(-50, 0, 0),
 };
 
 const RECORD_POS = {
@@ -93,4 +94,24 @@ export const playLp = (
         goal: COVER_POS.play,
         speedFactor: 15,
     });
+};
+
+export const placeLp = (coverRef: Group, recordRef: Group, station: Group) => {
+    // 카메라와의 거리 설정
+    temp.copy(station.position);
+    recordRef.parent?.worldToLocal(temp);
+
+    easeOutLerp({
+        target: recordRef.position,
+        goal: temp,
+        speedFactor: 15,
+    });
+
+    easeOutLerp({
+        target: coverRef.position,
+        goal: COVER_POS.placing,
+        speedFactor: 0.1,
+    });
+
+    coverRef.lookAt(new Vector3(0, 0, 1));
 };

@@ -1,7 +1,7 @@
 import gsap from "gsap";
 
 import { YouTubePlayer } from "react-youtube";
-import { AnimationStatus } from "./EventManager";
+import { AnimationStatus } from "../managers/EventManager";
 
 export class TimelineManager {
     private timeline: gsap.core.Timeline | null = null;

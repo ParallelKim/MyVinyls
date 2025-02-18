@@ -8,6 +8,8 @@ import { YOUTUBE_STATES } from "@/constants/youtubeState";
 
 import { AnimationEvent, eventManager } from "./EventManager";
 import { timelineManager } from "./TimelineManager";
+import { useThree } from "@react-three/fiber";
+import useSceneStore from "@/states/sceneStore";
 
 gsap.registerPlugin(useGSAP);
 
@@ -22,6 +24,12 @@ export const AnimationManager = () => {
         setIsPlaying,
     } = usePlayerStore();
     const { currentAnim, setCurrentAnim } = useAnimationStore();
+    const { lpPlayer } = useSceneStore();
+
+    const { camera, controls } = useThree((state) => ({
+        camera: state.camera,
+        controls: state.controls as any,
+    }));
 
     useGSAP(
         () => {
@@ -61,6 +69,10 @@ export const AnimationManager = () => {
                     // 이후 선택한 곡의 재생 시작
 
                     setCurrentAnim("loading");
+
+                    controls.reset();
+                    controls.fitToBox(lpPlayer, true, { cover: true });
+
                     await new Promise((resolve) => setTimeout(resolve, 1000));
                     setCurrentAnim("playing");
                     setIsPlaying(true);

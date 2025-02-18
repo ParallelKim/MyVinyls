@@ -42,12 +42,13 @@ export class EventManager {
                 }
 
                 this.selectedLpId = event.payload.lpId;
-            } else if (event.type === "LP_UNSELECTED") {
-                this.selectedLpId = null;
             }
             this.handlers.forEach((handler) => handler(event));
+            if (event.type === "LP_UNSELECTED") {
+                this.selectedLpId = null;
+            }
         } catch (error) {
-            console.error("UnifiedEventManager - 이벤트 발행 중 에러:", error);
+            console.error("EventManager - 이벤트 발행 중 에러:", error);
         }
     }
 
@@ -65,19 +66,26 @@ export class EventManager {
         this.selectedLpId = null;
     }
 
-    select(album: Album, onUnselect: () => void) {
+    select({
+        album,
+        onUnselect,
+        onPlaying,
+    }: {
+        album: Album;
+        onUnselect: () => void;
+        onPlaying: () => void;
+    }) {
         this.emit({
             type: "LP_SELECTED",
             payload: { album, lpId: album.id },
         });
 
         const unsubscribe = this.subscribe((event) => {
-            if (
-                event.type === "LP_UNSELECTED" &&
-                event.payload.lpId === album.id
-            ) {
+            if (event.type === "LP_UNSELECTED") {
                 onUnselect();
                 unsubscribe();
+            } else if (event.type === "LP_PLAYING") {
+                onPlaying();
             }
         });
     }

@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useRef } from "react";
-import { Group } from "three";
+import { BoxGeometry, Group, MeshBasicMaterial } from "three";
 import { GLTF } from "three-stdlib";
 
 import useSceneStore from "@/states/sceneStore";
@@ -33,8 +33,6 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
         if (lpRef.current && stationRef.current) {
             setLpPlayer(lpRef.current);
             setStation(stationRef.current);
-
-            console.log(stationRef.current);
         }
 
         return () => {
@@ -43,6 +41,7 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
         };
     }, [setLpPlayer, setStation]);
 
+    // TODO: 블렌더를 이용하여 축척 조정할 것
     return (
         <group
             name="lpPlayerOBJ"
@@ -76,8 +75,9 @@ export const LpPlayer = (props: JSX.IntrinsicElements["group"]) => {
             <group
                 ref={stationRef}
                 scale={0.5}
-                position={[0.03, 1.5, 0.75]}
-            />
+                position={[0.03, 3, 0.75]}
+                rotation={[0, 0, 0]}
+            ></group>
         </group>
     );
 };

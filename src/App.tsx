@@ -7,7 +7,7 @@ import { Suspense } from "react";
 import { Scene } from "Scene";
 import { LoadingFallback } from "@/components/groups/LoadingFallback";
 import { UI } from "@/components/ui/UI";
-import { AnimationManager } from "Scene/animations/AnimationManager";
+import { AnimationManager } from "@/Scene/managers/AnimationManager";
 import {
     CAMERA_SETTINGS,
     PERFORMANCE_SETTINGS,
@@ -40,7 +40,8 @@ const App = () => {
                 <Suspense fallback={<LoadingFallback />}>
                     <CameraControls
                         makeDefault
-                        enabled={!isPlaying}
+                        // enabled={!isPlaying}
+                        smoothTime={1}
                     />
                     <Bvh maxDepth={3}>
                         <Scene />
