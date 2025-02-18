@@ -1,8 +1,8 @@
 import { Html } from "@react-three/drei";
 import YouTube, { YouTubePlayer } from "react-youtube";
 
-import { youtubeState } from "@constants/youtubeState";
-import useAlbumStore from "@states/albumStore";
+import { youtubeState } from "@/constants/youtubeState";
+import useAlbumStore from "@/states/albumStore";
 
 export const YTPlayer = () => {
     const { album, setPlayer, setStatus } = useAlbumStore();
@@ -14,7 +14,11 @@ export const YTPlayer = () => {
     if (!playlist) return null;
 
     return (
-        <Html transform occlude scale={0.05}>
+        <Html
+            transform
+            occlude
+            scale={0.05}
+        >
             <YouTube
                 onReady={(event) => {
                     setPlayer(

@@ -23,11 +23,12 @@
         // custom path
         "baseUrl": "src",
         "paths": {
-            "@/*": ["./src/*"],
-            "@states/*": ["./states/*"],
-            "@components/*": ["./components/*"],
-            "@constants/*": ["./constants/*"],
-            "@types/*": ["./types/*"]
+            "@/*": ["./*"],
+            "@/states/*": ["./states/*"],
+            "@/components/*": ["./components/*"],
+            "@/constants/*": ["./constants/*"],
+            "@/types/*": ["./types/*"],
+            "@/utils/*": ["./utils/*"]
         },
         "typeRoots": ["./src/types", "./node_modules/@types"]
     },

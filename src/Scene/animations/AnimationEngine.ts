@@ -1,13 +1,7 @@
-/**
- * AnimationEngine 모듈은 이벤트 관리, 애니메이션 상태 전환, 타임라인 관리를 통합합니다.
- */
-
 import gsap from "gsap";
-import { Group } from "three";
 import { YouTubePlayer } from "react-youtube";
+import { Album } from "@/types/Album"
 
-// -----------------------------------------
-// 1. 애니메이션 상태 타입 (기존 AnimationStateManager.ts와 동일)
 export type AnimationStatus =
     | "idle"
     | "focusing"
@@ -19,8 +13,6 @@ export type AnimationStatus =
     | "returning"
     | "error";
 
-// -----------------------------------------
-// 2. 공통 이벤트 타입 (기존 LpEventManager.ts와 유사)
 export type AnimationEvent = {
     type: "LP_SELECTED" | "LP_UNSELECTED";
     payload: {
@@ -29,9 +21,6 @@ export type AnimationEvent = {
     };
 };
 
-// -----------------------------------------
-// 3. EventManager
-//    LP 선택/해제 이벤트의 구독 및 발행을 통합 관리합니다.
 export class EventManager {
     private handlers: ((event: AnimationEvent) => void)[] = [];
     private selectedLpId: string | null = null;
@@ -57,19 +46,13 @@ export class EventManager {
                             payload: { album: null, lpId: this.selectedLpId },
                         })
                     );
-                    // 딜레이 후 새 LP 선택 이벤트 처리
-                    setTimeout(() => {
-                        this.selectedLpId = event.payload.lpId;
-                        this.handlers.forEach((handler) => handler(event));
-                    }, 500);
-                } else {
-                    this.selectedLpId = event.payload.lpId;
-                    this.handlers.forEach((handler) => handler(event));
                 }
+
+                this.selectedLpId = event.payload.lpId;
             } else if (event.type === "LP_UNSELECTED") {
                 this.selectedLpId = null;
-                this.handlers.forEach((handler) => handler(event));
             }
+            this.handlers.forEach((handler) => handler(event));
         } catch (error) {
             console.error("UnifiedEventManager - 이벤트 발행 중 에러:", error);
         }
@@ -80,67 +63,23 @@ export class EventManager {
     }
 
     unselect() {
-        this.selectedLpId = null;
         this.handlers.forEach((handler) =>
             handler({
                 type: "LP_UNSELECTED",
-                payload: { album: null, lpId: null },
+                payload: { album: null, lpId: this.selectedLpId },
             })
         );
+        this.selectedLpId = null;
+    }
+
+    select(album: Album) {
+        this.emit({
+            type: "LP_SELECTED",
+            payload: { album, lpId: album.id },
+        });
     }
 }
 
-// -----------------------------------------
-// 4. AnimationStateManager
-//    애니메이션 상태 전환을 위한 공통 로직 (UI 업데이트, 인터랙션 제어 등)
-export class AnimationStateManager {
-    context: { controls: any; root: Group };
-    isPlaying: boolean = false;
-    currentAnim: AnimationStatus = "idle";
-
-    constructor(context: { controls: any; root: Group }) {
-        this.context = context;
-    }
-
-    async handleState(currentState: AnimationStatus) {
-        // 상태 전환 시 공통 처리 로직 (예: 인터랙션 제한, UI 업데이트 등)
-        switch (currentState) {
-            case "idle":
-                // idle 상태 처리
-                break;
-            case "focusing":
-                // focusing 상태 처리
-                break;
-            case "loading":
-                // loading 상태에서는 카메라 위치 유지 등 처리
-                break;
-            case "starting":
-                // starting 상태 처리
-                break;
-            case "ready":
-                // ready 상태 처리
-                break;
-            case "playing":
-                // playing 상태 처리
-                break;
-            case "changing":
-                // changing 상태 처리
-                break;
-            case "returning":
-                // returning 상태 처리
-                break;
-            case "error":
-                // error 상태 처리
-                break;
-            default:
-                break;
-        }
-    }
-}
-
-// -----------------------------------------
-// 5. TimelineManager
-//    GSAP 타임라인을 관리하고, YouTube 동기화, 상태 업데이트 및 에러 핸들링을 일원화합니다.
 export class TimelineManager {
     private timeline: gsap.core.Timeline | null = null;
     private lastSongIndex: number | null = null;
@@ -246,5 +185,4 @@ export class TimelineManager {
     }
 }
 
-// EventManager 싱글톤 인스턴스 추가
 export const eventManager = new EventManager();

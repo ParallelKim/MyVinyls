@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { Group } from "three";
 import { GLTF } from "three-stdlib";
 
-import useSceneStore from "@states/sceneStore";
+import useSceneStore from "@/states/sceneStore";
 
 type GLTFResult = GLTF & {
     nodes: {

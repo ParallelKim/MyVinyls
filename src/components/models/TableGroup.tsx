@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import { YTPlayer } from "@components/groups/YTPlayer";
+import { YTPlayer } from "@/components/groups/YTPlayer";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -31,7 +31,10 @@ export const TableGroup = ({
         "/table-transformed.glb"
     ) as GLTFResult;
     return (
-        <group {...props} dispose={null}>
+        <group
+            {...props}
+            dispose={null}
+        >
             {children}
             <group name="tablet">
                 <group

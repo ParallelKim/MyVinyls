@@ -1,4 +1,4 @@
-import { AnimationStatus } from "Scene/animations/states/AnimationStateManager";
+import { AnimationStatus } from "Scene/animations/AnimationEngine";
 
 export const YOUTUBE_STATES = {
     UNSTARTED: -1,

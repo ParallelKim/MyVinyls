@@ -5,10 +5,11 @@ import { Group, MeshStandardMaterial } from "three";
 import { GLTF } from "three-stdlib";
 import { useFrame, useThree } from "@react-three/fiber";
 
-import useAnimationStore from "@states/animationStore";
-import { Album } from "../../types/Album";
+import useAnimationStore from "@/states/animationStore";
 import { eventManager } from "Scene/animations/AnimationEngine";
 import { focusLp, returnLp } from "Scene/animations/lp";
+
+import { Album } from "@/types/Album";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -74,12 +75,15 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
             eventManager.unselect();
         } else {
             lpState.current = "focus";
-            eventManager.emit({
-                type: "LP_SELECTED",
-                payload: {
-                    album,
-                    lpId: album.id,
-                },
+            eventManager.select(album);
+
+            eventManager.subscribe((event) => {
+                if (
+                    event.type === "LP_UNSELECTED" &&
+                    event.payload.lpId === album.id
+                ) {
+                    lpState.current = "returning";
+                }
             });
         }
     };

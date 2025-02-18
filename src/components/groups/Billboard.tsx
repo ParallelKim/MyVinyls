@@ -2,8 +2,9 @@ import { useEffect, useRef } from "react";
 import { Group, Vector3 } from "three";
 import { useFrame } from "@react-three/fiber";
 
-import useSceneStore from "@states/sceneStore";
-import { easeOutLerp } from "utils/position";
+import useSceneStore from "@/states/sceneStore";
+import { easeOutLerp } from "@/utils/position";
+
 import { AlbumInfo } from "./AlbumInfo";
 
 export const Billboard = () => {

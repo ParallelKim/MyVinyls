@@ -1,4 +1,4 @@
-import useAlbumStore from "@states/albumStore";
+import useAlbumStore from "@/states/albumStore";
 import { Next } from "./Next";
 import { Pause } from "./Pause";
 import { Play } from "./Play";
@@ -10,21 +10,22 @@ export const YTController = () => {
     const isFirst = currentIndex === 0;
     const isLast = album && album.list.length - 1 === currentIndex;
 
-    const control = (action: "play" | "pause" | "prev" | "next") => async () => {
-        if (player) {
-            if (action === "play") {
-                await player.playVideo();
-            } else if (action === "pause") {
-                await player.pauseVideo();
-            } else if (action === "prev") {
-                if (isFirst) return;
-                await player.previousVideo();
-            } else if (action === "next") {
-                if (isLast) return;
-                await player.nextVideo();
+    const control =
+        (action: "play" | "pause" | "prev" | "next") => async () => {
+            if (player) {
+                if (action === "play") {
+                    await player.playVideo();
+                } else if (action === "pause") {
+                    await player.pauseVideo();
+                } else if (action === "prev") {
+                    if (isFirst) return;
+                    await player.previousVideo();
+                } else if (action === "next") {
+                    if (isLast) return;
+                    await player.nextVideo();
+                }
             }
-        }
-    };
+        };
 
     return (
         <div
@@ -39,14 +40,18 @@ export const YTController = () => {
                 <div className="yt-progress-bar yt-progress-indicator" />
                 <div className="yt-progress-indicator">⌾</div>
             </div>
-            <div className={"yt-buttons " + (player ? "" : "yt-buttons-disabled")}>
-                <Prev onClick={control("prev")}/>
-                {status !== "paused" ? (
+            <div
+                className={
+                    "yt-buttons " + (player ? "" : "yt-buttons-disabled")
+                }
+            >
+                <Prev onClick={control("prev")} />
+                {status !== "ready" ? (
                     <Pause onClick={control("pause")} />
                 ) : (
                     <Play onClick={control("play")} />
                 )}
-                <Next onClick={control("next")}/>
+                <Next onClick={control("next")} />
             </div>
         </div>
     );

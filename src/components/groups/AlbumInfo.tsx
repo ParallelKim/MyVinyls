@@ -3,8 +3,8 @@ import { Center, Text } from "@react-three/drei";
 import { useState } from "react";
 import { DoubleSide } from "three";
 
-import useAlbumStore from "@states/albumStore";
-import useAnimationStore from "@states/animationStore";
+import useAlbumStore from "@/states/albumStore";
+import useAnimationStore from "@/states/animationStore";
 
 export const AlbumInfo = () => {
     const [hoveredIndex, setHoveredIndex] = useState(0);

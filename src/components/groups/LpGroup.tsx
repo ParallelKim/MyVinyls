@@ -1,24 +1,15 @@
 import { useEffect, useRef } from "react";
 import { Group, Vector3 } from "three";
-import { useFrame } from "@react-three/fiber";
 
-import { JUNGWOO } from "@constants/jungwoo";
-import useSceneStore from "@states/sceneStore";
-import useAnimationStore from "@states/animationStore";
+import { JUNGWOO } from "@/constants/jungwoo";
+import useSceneStore from "@/states/sceneStore";
 import { CustomLp } from "../models/CustomLp";
-import { LpAnimationManager } from "../../Scene/animations/core/LpAnimationManager";
 import { eventManager } from "Scene/animations/AnimationEngine";
 
 export const LpGroup = () => {
     const shelfRef = useRef<Group>(null);
-    const { station, setShelf } = useSceneStore();
+    const { setShelf } = useSceneStore();
 
-    const { currentAnim } = useAnimationStore();
-    const animationManager = useRef<LpAnimationManager>(
-        new LpAnimationManager()
-    );
-
-    // 선택된 LP의 ref들을 관리
     const selectedRefs = useRef<{
         lpGroup: Group | null;
         coverRef: Group | null;
@@ -68,24 +59,6 @@ export const LpGroup = () => {
 
         return () => unsubscribe();
     }, []);
-
-    // LP 애니메이션 업데이트 (선택 여부와 관계없이 LP가 존재한다면 update 호출)
-    useFrame(({ camera }, delta) => {
-        const { lpGroup, coverRef, recordRef } = selectedRefs.current;
-        if (lpGroup) {
-            animationManager.current.update({
-                delta,
-                currentAnim,
-                camera,
-                lpGroup,
-                coverRef: coverRef!,
-                recordRef: recordRef!,
-                isSelected: isSelectedRef.current,
-                initialState: initialState.current,
-                station: station!,
-            });
-        }
-    });
 
     useEffect(() => {
         if (shelfRef.current) {

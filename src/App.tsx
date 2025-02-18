@@ -5,16 +5,16 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 
 import { Scene } from "Scene";
-import { ErrorBoundary } from "@components/groups/ErrorBoundary";
-import { LoadingFallback } from "@components/groups/LoadingFallback";
-import { UI } from "@components/ui/UI";
+import { ErrorBoundary } from "@/components/groups/ErrorBoundary";
+import { LoadingFallback } from "@/components/groups/LoadingFallback";
+import { UI } from "@/components/ui/UI";
 import { AnimationManager } from "Scene/animations/AnimationManager";
 import {
     CAMERA_SETTINGS,
     PERFORMANCE_SETTINGS,
 } from "./constants/sceneConstants";
 import useSceneStore from "./states/sceneStore";
-import { JUNGWOO } from "@constants/jungwoo"; // 앨범 데이터 import
+import { JUNGWOO } from "@/constants/jungwoo"; // 앨범 데이터 import
 
 const App = () => {
     const isPlaying = useSceneStore((state) => state.isPlaying);

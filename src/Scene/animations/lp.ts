@@ -74,6 +74,20 @@ export const returnLp = (
 
     if (temp.distanceTo(lpGroup.position) < 0.1) {
         lpGroup.position.copy(temp);
+        lpGroup.rotation.set(Math.PI / 8, 0, 0);
         callback();
     }
+};
+
+export const playLp = (
+    camera: Camera,
+    lpGroup: Group,
+    coverRef: Group,
+    recordRef: Group
+) => {
+    easeOutLerp({
+        target: camera.position,
+        goal: COVER_POS.play,
+        speedFactor: 15,
+    });
 };
