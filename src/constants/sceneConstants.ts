@@ -1,6 +1,6 @@
 export const CAMERA_SETTINGS = {
     FOV: 45,
-    POSITION: [0, 10, -30] as [number, number, number],
+    POSITION: [0, 10, 30] as [number, number, number],
     NEAR: 0.1,
     FAR: 1000,
 } as const;
