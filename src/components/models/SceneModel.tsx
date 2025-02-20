@@ -54,6 +54,7 @@ export const SceneModel = ({
     ...props
 }: JSX.IntrinsicElements["group"] & { children?: React.ReactNode }) => {
     const { nodes, materials } = useGLTF("/room-transformed.glb") as GLTFResult;
+
     return (
         <group
             {...props}

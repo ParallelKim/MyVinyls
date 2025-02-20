@@ -1,20 +1,8 @@
+import { COVER, LP_ROOT, RECORD } from "@/constants/lp";
 import { Camera, Group, Vector3 } from "three";
 import { easeOutLerp } from "utils/position";
 
 const temp = new Vector3();
-
-const COVER_POS = {
-    init: new Vector3(0, 0, 0),
-    focus: new Vector3(3.5, 0, 0),
-    play: new Vector3(-50, 0, 0),
-    placing: new Vector3(-50, 0, 0),
-};
-
-const RECORD_POS = {
-    init: new Vector3(0.5, 0, 0.3),
-    focus: new Vector3(0, 0, 0.1),
-    play: new Vector3(0, 1.5, 0),
-};
 
 const CAMERA_DISTANCE = -5; // 원하는 카메라와의 거리
 
@@ -36,16 +24,16 @@ export const focusLp = (
     });
     easeOutLerp({
         target: coverRef.position,
-        goal: COVER_POS.focus,
+        goal: COVER.POS.focus,
         speedFactor: 0.1,
     });
     easeOutLerp({
         target: recordRef.position,
-        goal: RECORD_POS.focus,
+        goal: RECORD.POS.focus,
         speedFactor: 0.1,
     });
 
-    lpGroup.lookAt(camera.position.clone().negate());
+    lpGroup.lookAt(camera.position.clone());
 };
 
 export const returnLp = (
@@ -55,7 +43,7 @@ export const returnLp = (
     order: number,
     callback: () => void
 ) => {
-    temp.set(order * -12, 0, 0);
+    temp.set(order * 0.4, 0, 0);
 
     easeOutLerp({
         target: lpGroup.position,
@@ -64,21 +52,21 @@ export const returnLp = (
     });
     easeOutLerp({
         target: coverRef.position,
-        goal: COVER_POS.init,
+        goal: COVER.POS.init,
         speedFactor: 0.1,
     });
     easeOutLerp({
         target: recordRef.position,
-        goal: RECORD_POS.init,
+        goal: RECORD.POS.init,
         speedFactor: 0.1,
     });
 
     if (temp.distanceTo(lpGroup.position) < 0.01) {
         lpGroup.position.copy(temp);
-        lpGroup.rotation.set(Math.PI / 8, 0, 0);
+        lpGroup.rotation.set(...LP_ROOT.ROT.init);
         recordRef.rotation.set(0, 0, 0);
-        recordRef.position.copy(RECORD_POS.init);
-        coverRef.position.copy(COVER_POS.init);
+        recordRef.position.copy(RECORD.POS.init);
+        coverRef.position.copy(COVER.POS.init);
         callback();
     }
 };
@@ -91,7 +79,7 @@ export const playLp = (
 ) => {
     easeOutLerp({
         target: camera.position,
-        goal: COVER_POS.play,
+        goal: COVER.POS.play,
         speedFactor: 15,
     });
 };
@@ -109,7 +97,7 @@ export const placeLp = (coverRef: Group, recordRef: Group, station: Group) => {
 
     easeOutLerp({
         target: coverRef.position,
-        goal: COVER_POS.placing,
+        goal: COVER.POS.placing,
         speedFactor: 0.1,
     });
 
