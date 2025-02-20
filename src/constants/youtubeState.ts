@@ -1,4 +1,4 @@
-import { AnimationStatus } from "@/Scene/managers/EventManager";
+import { AnimationStatus } from "@/components/managers/EventManager";
 
 export const YOUTUBE_STATES = {
     UNSTARTED: -1,

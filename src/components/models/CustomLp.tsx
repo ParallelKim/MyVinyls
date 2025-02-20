@@ -12,8 +12,8 @@ import { GLTF } from "three-stdlib";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import useAnimationStore from "@/states/animationStore";
-import { eventManager } from "@/Scene/managers/EventManager";
-import { focusLp, placeLp, returnLp } from "Scene/animations/lp";
+import { eventManager } from "@/components/managers/EventManager";
+import { focusLp, placeLp, returnLp } from "@/animations/lp";
 
 import { Album } from "@/types/Album";
 import useSceneStore from "@/states/sceneStore";

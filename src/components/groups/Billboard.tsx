@@ -7,7 +7,7 @@ import { easeOutLerp } from "@/utils/position";
 
 import { AlbumInfo } from "./AlbumInfo";
 
-const FollowCam = new Vector3(0, 0, -6);
+const FollowCam = new Vector3(0, 0, -1);
 
 export const Billboard = () => {
     const boardRef = useRef<Group>(null);
@@ -39,11 +39,9 @@ export const Billboard = () => {
         <group
             name="board wrapper"
             ref={wrapperRef}
-            scale={0.2}
-            position={[0, 2, 0]}
+            scale={0.4}
         >
             <group
-                position={[0, 0, 0]}
                 name="bill board"
                 ref={boardRef}
             >

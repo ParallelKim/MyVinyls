@@ -1,23 +1,21 @@
 import "./App.css";
 
-import { Bvh, CameraControls, useTexture } from "@react-three/drei";
+import { Bvh, useTexture } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 
-import { Scene } from "Scene";
+import { Scene } from "@/components/Scene";
 import { LoadingFallback } from "@/components/groups/LoadingFallback";
 import { UI } from "@/components/ui/UI";
-import { AnimationManager } from "@/Scene/managers/AnimationManager";
+import { AnimationManager } from "@/components/managers/AnimationManager";
 import {
     CAMERA_SETTINGS,
     PERFORMANCE_SETTINGS,
 } from "./constants/sceneConstants";
 import { JUNGWOO } from "@/constants/jungwoo";
-import usePlayerStore from "@/states/playerStore";
+import { CustomControls } from "./components/CustomControls";
 
 const App = () => {
-    const { isPlaying } = usePlayerStore();
-
     // 앨범 커버 이미지 프리로드
     useTexture.preload(JUNGWOO.albums.map((album) => album.cover));
 
@@ -26,11 +24,7 @@ const App = () => {
             <Canvas
                 id="canvas"
                 shadows
-                camera={{
-                    fov: CAMERA_SETTINGS.FOV,
-                    position: CAMERA_SETTINGS.POSITION,
-                    frustumCulled: true,
-                }}
+                camera={CAMERA_SETTINGS}
                 frameloop={"always"}
                 performance={{
                     min: PERFORMANCE_SETTINGS.MIN,
@@ -38,11 +32,7 @@ const App = () => {
                 }}
             >
                 <Suspense fallback={<LoadingFallback />}>
-                    <CameraControls
-                        makeDefault
-                        // enabled={!isPlaying}
-                        smoothTime={1}
-                    />
+                    <CustomControls />
                     <Bvh maxDepth={3}>
                         <Scene />
                     </Bvh>

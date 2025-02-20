@@ -6,7 +6,7 @@ import { DoubleSide } from "three";
 import usePlayerStore from "@/states/playerStore";
 import useAnimationStore from "@/states/animationStore";
 import { ThreeEvent } from "@react-three/fiber";
-import { eventManager } from "@/Scene/managers/EventManager";
+import { eventManager } from "@/components/managers/EventManager";
 
 export const AlbumInfo = () => {
     const [hoveredIndex, setHoveredIndex] = useState(0);
@@ -35,13 +35,13 @@ export const AlbumInfo = () => {
     return (
         <group
             name="album info"
-            position={[-5, 0, 0]}
-            scale={1.1}
+            scale={0.06}
+            position={[-0.3, 0, 0]}
         >
             <group>
                 <mesh
                     name="panel"
-                    position={[0, 0, -10]}
+                    position={[0, 0, 0]}
                 >
                     <Geometry>
                         <Base>
@@ -58,21 +58,21 @@ export const AlbumInfo = () => {
                         transparent
                         opacity={0.7}
                         side={DoubleSide}
+                        depthWrite={false}
                     />
                 </mesh>
                 <group
                     name="text"
-                    scale={0.8}
-                    position={[0, 0, -5]}
+                    position={[0, 0, 0.5]}
                 >
                     <Text
-                        position={[4, 9.5, 0]}
+                        position={[4, 8.2, 0]}
                         fontSize={1.5}
                         font="/Pretendard.woff"
                     >
                         {album.title}
                     </Text>
-                    <group position={[4.5, 7.1, 0]}>
+                    <group position={[3, 7, 0]}>
                         {album.list.map((song, idx) => {
                             const x =
                                 9 *
@@ -121,7 +121,7 @@ export const AlbumInfo = () => {
                         {hoveredIndex > 0 && (
                             <mesh
                                 name="background"
-                                position={[2, -7, 0]}
+                                position={[2, -7, -0.4]}
                                 renderOrder={1}
                             >
                                 <Geometry>
@@ -174,7 +174,7 @@ export const AlbumInfo = () => {
                                 <group>
                                     <mesh
                                         name="playingBack"
-                                        position={[2, -7, -0.2]}
+                                        position={[2, -7, -0.45]}
                                     >
                                         <Geometry>
                                             <Base>
