@@ -1,7 +1,7 @@
 import { LpGroup } from "@/components/groups/LpGroup";
 import { SceneModel } from "@/components/models/SceneModel";
-import { Billboard } from "@react-three/drei";
-import { SCENE_SETTINGS } from "../../constants/sceneConstants";
+import { SCENE_SETTINGS } from "../constants/sceneConstants";
+import { Billboard } from "./groups/Billboard";
 
 const { ROOT_POSITION, AMBIENT_LIGHT } = SCENE_SETTINGS;
 

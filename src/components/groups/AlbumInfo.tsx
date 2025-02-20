@@ -13,6 +13,8 @@ export const AlbumInfo = () => {
     const { album, currentIndex } = usePlayerStore();
     const { currentAnim } = useAnimationStore();
 
+    console.log(album, currentAnim);
+
     // 앨범이 없거나 focusing 상태가 아니면 렌더링하지 않음
     if (!album || currentAnim !== "focusing") {
         return null;
@@ -32,6 +34,7 @@ export const AlbumInfo = () => {
             },
         });
     };
+
     return (
         <group
             name="album info"
@@ -162,11 +165,7 @@ export const AlbumInfo = () => {
                                         </Subtraction>
                                     </>
                                 </Geometry>
-                                <meshBasicMaterial
-                                    color="#FFF"
-                                    transparent
-                                    opacity={0.7}
-                                />
+                                <meshBasicMaterial color="#F88" />
                             </mesh>
                         )}
                         {typeof currentIndex === "number" &&
@@ -174,15 +173,13 @@ export const AlbumInfo = () => {
                                 <group>
                                     <mesh
                                         name="playingBack"
-                                        position={[2, -7, -0.45]}
+                                        position={[2, -7, -0.35]}
                                     >
                                         <Geometry>
                                             <Base>
-                                                <planeGeometry
-                                                    args={[10, 20]}
-                                                />
+                                                <planeGeometry args={[8, 30]} />
                                             </Base>
-                                            <Addition position={[5, 0, 0]}>
+                                            <Addition position={[4, 0, 0]}>
                                                 <circleGeometry
                                                     args={[
                                                         10,
@@ -221,12 +218,7 @@ export const AlbumInfo = () => {
                                                 </Geometry>
                                             </Subtraction>
                                         </Geometry>
-                                        <meshBasicMaterial
-                                            color="#FFF"
-                                            transparent
-                                            opacity={0.2}
-                                            side={DoubleSide}
-                                        />
+                                        <meshBasicMaterial color="#F44" />
                                     </mesh>
                                 </group>
                             )}
