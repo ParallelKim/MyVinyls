@@ -21,10 +21,10 @@ import { LP_GAP, LP_ROOT } from "@/constants/lp";
 
 type GLTFResult = GLTF & {
     nodes: {
-        ["Box001_Material_#25_0"]: THREE.Mesh;
-        ["Box001_Material_#37_0"]: THREE.Mesh;
-        ["Box001_Material_#49_0"]: THREE.Mesh;
-        ["Box001_Material_#73_0"]: THREE.Mesh;
+        ["Box001_Material_#25_0_1"]: THREE.Mesh;
+        ["Box001_Material_#25_0_2"]: THREE.Mesh;
+        ["Box001_Material_#25_0_3"]: THREE.Mesh;
+        ["Box001_Material_#25_0_4"]: THREE.Mesh;
         ["Cylinder001_Material_#85_0"]: THREE.Mesh;
     };
     materials: {
@@ -107,52 +107,40 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
             position-x={order * LP_GAP}
             rotation-x={LP_ROOT.ROT.init[0]}
             onClick={handleClick}
+            scale={1.1}
         >
             <group name="cover">
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes["Box001_Material_#25_0"].geometry}
+                    geometry={nodes["Box001_Material_#25_0_1"].geometry}
                     material={coverMaterial}
-                    position={[-0.019, 0, 0]}
-                    scale={0.03}
                 />
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes["Box001_Material_#37_0"].geometry}
+                    geometry={nodes["Box001_Material_#25_0_2"].geometry}
                     material={materials.Material_37}
-                    position={[-0.019, 0, 0]}
-                    scale={0.03}
                 />
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes["Box001_Material_#49_0"].geometry}
+                    geometry={nodes["Box001_Material_#25_0_3"].geometry}
                     material={materials.Material_49}
-                    position={[-0.019, 0, 0]}
-                    scale={0.03}
                 />
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes["Box001_Material_#73_0"].geometry}
+                    geometry={nodes["Box001_Material_#25_0_4"].geometry}
                     material={materials.Material_73}
-                    position={[-0.019, 0, 0]}
-                    scale={0.03}
                 />
             </group>
-            <group
-                name="record"
-                position-z={-0.01}
-            >
+            <group name="record">
                 <mesh
                     castShadow
                     receiveShadow
                     geometry={nodes["Cylinder001_Material_#85_0"].geometry}
                     material={materials.Material_85}
-                    position={[0, 0, 0.001]}
-                    scale={0.135}
                 />
             </group>
         </group>

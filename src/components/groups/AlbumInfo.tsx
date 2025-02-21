@@ -13,8 +13,6 @@ export const AlbumInfo = () => {
     const { album, currentIndex } = usePlayerStore();
     const { currentAnim } = useAnimationStore();
 
-    console.log(album, currentAnim);
-
     // 앨범이 없거나 focusing 상태가 아니면 렌더링하지 않음
     if (!album || currentAnim !== "focusing") {
         return null;

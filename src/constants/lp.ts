@@ -1,6 +1,6 @@
 import { Vector3 } from "three";
 
-export const LP_GAP = 0.4;
+export const LP_GAP = 0.5;
 
 export const LP_ROOT = {
     POS: {

@@ -10,6 +10,8 @@ import { GLTF } from "three-stdlib";
 
 type GLTFResult = GLTF & {
     nodes: {
+        Room: THREE.Mesh;
+        Table: THREE.Mesh;
         Mesh018: THREE.Mesh;
         Mesh018_1: THREE.Mesh;
         Mesh018_2: THREE.Mesh;
@@ -18,41 +20,260 @@ type GLTFResult = GLTF & {
         Mesh018_5: THREE.Mesh;
         Mesh018_6: THREE.Mesh;
         Mesh018_7: THREE.Mesh;
-        Cube005: THREE.Mesh;
-        Cube005_1: THREE.Mesh;
-        Table_1: THREE.Mesh;
-        Table_2: THREE.Mesh;
         Mesh043: THREE.Mesh;
         Mesh043_1: THREE.Mesh;
         Mesh043_2: THREE.Mesh;
-        Room: THREE.Mesh;
-        Shelf: THREE.Mesh;
+        Object_0005: THREE.Mesh;
+        Object_0005_1: THREE.Mesh;
+        Object_0005_2: THREE.Mesh;
+        Object_0005_3: THREE.Mesh;
+        Object_0005_4: THREE.Mesh;
+        Object_0005_5: THREE.Mesh;
+        Object_0005_6: THREE.Mesh;
+        Object_0005_7: THREE.Mesh;
+        Object_0005_8: THREE.Mesh;
+        Object_0005_9: THREE.Mesh;
+        Object_0005_10: THREE.Mesh;
+        Object_0005_11: THREE.Mesh;
+        Object_0005_12: THREE.Mesh;
+        Object_0005_13: THREE.Mesh;
+        Object_0005_14: THREE.Mesh;
+        Object_0005_15: THREE.Mesh;
+        Object_0005_16: THREE.Mesh;
+        Object_0005_17: THREE.Mesh;
+        Object_0005_18: THREE.Mesh;
+        Object_0005_19: THREE.Mesh;
+        Object_0005_20: THREE.Mesh;
+        Object_0005_21: THREE.Mesh;
+        Object_0005_22: THREE.Mesh;
+        Object_0005_23: THREE.Mesh;
+        Object_0005_24: THREE.Mesh;
+        Object_0005_25: THREE.Mesh;
+        Object_0005_26: THREE.Mesh;
+        Object_0005_27: THREE.Mesh;
+        Object_0005_28: THREE.Mesh;
+        Object_0005_29: THREE.Mesh;
+        Object_0005_30: THREE.Mesh;
+        Object_0005_31: THREE.Mesh;
+        Object_0005_32: THREE.Mesh;
+        Object_0005_33: THREE.Mesh;
+        Object_0005_34: THREE.Mesh;
+        Object_0005_35: THREE.Mesh;
+        Object_0005_36: THREE.Mesh;
+        Object_0005_37: THREE.Mesh;
+        Object_0005_38: THREE.Mesh;
+        Object_0005_39: THREE.Mesh;
+        Object_0005_40: THREE.Mesh;
+        Object_0005_41: THREE.Mesh;
+        Object_0005_42: THREE.Mesh;
+        Object_0005_43: THREE.Mesh;
+        Object_0005_44: THREE.Mesh;
+        Object_0005_45: THREE.Mesh;
+        Object_0005_46: THREE.Mesh;
+        Object_0005_47: THREE.Mesh;
+        Object_0005_48: THREE.Mesh;
+        Object_0005_49: THREE.Mesh;
+        Object_0005_50: THREE.Mesh;
+        Object_0005_51: THREE.Mesh;
+        Object_0005_52: THREE.Mesh;
+        Object_0005_53: THREE.Mesh;
+        Object_0005_54: THREE.Mesh;
+        Object_0005_55: THREE.Mesh;
+        Object_0005_56: THREE.Mesh;
+        Object_0005_57: THREE.Mesh;
+        Object_0005_58: THREE.Mesh;
+        Object_0005_59: THREE.Mesh;
+        Object_0005_60: THREE.Mesh;
+        Object_0005_61: THREE.Mesh;
+        Object_0005_62: THREE.Mesh;
+        Object_0005_63: THREE.Mesh;
+        Object_0005_64: THREE.Mesh;
+        Object_0005_65: THREE.Mesh;
+        Object_0005_66: THREE.Mesh;
+        Object_0005_67: THREE.Mesh;
+        Object_0005_68: THREE.Mesh;
+        Object_0005_69: THREE.Mesh;
+        Object_0005_70: THREE.Mesh;
+        Object_0005_71: THREE.Mesh;
+        Object_0005_72: THREE.Mesh;
+        Object_0005_73: THREE.Mesh;
+        Object_0005_74: THREE.Mesh;
+        Object_0005_75: THREE.Mesh;
+        Object_0005_76: THREE.Mesh;
+        Object_0005_77: THREE.Mesh;
+        Object_0005_78: THREE.Mesh;
+        Object_0005_79: THREE.Mesh;
+        Object_0005_80: THREE.Mesh;
+        Object_0005_81: THREE.Mesh;
+        Object_0005_82: THREE.Mesh;
+        Object_0005_83: THREE.Mesh;
+        Object_0005_84: THREE.Mesh;
+        Object_0005_85: THREE.Mesh;
+        Object_0005_86: THREE.Mesh;
+        Object_0005_87: THREE.Mesh;
+        Object_0005_88: THREE.Mesh;
+        Object_0005_89: THREE.Mesh;
+        Object_0005_90: THREE.Mesh;
+        Object_0005_91: THREE.Mesh;
+        Object_0005_92: THREE.Mesh;
+        Object_0005_93: THREE.Mesh;
+        Object_0005_94: THREE.Mesh;
+        Object_0005_95: THREE.Mesh;
+        Object_0005_96: THREE.Mesh;
+        Object_0005_97: THREE.Mesh;
+        Object_0005_98: THREE.Mesh;
+        Object_0005_99: THREE.Mesh;
+        Object_0005_100: THREE.Mesh;
+        Object_0005_101: THREE.Mesh;
+        Object_0005_102: THREE.Mesh;
+        Object_0005_103: THREE.Mesh;
+        Object_0005_104: THREE.Mesh;
+        Object_25001: THREE.Mesh;
+        Object_25001_1: THREE.Mesh;
+        Object_25001_2: THREE.Mesh;
+        Object_25001_3: THREE.Mesh;
+        Object_25001_4: THREE.Mesh;
+        Object_25001_5: THREE.Mesh;
+        Object_25001_6: THREE.Mesh;
+        Object_25001_7: THREE.Mesh;
+        Object_25001_8: THREE.Mesh;
+        Object_25001_9: THREE.Mesh;
+        Object_25001_10: THREE.Mesh;
     };
     materials: {
+        PaletteMaterial001: THREE.MeshStandardMaterial;
+        None: THREE.MeshStandardMaterial;
         ["Dark.Wood.004"]: THREE.MeshStandardMaterial;
+        PaletteMaterial008: THREE.MeshStandardMaterial;
+        PaletteMaterial009: THREE.MeshStandardMaterial;
+        PaletteMaterial010: THREE.MeshStandardMaterial;
         PaletteMaterial005: THREE.MeshStandardMaterial;
+        PaletteMaterial002: THREE.MeshStandardMaterial;
         PaletteMaterial006: THREE.MeshStandardMaterial;
         PaletteMaterial007: THREE.MeshStandardMaterial;
-        PaletteMaterial001: THREE.MeshStandardMaterial;
-        PaletteMaterial002: THREE.MeshStandardMaterial;
-        PaletteMaterial003: THREE.MeshStandardMaterial;
-        PaletteMaterial004: THREE.MeshStandardMaterial;
-        ["Audio.Body.003"]: THREE.MeshStandardMaterial;
-        ["Material.002"]: THREE.MeshStandardMaterial;
-        PaletteMaterial009: THREE.MeshPhysicalMaterial;
-        PaletteMaterial008: THREE.MeshPhysicalMaterial;
         ["20.-.Default.001"]: THREE.MeshStandardMaterial;
-        PaletteMaterial010: THREE.MeshStandardMaterial;
+        PaletteMaterial003: THREE.MeshStandardMaterial;
         ["14.-.Default.001"]: THREE.MeshStandardMaterial;
-        PaletteMaterial011: THREE.MeshStandardMaterial;
-        ["Dark.Wood.004"]: THREE.MeshStandardMaterial;
+        ["cover.001"]: THREE.MeshStandardMaterial;
+        cardboard: THREE.MeshStandardMaterial;
+        ["cover.002"]: THREE.MeshStandardMaterial;
+        ["cover.003"]: THREE.MeshStandardMaterial;
+        ["cover.004"]: THREE.MeshStandardMaterial;
+        ["cover.005"]: THREE.MeshStandardMaterial;
+        ["cover.006"]: THREE.MeshStandardMaterial;
+        ["cover.007"]: THREE.MeshStandardMaterial;
+        ["cover.008"]: THREE.MeshStandardMaterial;
+        ["cover.009"]: THREE.MeshStandardMaterial;
+        ["cover.010"]: THREE.MeshStandardMaterial;
+        ["cover.011"]: THREE.MeshStandardMaterial;
+        ["cover.012"]: THREE.MeshStandardMaterial;
+        ["cover.013"]: THREE.MeshStandardMaterial;
+        ["cover.014"]: THREE.MeshStandardMaterial;
+        ["cover.015"]: THREE.MeshStandardMaterial;
+        ["cover.016"]: THREE.MeshStandardMaterial;
+        ["cover.017"]: THREE.MeshStandardMaterial;
+        ["cover.018"]: THREE.MeshStandardMaterial;
+        ["cover.019"]: THREE.MeshStandardMaterial;
+        ["cover.020"]: THREE.MeshStandardMaterial;
+        ["cover.021"]: THREE.MeshStandardMaterial;
+        ["cover.022"]: THREE.MeshStandardMaterial;
+        ["cover.023"]: THREE.MeshStandardMaterial;
+        ["cover.024"]: THREE.MeshStandardMaterial;
+        ["cover.025"]: THREE.MeshStandardMaterial;
+        ["cover.026"]: THREE.MeshStandardMaterial;
+        ["cover.027"]: THREE.MeshStandardMaterial;
+        ["cover.028"]: THREE.MeshStandardMaterial;
+        ["cover.029"]: THREE.MeshStandardMaterial;
+        ["cover.030"]: THREE.MeshStandardMaterial;
+        ["cover.031"]: THREE.MeshStandardMaterial;
+        ["cover.032"]: THREE.MeshStandardMaterial;
+        ["cover.033"]: THREE.MeshStandardMaterial;
+        ["cover.034"]: THREE.MeshStandardMaterial;
+        ["cover.035"]: THREE.MeshStandardMaterial;
+        ["cover.036"]: THREE.MeshStandardMaterial;
+        ["cover.037"]: THREE.MeshStandardMaterial;
+        ["cover.038"]: THREE.MeshStandardMaterial;
+        ["cover.039"]: THREE.MeshStandardMaterial;
+        ["cover.040"]: THREE.MeshStandardMaterial;
+        ["cover.041"]: THREE.MeshStandardMaterial;
+        ["cover.042"]: THREE.MeshStandardMaterial;
+        ["cover.043"]: THREE.MeshStandardMaterial;
+        ["cover.044"]: THREE.MeshStandardMaterial;
+        ["cover.045"]: THREE.MeshStandardMaterial;
+        ["cover.046"]: THREE.MeshStandardMaterial;
+        ["cover.047"]: THREE.MeshStandardMaterial;
+        ["cover.048"]: THREE.MeshStandardMaterial;
+        ["cover.049"]: THREE.MeshStandardMaterial;
+        ["cover.050"]: THREE.MeshStandardMaterial;
+        ["cover.219"]: THREE.MeshStandardMaterial;
+        PaletteMaterial004: THREE.MeshStandardMaterial;
+        ["cover.220"]: THREE.MeshStandardMaterial;
+        ["cover.221"]: THREE.MeshStandardMaterial;
+        ["cover.222"]: THREE.MeshStandardMaterial;
+        ["cover.223"]: THREE.MeshStandardMaterial;
+        ["cover.224"]: THREE.MeshStandardMaterial;
+        ["cover.225"]: THREE.MeshStandardMaterial;
+        ["cover.226"]: THREE.MeshStandardMaterial;
+        ["cover.227"]: THREE.MeshStandardMaterial;
+        ["cover.228"]: THREE.MeshStandardMaterial;
+        ["cover.229"]: THREE.MeshStandardMaterial;
+        ["cover.230"]: THREE.MeshStandardMaterial;
+        ["cover.231"]: THREE.MeshStandardMaterial;
+        ["cover.232"]: THREE.MeshStandardMaterial;
+        ["cover.233"]: THREE.MeshStandardMaterial;
+        ["cover.234"]: THREE.MeshStandardMaterial;
+        ["cover.235"]: THREE.MeshStandardMaterial;
+        ["cover.236"]: THREE.MeshStandardMaterial;
+        ["cover.237"]: THREE.MeshStandardMaterial;
+        ["cover.238"]: THREE.MeshStandardMaterial;
+        ["cover.239"]: THREE.MeshStandardMaterial;
+        ["cover.240"]: THREE.MeshStandardMaterial;
+        ["cover.241"]: THREE.MeshStandardMaterial;
+        ["cover.242"]: THREE.MeshStandardMaterial;
+        ["cover.243"]: THREE.MeshStandardMaterial;
+        ["cover.244"]: THREE.MeshStandardMaterial;
+        ["cover.245"]: THREE.MeshStandardMaterial;
+        ["cover.246"]: THREE.MeshStandardMaterial;
+        ["cover.247"]: THREE.MeshStandardMaterial;
+        ["cover.248"]: THREE.MeshStandardMaterial;
+        ["cover.249"]: THREE.MeshStandardMaterial;
+        ["cover.250"]: THREE.MeshStandardMaterial;
+        ["cover.251"]: THREE.MeshStandardMaterial;
+        ["cover.252"]: THREE.MeshStandardMaterial;
+        ["cover.253"]: THREE.MeshStandardMaterial;
+        ["cover.254"]: THREE.MeshStandardMaterial;
+        ["cover.255"]: THREE.MeshStandardMaterial;
+        ["cover.256"]: THREE.MeshStandardMaterial;
+        ["cover.257"]: THREE.MeshStandardMaterial;
+        ["cover.258"]: THREE.MeshStandardMaterial;
+        ["cover.259"]: THREE.MeshStandardMaterial;
+        ["cover.260"]: THREE.MeshStandardMaterial;
+        ["cover.261"]: THREE.MeshStandardMaterial;
+        ["cover.262"]: THREE.MeshStandardMaterial;
+        ["cover.263"]: THREE.MeshStandardMaterial;
+        ["cover.264"]: THREE.MeshStandardMaterial;
+        ["cover.265"]: THREE.MeshStandardMaterial;
+        ["cover.266"]: THREE.MeshStandardMaterial;
+        ["cover.267"]: THREE.MeshStandardMaterial;
+        ["cover.268"]: THREE.MeshStandardMaterial;
+        ["cover.269"]: THREE.MeshStandardMaterial;
+        ["cover.270"]: THREE.MeshStandardMaterial;
+        ["cover.271"]: THREE.MeshStandardMaterial;
+        pierscien: THREE.MeshStandardMaterial;
+        black: THREE.MeshStandardMaterial;
+        darkgraymetal: THREE.MeshStandardMaterial;
+        material: THREE.MeshStandardMaterial;
+        pierscienczarn: THREE.MeshStandardMaterial;
+        membrane_cooper: THREE.MeshStandardMaterial;
+        membrane: THREE.MeshStandardMaterial;
+        guma: THREE.MeshStandardMaterial;
+        lightgray: THREE.MeshStandardMaterial;
+        darkwood: THREE.MeshStandardMaterial;
+        brownwood: THREE.MeshStandardMaterial;
     };
 };
 
-export const SceneModel = ({
-    children,
-    ...props
-}: JSX.IntrinsicElements["group"] & { children?: React.ReactNode }) => {
+export const SceneModel = (props: JSX.IntrinsicElements["group"]) => {
     const { nodes, materials } = useGLTF("/room-transformed.glb") as GLTFResult;
 
     return (
@@ -60,128 +281,779 @@ export const SceneModel = ({
             {...props}
             dispose={null}
         >
-            {children}
-            <group
-                name="player"
-                position={[0, 0.66, -1.115]}
-            >
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018.geometry}
-                    material={materials["Dark.Wood.004"]}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_1.geometry}
-                    material={materials.PaletteMaterial005}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_2.geometry}
-                    material={materials.PaletteMaterial006}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_3.geometry}
-                    material={materials.PaletteMaterial007}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_4.geometry}
-                    material={materials.PaletteMaterial001}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_5.geometry}
-                    material={materials.PaletteMaterial002}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_6.geometry}
-                    material={materials.PaletteMaterial003}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_7.geometry}
-                    material={materials.PaletteMaterial004}
-                />
-            </group>
-            <group
-                name="audio"
-                position={[0.5, 0, -1.206]}
-            >
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Cube005.geometry}
-                    material={materials["Audio.Body.003"]}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Cube005_1.geometry}
-                    material={materials["Material.002"]}
-                />
-            </group>
-            <group
-                name="table"
-                position={[0, 0, -1.115]}
-            >
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Table_1.geometry}
-                    material={materials.PaletteMaterial009}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Table_2.geometry}
-                    material={materials.PaletteMaterial008}
-                />
-            </group>
-            <group
-                name="tablet"
-                position={[0, 0, -1.2]}
-            >
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh043.geometry}
-                    material={materials["20.-.Default.001"]}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh043_1.geometry}
-                    material={materials.PaletteMaterial010}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh043_2.geometry}
-                    material={materials["14.-.Default.001"]}
-                />
-            </group>
             <mesh
                 castShadow
                 receiveShadow
                 geometry={nodes.Room.geometry}
-                material={materials.PaletteMaterial011}
+                material={materials.PaletteMaterial001}
             />
             <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.Shelf.geometry}
+                geometry={nodes.Table.geometry}
+                material={materials.None}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh018.geometry}
                 material={materials["Dark.Wood.004"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh018_1.geometry}
+                material={materials.PaletteMaterial008}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh018_2.geometry}
+                material={materials.PaletteMaterial009}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh018_3.geometry}
+                material={materials.PaletteMaterial010}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh018_4.geometry}
+                material={materials.PaletteMaterial005}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh018_5.geometry}
+                material={materials.PaletteMaterial002}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh018_6.geometry}
+                material={materials.PaletteMaterial006}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh018_7.geometry}
+                material={materials.PaletteMaterial007}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh043.geometry}
+                material={materials["20.-.Default.001"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh043_1.geometry}
+                material={materials.PaletteMaterial003}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh043_2.geometry}
+                material={materials["14.-.Default.001"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005.geometry}
+                material={materials["cover.001"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_1.geometry}
+                material={materials.cardboard}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_2.geometry}
+                material={materials["cover.002"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_3.geometry}
+                material={materials["cover.003"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_4.geometry}
+                material={materials["cover.004"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_5.geometry}
+                material={materials["cover.005"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_6.geometry}
+                material={materials["cover.006"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_7.geometry}
+                material={materials["cover.007"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_8.geometry}
+                material={materials["cover.008"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_9.geometry}
+                material={materials["cover.009"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_10.geometry}
+                material={materials["cover.010"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_11.geometry}
+                material={materials["cover.011"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_12.geometry}
+                material={materials["cover.012"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_13.geometry}
+                material={materials["cover.013"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_14.geometry}
+                material={materials["cover.014"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_15.geometry}
+                material={materials["cover.015"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_16.geometry}
+                material={materials["cover.016"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_17.geometry}
+                material={materials["cover.017"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_18.geometry}
+                material={materials["cover.018"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_19.geometry}
+                material={materials["cover.019"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_20.geometry}
+                material={materials["cover.020"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_21.geometry}
+                material={materials["cover.021"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_22.geometry}
+                material={materials["cover.022"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_23.geometry}
+                material={materials["cover.023"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_24.geometry}
+                material={materials["cover.024"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_25.geometry}
+                material={materials["cover.025"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_26.geometry}
+                material={materials["cover.026"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_27.geometry}
+                material={materials["cover.027"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_28.geometry}
+                material={materials["cover.028"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_29.geometry}
+                material={materials["cover.029"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_30.geometry}
+                material={materials["cover.030"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_31.geometry}
+                material={materials["cover.031"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_32.geometry}
+                material={materials["cover.032"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_33.geometry}
+                material={materials["cover.033"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_34.geometry}
+                material={materials["cover.034"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_35.geometry}
+                material={materials["cover.035"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_36.geometry}
+                material={materials["cover.036"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_37.geometry}
+                material={materials["cover.037"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_38.geometry}
+                material={materials["cover.038"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_39.geometry}
+                material={materials["cover.039"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_40.geometry}
+                material={materials["cover.040"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_41.geometry}
+                material={materials["cover.041"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_42.geometry}
+                material={materials["cover.042"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_43.geometry}
+                material={materials["cover.043"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_44.geometry}
+                material={materials["cover.044"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_45.geometry}
+                material={materials["cover.045"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_46.geometry}
+                material={materials["cover.046"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_47.geometry}
+                material={materials["cover.047"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_48.geometry}
+                material={materials["cover.048"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_49.geometry}
+                material={materials["cover.049"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_50.geometry}
+                material={materials["cover.050"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_51.geometry}
+                material={materials["cover.219"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_52.geometry}
+                material={materials.PaletteMaterial004}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_53.geometry}
+                material={materials["cover.220"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_54.geometry}
+                material={materials["cover.221"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_55.geometry}
+                material={materials["cover.222"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_56.geometry}
+                material={materials["cover.223"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_57.geometry}
+                material={materials["cover.224"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_58.geometry}
+                material={materials["cover.225"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_59.geometry}
+                material={materials["cover.226"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_60.geometry}
+                material={materials["cover.227"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_61.geometry}
+                material={materials["cover.228"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_62.geometry}
+                material={materials["cover.229"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_63.geometry}
+                material={materials["cover.230"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_64.geometry}
+                material={materials["cover.231"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_65.geometry}
+                material={materials["cover.232"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_66.geometry}
+                material={materials["cover.233"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_67.geometry}
+                material={materials["cover.234"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_68.geometry}
+                material={materials["cover.235"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_69.geometry}
+                material={materials["cover.236"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_70.geometry}
+                material={materials["cover.237"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_71.geometry}
+                material={materials["cover.238"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_72.geometry}
+                material={materials["cover.239"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_73.geometry}
+                material={materials["cover.240"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_74.geometry}
+                material={materials["cover.241"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_75.geometry}
+                material={materials["cover.242"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_76.geometry}
+                material={materials["cover.243"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_77.geometry}
+                material={materials["cover.244"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_78.geometry}
+                material={materials["cover.245"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_79.geometry}
+                material={materials["cover.246"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_80.geometry}
+                material={materials["cover.247"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_81.geometry}
+                material={materials["cover.248"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_82.geometry}
+                material={materials["cover.249"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_83.geometry}
+                material={materials["cover.250"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_84.geometry}
+                material={materials["cover.251"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_85.geometry}
+                material={materials["cover.252"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_86.geometry}
+                material={materials["cover.253"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_87.geometry}
+                material={materials["cover.254"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_88.geometry}
+                material={materials["cover.255"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_89.geometry}
+                material={materials["cover.256"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_90.geometry}
+                material={materials["cover.257"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_91.geometry}
+                material={materials["cover.258"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_92.geometry}
+                material={materials["cover.259"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_93.geometry}
+                material={materials["cover.260"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_94.geometry}
+                material={materials["cover.261"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_95.geometry}
+                material={materials["cover.262"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_96.geometry}
+                material={materials["cover.263"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_97.geometry}
+                material={materials["cover.264"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_98.geometry}
+                material={materials["cover.265"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_99.geometry}
+                material={materials["cover.266"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_100.geometry}
+                material={materials["cover.267"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_101.geometry}
+                material={materials["cover.268"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_102.geometry}
+                material={materials["cover.269"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_103.geometry}
+                material={materials["cover.270"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_0005_104.geometry}
+                material={materials["cover.271"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001.geometry}
+                material={materials.pierscien}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_1.geometry}
+                material={materials.black}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_2.geometry}
+                material={materials.darkgraymetal}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_3.geometry}
+                material={materials.material}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_4.geometry}
+                material={materials.pierscienczarn}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_5.geometry}
+                material={materials.membrane_cooper}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_6.geometry}
+                material={materials.membrane}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_7.geometry}
+                material={materials.guma}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_8.geometry}
+                material={materials.lightgray}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_9.geometry}
+                material={materials.darkwood}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_25001_10.geometry}
+                material={materials.brownwood}
             />
         </group>
     );
