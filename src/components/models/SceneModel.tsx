@@ -12,17 +12,6 @@ type GLTFResult = GLTF & {
     nodes: {
         Room: THREE.Mesh;
         Table: THREE.Mesh;
-        Mesh018: THREE.Mesh;
-        Mesh018_1: THREE.Mesh;
-        Mesh018_2: THREE.Mesh;
-        Mesh018_3: THREE.Mesh;
-        Mesh018_4: THREE.Mesh;
-        Mesh018_5: THREE.Mesh;
-        Mesh018_6: THREE.Mesh;
-        Mesh018_7: THREE.Mesh;
-        Mesh043: THREE.Mesh;
-        Mesh043_1: THREE.Mesh;
-        Mesh043_2: THREE.Mesh;
         Object_0005: THREE.Mesh;
         Object_0005_1: THREE.Mesh;
         Object_0005_2: THREE.Mesh;
@@ -139,21 +128,21 @@ type GLTFResult = GLTF & {
         Object_25001_8: THREE.Mesh;
         Object_25001_9: THREE.Mesh;
         Object_25001_10: THREE.Mesh;
+        Mesh018: THREE.Mesh;
+        Mesh018_1: THREE.Mesh;
+        Mesh018_2: THREE.Mesh;
+        Mesh018_3: THREE.Mesh;
+        Mesh018_4: THREE.Mesh;
+        Mesh018_5: THREE.Mesh;
+        Mesh018_6: THREE.Mesh;
+        Mesh018_7: THREE.Mesh;
+        Mesh043: THREE.Mesh;
+        Mesh043_1: THREE.Mesh;
+        Mesh043_2: THREE.Mesh;
     };
     materials: {
         PaletteMaterial001: THREE.MeshStandardMaterial;
         None: THREE.MeshStandardMaterial;
-        ["Dark.Wood.004"]: THREE.MeshStandardMaterial;
-        PaletteMaterial008: THREE.MeshStandardMaterial;
-        PaletteMaterial009: THREE.MeshStandardMaterial;
-        PaletteMaterial010: THREE.MeshStandardMaterial;
-        PaletteMaterial005: THREE.MeshStandardMaterial;
-        PaletteMaterial002: THREE.MeshStandardMaterial;
-        PaletteMaterial006: THREE.MeshStandardMaterial;
-        PaletteMaterial007: THREE.MeshStandardMaterial;
-        ["20.-.Default.001"]: THREE.MeshStandardMaterial;
-        PaletteMaterial003: THREE.MeshStandardMaterial;
-        ["14.-.Default.001"]: THREE.MeshStandardMaterial;
         ["cover.001"]: THREE.MeshStandardMaterial;
         cardboard: THREE.MeshStandardMaterial;
         ["cover.002"]: THREE.MeshStandardMaterial;
@@ -270,8 +259,20 @@ type GLTFResult = GLTF & {
         lightgray: THREE.MeshStandardMaterial;
         darkwood: THREE.MeshStandardMaterial;
         brownwood: THREE.MeshStandardMaterial;
+        ["Dark.Wood.004"]: THREE.MeshStandardMaterial;
+        PaletteMaterial008: THREE.MeshStandardMaterial;
+        PaletteMaterial009: THREE.MeshStandardMaterial;
+        PaletteMaterial010: THREE.MeshStandardMaterial;
+        PaletteMaterial005: THREE.MeshStandardMaterial;
+        PaletteMaterial002: THREE.MeshStandardMaterial;
+        PaletteMaterial006: THREE.MeshStandardMaterial;
+        PaletteMaterial007: THREE.MeshStandardMaterial;
+        ["20.-.Default.001"]: THREE.MeshStandardMaterial;
+        PaletteMaterial003: THREE.MeshStandardMaterial;
+        ["14.-.Default.001"]: THREE.MeshStandardMaterial;
     };
 };
+
 export const SceneModel = (props: JSX.IntrinsicElements["group"]) => {
     const { nodes, materials } = useGLTF("/room-transformed.glb") as GLTFResult;
 
@@ -345,24 +346,6 @@ export const SceneModel = (props: JSX.IntrinsicElements["group"]) => {
                     material={materials.PaletteMaterial007}
                 />
             </group>
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh043.geometry}
-                material={materials["20.-.Default.001"]}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh043_1.geometry}
-                material={materials.PaletteMaterial003}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh043_2.geometry}
-                material={materials["14.-.Default.001"]}
-            />
             <mesh
                 castShadow
                 receiveShadow
@@ -1058,6 +1041,24 @@ export const SceneModel = (props: JSX.IntrinsicElements["group"]) => {
                 receiveShadow
                 geometry={nodes.Object_25001_10.geometry}
                 material={materials.brownwood}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh043.geometry}
+                material={materials["20.-.Default.001"]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh043_1.geometry}
+                material={materials.PaletteMaterial003}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh043_2.geometry}
+                material={materials["14.-.Default.001"]}
             />
         </group>
     );
