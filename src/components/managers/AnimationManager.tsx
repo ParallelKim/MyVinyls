@@ -24,11 +24,10 @@ export const AnimationManager = () => {
         setIsPlaying,
     } = usePlayerStore();
     const { currentAnim, setCurrentAnim } = useAnimationStore();
-    const { lpPlayer } = useSceneStore();
 
-    const { camera, controls } = useThree((state) => ({
-        camera: state.camera,
+    const { controls, scene } = useThree((state) => ({
         controls: state.controls as any,
+        scene: state.scene,
     }));
 
     useGSAP(
@@ -62,6 +61,8 @@ export const AnimationManager = () => {
                     setAlbum(null);
                     setCurrentAnim("idle");
                 } else if (event.type === "LP_PLAYING") {
+                    console.log("LP_PLAYING", event.payload);
+
                     if (!player) return;
                     // 곡 선택 시 로딩 상태로 전환하여 레코드 이동 애니메이션 시작
                     // 애니메이션이 완료될 때까지 대기
@@ -71,7 +72,12 @@ export const AnimationManager = () => {
                     setCurrentAnim("loading");
 
                     controls.reset();
-                    controls.fitToBox(lpPlayer, true, { cover: true });
+                    const lpPlayerTarget =
+                        scene.getObjectByName("lpPlayerTarget");
+                    if (!lpPlayerTarget) return;
+                    await controls.fitToBox(lpPlayerTarget, true, {
+                        cover: true,
+                    });
 
                     await new Promise((resolve) => setTimeout(resolve, 1000));
                     setCurrentAnim("playing");

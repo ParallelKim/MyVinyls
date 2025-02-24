@@ -53,10 +53,9 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
 
     const { currentAnim } = useAnimationStore();
     const { camera } = useThree();
-    const { station } = useSceneStore();
 
     // 각 CustomLp가 자신의 애니메이션을 업데이트함
-    useFrame(() => {
+    useFrame(({ scene }) => {
         if (lpState.current === "idle") return;
         if (groupRef.current) {
             const coverRef = groupRef.current.getObjectByName("cover") as Group;
@@ -71,8 +70,10 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
                     lpState.current = "idle";
                 });
             } else if (lpState.current === "placing") {
+                const station = scene.getObjectByName("stationTarget");
                 if (!station) return;
-                placeLp(coverRef, recordRef, station);
+
+                placeLp(groupRef.current, coverRef, recordRef, station);
             }
         }
     });
@@ -107,7 +108,7 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
             position-x={order * LP_GAP}
             rotation-x={LP_ROOT.ROT.init[0]}
             onClick={handleClick}
-            scale={1.1}
+            scale={1.5} // TODO: Update LP scale
         >
             <group name="cover">
                 <mesh

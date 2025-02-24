@@ -1,11 +1,16 @@
 export const TargetMesh = ({
-    planeArgs,
+    size,
+    color = "green",
     ...props
-}: JSX.IntrinsicElements["mesh"] & { planeArgs: [number, number] }) => {
+}: JSX.IntrinsicElements["mesh"] & { size: number; color?: string }) => {
     return (
         <mesh {...props}>
-            <planeGeometry args={planeArgs} />
-            <meshStandardMaterial color="green" />
+            <boxGeometry args={[size, size, size]} />
+            <meshStandardMaterial
+                color={color}
+                transparent
+                opacity={0.5}
+            />
         </mesh>
     );
 };

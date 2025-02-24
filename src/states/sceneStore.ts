@@ -9,6 +9,7 @@ interface SceneState {
     currentRecord: Group | null;
     currentTrack: string | null;
     billboard: Group | null;
+    isDebug: boolean;
     setRoot: (root: Group | null) => void;
     setShelf: (shelf: Group | null) => void;
     setLpPlayer: (lpPlayer: Group | null) => void;
@@ -26,6 +27,7 @@ const useSceneStore = create<SceneState>()((set) => ({
     currentRecord: null,
     currentTrack: null,
     billboard: null,
+    isDebug: true,
     setRoot: (root) => set({ root }),
     setShelf: (shelf) => set({ shelf }),
     setLpPlayer: (lpPlayer) => set({ lpPlayer }),

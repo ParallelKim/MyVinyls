@@ -11,8 +11,6 @@ export const YTPlayer = () => {
     const query = album?.url.split("list=") ?? [];
     const playlist = query.pop();
 
-    if (!playlist) return null;
-
     const options = {
         width: 340,
         height: 270,
@@ -30,12 +28,16 @@ export const YTPlayer = () => {
 
     return (
         <Html
+            renderOrder={-10}
             transform
-            occlude
-            scale={0.05}
+            occlude="blending"
+            scale={0.034}
+            position={[-0.051, 0.463, -1.188]}
+            rotation={[-Math.PI / 4.8, 0, 0]}
         >
             <YouTube
                 onReady={(event) => {
+                    console.log("YTPlayer onReady", event);
                     setPlayer(
                         event.target as YouTubePlayer & {
                             playerInfo: { playlistIndex: number };

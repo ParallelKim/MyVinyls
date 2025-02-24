@@ -1,5 +1,5 @@
 import { COVER, LP_ROOT, RECORD } from "@/constants/lp";
-import { Camera, Group, Vector3 } from "three";
+import { Camera, Euler, Group, Object3D, Vector3 } from "three";
 import { easeOutLerp } from "utils/position";
 
 const temp = new Vector3();
@@ -71,12 +71,7 @@ export const returnLp = (
     }
 };
 
-export const playLp = (
-    camera: Camera,
-    lpGroup: Group,
-    coverRef: Group,
-    recordRef: Group
-) => {
+export const playLp = (camera: Camera) => {
     easeOutLerp({
         target: camera.position,
         goal: COVER.POS.play,
@@ -84,10 +79,22 @@ export const playLp = (
     });
 };
 
-export const placeLp = (coverRef: Group, recordRef: Group, station: Group) => {
-    // 카메라와의 거리 설정
-    temp.copy(station.position);
-    recordRef.parent?.worldToLocal(temp);
+export const placeLp = (
+    groupRef: Group,
+    coverRef: Group,
+    recordRef: Group,
+    station: Object3D
+) => {
+    temp.set(0, 0, 0);
+
+    easeOutLerp({
+        target: groupRef.position,
+        goal: temp,
+        speedFactor: 15,
+    });
+
+    station.localToWorld(temp);
+    groupRef.worldToLocal(temp);
 
     easeOutLerp({
         target: recordRef.position,
@@ -101,5 +108,5 @@ export const placeLp = (coverRef: Group, recordRef: Group, station: Group) => {
         speedFactor: 0.1,
     });
 
-    coverRef.lookAt(new Vector3(0, 0, 1));
+    recordRef.lookAt(0.5, 100, 0);
 };

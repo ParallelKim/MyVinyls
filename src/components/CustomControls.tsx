@@ -3,6 +3,8 @@ import { useEffect, useRef } from "react";
 
 import usePlayerStore from "@/states/playerStore";
 import { useThree } from "@react-three/fiber";
+import useSceneStore from "@/states/sceneStore";
+import useAnimationStore from "@/states/animationStore";
 
 const CAMERA_SETTINGS = {
     INIT: {
@@ -10,8 +12,15 @@ const CAMERA_SETTINGS = {
         maxAzimuthAngle: Math.PI / 6,
         minPolarAngle: Math.PI / 2 - Math.PI / 6,
         maxPolarAngle: Math.PI / 2 + Math.PI / 6,
-        minDistance: 3,
-        maxDistance: 5,
+        minDistance: 2,
+        maxDistance: 6,
+        restThreshold: 0.005,
+        smoothTime: 0.5,
+        truckSpeed: 0.1,
+    },
+    LP_PLAYING: {
+        minDistance: 0.5,
+        maxDistance: 6,
         restThreshold: 0.005,
         smoothTime: 0.5,
     },
@@ -19,9 +28,9 @@ const CAMERA_SETTINGS = {
 
 export const CustomControls = () => {
     const ref = useRef<CameraControls>(null);
-    const isDebug = true;
 
     const { isPlaying } = usePlayerStore();
+    const { isDebug } = useSceneStore();
     const scene = useThree((state) => state.scene);
 
     useEffect(() => {
@@ -32,9 +41,14 @@ export const CustomControls = () => {
 
         const init = async () => {
             if (!ref.current) return;
+            ref.current.disconnect();
             await ref.current.fitToBox(shelfTarget, true);
-            ref.current.rotate(0, -Math.PI / 12, true);
+            await Promise.all([
+                ref.current.rotate(0, -Math.PI / 12, true),
+                ref.current.elevate(-0.15, true),
+            ]);
             ref.current.saveState();
+            ref.current.connect(document.body);
         };
 
         setTimeout(init, 0); // NOTE: 바운딩 박스가 비동기적으로 초기화되기 때문에 스레드 분리 필요
@@ -47,6 +61,8 @@ export const CustomControls = () => {
             ref.current.smoothTime = 1;
         };
 
+        if (isDebug) return;
+
         ref.current.addEventListener("sleep", springBack);
     }, []);
 
@@ -55,7 +71,7 @@ export const CustomControls = () => {
             ref={ref}
             makeDefault
             // enabled={!isPlaying}
-            {...CAMERA_SETTINGS.INIT}
+            {...(isDebug ? {} : CAMERA_SETTINGS.INIT)}
         />
     );
 };
