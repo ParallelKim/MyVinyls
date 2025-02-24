@@ -272,7 +272,6 @@ type GLTFResult = GLTF & {
         brownwood: THREE.MeshStandardMaterial;
     };
 };
-
 export const SceneModel = (props: JSX.IntrinsicElements["group"]) => {
     const { nodes, materials } = useGLTF("/room-transformed.glb") as GLTFResult;
 
@@ -293,54 +292,59 @@ export const SceneModel = (props: JSX.IntrinsicElements["group"]) => {
                 geometry={nodes.Table.geometry}
                 material={materials.None}
             />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh018.geometry}
-                material={materials["Dark.Wood.004"]}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh018_1.geometry}
-                material={materials.PaletteMaterial008}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh018_2.geometry}
-                material={materials.PaletteMaterial009}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh018_3.geometry}
-                material={materials.PaletteMaterial010}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh018_4.geometry}
-                material={materials.PaletteMaterial005}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh018_5.geometry}
-                material={materials.PaletteMaterial002}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh018_6.geometry}
-                material={materials.PaletteMaterial006}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Mesh018_7.geometry}
-                material={materials.PaletteMaterial007}
-            />
+            <group
+                position={[0, 0.794, -1.291]}
+                scale={0.66}
+            >
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Mesh018.geometry}
+                    material={materials["Dark.Wood.004"]}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Mesh018_1.geometry}
+                    material={materials.PaletteMaterial008}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Mesh018_2.geometry}
+                    material={materials.PaletteMaterial009}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Mesh018_3.geometry}
+                    material={materials.PaletteMaterial010}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Mesh018_4.geometry}
+                    material={materials.PaletteMaterial005}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Mesh018_5.geometry}
+                    material={materials.PaletteMaterial002}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Mesh018_6.geometry}
+                    material={materials.PaletteMaterial006}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Mesh018_7.geometry}
+                    material={materials.PaletteMaterial007}
+                />
+            </group>
             <mesh
                 castShadow
                 receiveShadow

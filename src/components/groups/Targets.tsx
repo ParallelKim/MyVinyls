@@ -7,19 +7,19 @@ export const Targets = () => {
         <group visible={isDebug}>
             <TargetMesh
                 name="shelfTarget"
-                size={2}
-                position={[0, 2.66, -2.3]}
+                size={1.5}
+                position={[0, 2.1, -2.1]}
             />
             <TargetMesh
                 name="lpPlayerTarget"
-                size={0.5}
-                position={[0, 0.85, -1.25]}
+                size={0.33}
+                position={[-0.03, 0.85, -1.28]}
             />
             <TargetMesh
                 name="stationTarget"
-                size={0.1}
+                size={0.03}
                 color="red"
-                position={[-0.045, 0.835, -1.255]}
+                position={[-0.0565, 0.792, -1.2627]}
             />
         </group>
     );

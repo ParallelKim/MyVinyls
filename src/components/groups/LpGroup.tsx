@@ -6,7 +6,7 @@ export const LpGroup = () => {
     return (
         <group
             name="lpGroup"
-            position={[-0.8, 3.49, -1.47]}
+            position={[-0.5, 2.6, -1.47]}
         >
             {JUNGWOO.albums.map((album, idx) => (
                 <CustomLp

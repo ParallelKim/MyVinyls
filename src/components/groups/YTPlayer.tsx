@@ -32,7 +32,7 @@ export const YTPlayer = () => {
             transform
             occlude="blending"
             scale={0.034}
-            position={[-0.051, 0.463, -1.188]}
+            position={[-0.051, 0.463, -1.18]}
             rotation={[-Math.PI / 4.8, 0, 0]}
         >
             <YouTube

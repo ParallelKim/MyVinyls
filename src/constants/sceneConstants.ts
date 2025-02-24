@@ -3,7 +3,7 @@ export const CAMERA_SETTINGS = {
 } as const;
 
 export const SCENE_SETTINGS = {
-    ROOT_POSITION: [0, 0, 1] as [number, number, number],
+    ROOT_POSITION: [0, 0, 0] as [number, number, number],
     AMBIENT_LIGHT: {
         INTENSITY: 2,
         POSITION: [0, 0, 30] as [number, number, number],

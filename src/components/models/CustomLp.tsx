@@ -13,10 +13,9 @@ import { useFrame, useThree } from "@react-three/fiber";
 
 import useAnimationStore from "@/states/animationStore";
 import { eventManager } from "@/components/managers/EventManager";
-import { focusLp, placeLp, returnLp } from "@/animations/lp";
+import { focusLp, placeLp, playLp, returnLp } from "@/animations/lp";
 
 import { Album } from "@/types/Album";
-import useSceneStore from "@/states/sceneStore";
 import { LP_GAP, LP_ROOT } from "@/constants/lp";
 
 type GLTFResult = GLTF & {
@@ -74,6 +73,8 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
                 if (!station) return;
 
                 placeLp(groupRef.current, coverRef, recordRef, station);
+            } else if (lpState.current === "playing") {
+                playLp(recordRef);
             }
         }
     });
@@ -108,7 +109,6 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
             position-x={order * LP_GAP}
             rotation-x={LP_ROOT.ROT.init[0]}
             onClick={handleClick}
-            scale={1.5} // TODO: Update LP scale
         >
             <group name="cover">
                 <mesh
