@@ -1,10 +1,8 @@
 import { CameraControls } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 
-import usePlayerStore from "@/states/playerStore";
 import { useThree } from "@react-three/fiber";
 import useSceneStore from "@/states/sceneStore";
-import useAnimationStore from "@/states/animationStore";
 
 const CAMERA_SETTINGS = {
     INIT: {
@@ -29,7 +27,6 @@ const CAMERA_SETTINGS = {
 export const CustomControls = () => {
     const ref = useRef<CameraControls>(null);
 
-    const { isPlaying } = usePlayerStore();
     const { isDebug } = useSceneStore();
     const scene = useThree((state) => state.scene);
 

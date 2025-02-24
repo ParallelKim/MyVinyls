@@ -1,10 +1,11 @@
-import useSceneStore from "@/states/sceneStore";
+// import useSceneStore from "@/states/sceneStore";
 import { TargetMesh } from "../models/TargetMesh";
 
 export const Targets = () => {
-    const { isDebug } = useSceneStore();
+    // const { isDebug } = useSceneStore();
+
     return (
-        <group visible={isDebug}>
+        <group visible={false}>
             <TargetMesh
                 name="shelfTarget"
                 size={1.5}

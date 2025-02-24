@@ -55,7 +55,7 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
     const { camera } = useThree();
 
     // 각 CustomLp가 자신의 애니메이션을 업데이트함
-    useFrame(({ scene }) => {
+    useFrame(({ scene, controls }) => {
         if (lpState.current === "idle") return;
         if (groupRef.current) {
             const coverRef = groupRef.current.getObjectByName("cover") as Group;
@@ -75,6 +75,8 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
 
                 placeLp(groupRef.current, coverRef, recordRef, station, () => {
                     lpState.current = "playing";
+                    (controls as any).elevate(0.03, true);
+                    (controls as any).rotate(0, -Math.PI / 6, true);
                 });
             } else if (lpState.current === "playing") {
                 playLp(recordRef);

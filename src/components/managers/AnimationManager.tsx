@@ -4,12 +4,10 @@ import gsap from "gsap";
 
 import usePlayerStore from "@/states/playerStore";
 import useAnimationStore from "@/states/animationStore";
-import { YOUTUBE_STATES } from "@/constants/youtubeState";
 
 import { AnimationEvent, eventManager } from "./EventManager";
 import { timelineManager } from "./TimelineManager";
 import { useThree } from "@react-three/fiber";
-import useSceneStore from "@/states/sceneStore";
 
 gsap.registerPlugin(useGSAP);
 
@@ -23,8 +21,8 @@ export const AnimationManager = () => {
         setAlbum,
         setIsPlaying,
     } = usePlayerStore();
-    const { currentAnim, setCurrentAnim } = useAnimationStore();
 
+    const { setCurrentAnim } = useAnimationStore();
     const { controls, scene } = useThree((state) => ({
         controls: state.controls as any,
         scene: state.scene,

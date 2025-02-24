@@ -37,8 +37,6 @@ const App = () => {
                         <Scene />
                     </Bvh>
                     <AnimationManager />
-                    <gridHelper args={[100, 100]} />
-                    <axesHelper args={[8]} />
                 </Suspense>
             </Canvas>
             <UI />

@@ -1,5 +1,5 @@
 import { COVER, LP_ROOT, RECORD } from "@/constants/lp";
-import { Camera, Euler, Group, Object3D, Vector3 } from "three";
+import { Camera, Group, Object3D, Vector3 } from "three";
 import { easeOutLerp } from "utils/position";
 
 const temp = new Vector3();

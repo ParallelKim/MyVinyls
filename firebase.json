@@ -1,7 +1,7 @@
 {
   "hosting": {
     "site": "my-vinyls",
-    "public": "public",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
