@@ -20,23 +20,24 @@ import { LP_GAP, LP_ROOT } from "@/constants/lp";
 
 type GLTFResult = GLTF & {
     nodes: {
+        ["Box001_Material_#25_0"]: THREE.Mesh;
         ["Box001_Material_#25_0_1"]: THREE.Mesh;
         ["Box001_Material_#25_0_2"]: THREE.Mesh;
         ["Box001_Material_#25_0_3"]: THREE.Mesh;
-        ["Box001_Material_#25_0_4"]: THREE.Mesh;
-        ["Cylinder001_Material_#85_0"]: THREE.Mesh;
+        vinyl158_Vinyl1_0: THREE.Mesh;
+        vinyl158_Vinyl1_0_1: THREE.Mesh;
     };
     materials: {
         Material_25: THREE.MeshStandardMaterial;
         Material_37: THREE.MeshStandardMaterial;
         Material_49: THREE.MeshStandardMaterial;
         Material_73: THREE.MeshStandardMaterial;
-        Material_85: THREE.MeshStandardMaterial;
+        Vinyl1: THREE.MeshStandardMaterial;
+        Vinyl2: THREE.MeshStandardMaterial;
     };
 };
 
 export function CustomLp({ album, order }: { album: Album; order: number }) {
-    // asset data
     const { nodes, materials } = useGLTF(
         "/record-transformed.glb"
     ) as GLTFResult;
@@ -72,7 +73,9 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
                 const station = scene.getObjectByName("stationTarget");
                 if (!station) return;
 
-                placeLp(groupRef.current, coverRef, recordRef, station);
+                placeLp(groupRef.current, coverRef, recordRef, station, () => {
+                    lpState.current = "playing";
+                });
             } else if (lpState.current === "playing") {
                 playLp(recordRef);
             }
@@ -109,30 +112,31 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
             position-x={order * LP_GAP}
             rotation-x={LP_ROOT.ROT.init[0]}
             onClick={handleClick}
+            dispose={null}
         >
             <group name="cover">
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes["Box001_Material_#25_0_1"].geometry}
+                    geometry={nodes["Box001_Material_#25_0"].geometry}
                     material={coverMaterial}
                 />
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes["Box001_Material_#25_0_2"].geometry}
+                    geometry={nodes["Box001_Material_#25_0_1"].geometry}
                     material={materials.Material_37}
                 />
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes["Box001_Material_#25_0_3"].geometry}
+                    geometry={nodes["Box001_Material_#25_0_2"].geometry}
                     material={materials.Material_49}
                 />
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes["Box001_Material_#25_0_4"].geometry}
+                    geometry={nodes["Box001_Material_#25_0_3"].geometry}
                     material={materials.Material_73}
                 />
             </group>
@@ -140,8 +144,14 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
                 <mesh
                     castShadow
                     receiveShadow
-                    geometry={nodes["Cylinder001_Material_#85_0"].geometry}
-                    material={materials.Material_85}
+                    geometry={nodes.vinyl158_Vinyl1_0.geometry}
+                    material={materials.Vinyl1}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.vinyl158_Vinyl1_0_1.geometry}
+                    material={materials.Vinyl2}
                 />
             </group>
         </group>

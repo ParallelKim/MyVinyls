@@ -71,39 +71,38 @@ export const returnLp = (
     }
 };
 
-export const playLp = (recordRef: Group) => {
-    recordRef.rotation.z += Math.PI / 180;
-};
-
 export const placeLp = (
     groupRef: Group,
     coverRef: Group,
     recordRef: Group,
-    station: Object3D
+    station: Object3D,
+    callback: () => void
 ) => {
     temp.set(0, 0, 0);
 
-    easeOutLerp({
-        target: groupRef.position,
-        goal: temp,
-        speedFactor: 15,
-    });
-
     groupRef.rotation.set(0, 0, 0);
-    recordRef.rotation.set(Math.PI / 2, 0.013, 0);
 
     station.localToWorld(temp);
     groupRef.worldToLocal(temp);
-
     easeOutLerp({
         target: recordRef.position,
         goal: temp,
         speedFactor: 1,
     });
+    recordRef.rotation.set(-Math.PI / 2, 0.0, 0);
 
     easeOutLerp({
         target: coverRef.position,
         goal: COVER.POS.placing,
         speedFactor: 0.1,
     });
+
+    if (temp.distanceTo(recordRef.position) < 0.01) {
+        recordRef.position.copy(temp);
+        callback();
+    }
+};
+
+export const playLp = (recordRef: Group) => {
+    recordRef.rotation.z += Math.PI / 180;
 };

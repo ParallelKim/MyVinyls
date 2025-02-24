@@ -75,9 +75,7 @@ export const AnimationManager = () => {
                     const lpPlayerTarget =
                         scene.getObjectByName("lpPlayerTarget");
                     if (!lpPlayerTarget) return;
-                    await controls.fitToBox(lpPlayerTarget, true, {
-                        cover: true,
-                    });
+                    await controls.fitToBox(lpPlayerTarget, true);
 
                     await new Promise((resolve) => setTimeout(resolve, 1000));
                     setCurrentAnim("playing");

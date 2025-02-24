@@ -13,13 +13,13 @@ export const Targets = () => {
             <TargetMesh
                 name="lpPlayerTarget"
                 size={0.33}
-                position={[-0.03, 0.85, -1.28]}
+                position={[-0.03, 0.83, -1.28]}
             />
             <TargetMesh
                 name="stationTarget"
                 size={0.03}
                 color="red"
-                position={[-0.0565, 0.792, -1.2627]}
+                position={[-0.0565, 0.792, -1.266]}
             />
         </group>
     );

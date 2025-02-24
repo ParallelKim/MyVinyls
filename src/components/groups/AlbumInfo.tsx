@@ -122,7 +122,7 @@ export const AlbumInfo = () => {
                         {hoveredIndex > 0 && (
                             <mesh
                                 name="background"
-                                position={[2, -7, -0.4]}
+                                position={[1.5, -7, -0.4]}
                                 renderOrder={1}
                             >
                                 <Geometry>

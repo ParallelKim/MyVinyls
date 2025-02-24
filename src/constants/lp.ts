@@ -16,7 +16,7 @@ export const COVER = {
         init: new Vector3(0, 0, 0),
         focus: new Vector3(-0.13, 0, 0.2),
         play: new Vector3(-50, 0, 0),
-        placing: new Vector3(-50, 0, 0),
+        placing: new Vector3(0, 50, 0),
     },
 } as const;
 
