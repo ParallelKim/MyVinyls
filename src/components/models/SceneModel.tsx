@@ -128,17 +128,10 @@ type GLTFResult = GLTF & {
         Object_25001_8: THREE.Mesh;
         Object_25001_9: THREE.Mesh;
         Object_25001_10: THREE.Mesh;
-        Mesh018: THREE.Mesh;
-        Mesh018_1: THREE.Mesh;
-        Mesh018_2: THREE.Mesh;
-        Mesh018_3: THREE.Mesh;
-        Mesh018_4: THREE.Mesh;
-        Mesh018_5: THREE.Mesh;
-        Mesh018_6: THREE.Mesh;
-        Mesh018_7: THREE.Mesh;
         Mesh043: THREE.Mesh;
         Mesh043_1: THREE.Mesh;
         Mesh043_2: THREE.Mesh;
+        Mesh043_3: THREE.Mesh;
     };
     materials: {
         PaletteMaterial001: THREE.MeshStandardMaterial;
@@ -259,16 +252,9 @@ type GLTFResult = GLTF & {
         lightgray: THREE.MeshStandardMaterial;
         darkwood: THREE.MeshStandardMaterial;
         brownwood: THREE.MeshStandardMaterial;
-        ["Dark.Wood.004"]: THREE.MeshStandardMaterial;
-        PaletteMaterial008: THREE.MeshStandardMaterial;
-        PaletteMaterial009: THREE.MeshStandardMaterial;
-        PaletteMaterial010: THREE.MeshStandardMaterial;
-        PaletteMaterial005: THREE.MeshStandardMaterial;
-        PaletteMaterial002: THREE.MeshStandardMaterial;
-        PaletteMaterial006: THREE.MeshStandardMaterial;
-        PaletteMaterial007: THREE.MeshStandardMaterial;
         ["20.-.Default.001"]: THREE.MeshStandardMaterial;
         PaletteMaterial003: THREE.MeshStandardMaterial;
+        PaletteMaterial002: THREE.MeshStandardMaterial;
         ["14.-.Default.001"]: THREE.MeshStandardMaterial;
     };
 };
@@ -293,59 +279,6 @@ export const SceneModel = (props: JSX.IntrinsicElements["group"]) => {
                 geometry={nodes.Table.geometry}
                 material={materials.None}
             />
-            <group
-                position={[0, 0.794, -1.291]}
-                scale={0.66}
-            >
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018.geometry}
-                    material={materials["Dark.Wood.004"]}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_1.geometry}
-                    material={materials.PaletteMaterial008}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_2.geometry}
-                    material={materials.PaletteMaterial009}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_3.geometry}
-                    material={materials.PaletteMaterial010}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_4.geometry}
-                    material={materials.PaletteMaterial005}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_5.geometry}
-                    material={materials.PaletteMaterial002}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_6.geometry}
-                    material={materials.PaletteMaterial006}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Mesh018_7.geometry}
-                    material={materials.PaletteMaterial007}
-                />
-            </group>
             <mesh
                 castShadow
                 receiveShadow
@@ -1058,6 +991,12 @@ export const SceneModel = (props: JSX.IntrinsicElements["group"]) => {
                 castShadow
                 receiveShadow
                 geometry={nodes.Mesh043_2.geometry}
+                material={materials.PaletteMaterial002}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Mesh043_3.geometry}
                 material={materials["14.-.Default.001"]}
             />
         </group>

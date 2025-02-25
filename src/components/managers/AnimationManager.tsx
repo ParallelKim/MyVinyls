@@ -73,9 +73,15 @@ export const AnimationManager = () => {
                     const lpPlayerTarget =
                         scene.getObjectByName("lpPlayerTarget");
                     if (!lpPlayerTarget) return;
-                    await controls.fitToBox(lpPlayerTarget, true);
+                    await controls.fitToBox(lpPlayerTarget, true, {
+                        paddingTop: 0.03,
+                        paddingBottom: 0.03,
+                        paddingLeft: 0.03,
+                        paddingRight: 0.03,
+                    });
+                    controls.saveState();
 
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
+                    await new Promise((resolve) => setTimeout(resolve, 500));
                     setCurrentAnim("playing");
                     setIsPlaying(true);
                     await player.playVideoAt(event.payload.songIndex ?? 0);

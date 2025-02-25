@@ -27,7 +27,7 @@ const useSceneStore = create<SceneState>()((set) => ({
     currentRecord: null,
     currentTrack: null,
     billboard: null,
-    isDebug: true,
+    isDebug: false,
     setRoot: (root) => set({ root }),
     setShelf: (shelf) => set({ shelf }),
     setLpPlayer: (lpPlayer) => set({ lpPlayer }),

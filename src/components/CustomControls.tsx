@@ -10,7 +10,7 @@ const CAMERA_SETTINGS = {
         maxAzimuthAngle: Math.PI / 6,
         minPolarAngle: Math.PI / 2 - Math.PI / 6,
         maxPolarAngle: Math.PI / 2 + Math.PI / 6,
-        minDistance: 2,
+        minDistance: 0.1, // 2 when Focus on Shelf
         maxDistance: 6,
         restThreshold: 0.005,
         smoothTime: 0.5,
@@ -34,21 +34,9 @@ export const CustomControls = () => {
         if (!ref.current) return;
 
         const shelfTarget = scene.getObjectByName("shelfTarget");
-        if (!shelfTarget) return;
+        const lpPlayerTarget = scene.getObjectByName("lpPlayerTarget");
 
-        const init = async () => {
-            if (!ref.current) return;
-            ref.current.disconnect();
-            await ref.current.fitToBox(shelfTarget, true);
-            await Promise.all([
-                ref.current.rotate(0, -Math.PI / 12, true),
-                ref.current.elevate(-0.15, true),
-            ]);
-            ref.current.saveState();
-            ref.current.connect(document.body);
-        };
-
-        setTimeout(init, 0); // NOTE: 바운딩 박스가 비동기적으로 초기화되기 때문에 스레드 분리 필요
+        if (!shelfTarget || !lpPlayerTarget) return;
 
         const springBack = async () => {
             if (!ref.current) return;
@@ -58,16 +46,30 @@ export const CustomControls = () => {
             ref.current.smoothTime = 1;
         };
 
-        if (isDebug) return;
+        const init = async () => {
+            if (!ref.current) return;
+            ref.current.disconnect();
+            await ref.current.fitToBox(lpPlayerTarget, true);
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+            await ref.current.fitToBox(shelfTarget, true);
+            await Promise.all([
+                ref.current.rotate(0, -Math.PI / 12, true),
+                ref.current.elevate(-0.15, true),
+            ]);
+            ref.current.saveState();
+            ref.current.connect(document.body);
 
-        ref.current.addEventListener("sleep", springBack);
+            if (isDebug) return;
+            ref.current.addEventListener("sleep", springBack);
+        };
+
+        setTimeout(init, 0); // NOTE: 바운딩 박스가 비동기적으로 초기화되기 때문에 스레드 분리 필요
     }, []);
 
     return (
         <CameraControls
             ref={ref}
             makeDefault
-            // enabled={!isPlaying}
             {...(isDebug ? {} : CAMERA_SETTINGS.INIT)}
         />
     );

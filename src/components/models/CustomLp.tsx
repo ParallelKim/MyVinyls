@@ -75,8 +75,7 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
 
                 placeLp(groupRef.current, coverRef, recordRef, station, () => {
                     lpState.current = "playing";
-                    (controls as any).elevate(0.03, true);
-                    (controls as any).rotate(0, -Math.PI / 6, true);
+                    (controls as any).rotate(0, -Math.PI / 8, true);
                 });
             } else if (lpState.current === "playing") {
                 playLp(recordRef);
@@ -142,7 +141,10 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
                     material={materials.Material_73}
                 />
             </group>
-            <group name="record">
+            <group
+                name="record"
+                rotation-z={-Math.PI / 2}
+            >
                 <mesh
                     castShadow
                     receiveShadow
