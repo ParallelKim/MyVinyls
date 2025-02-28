@@ -74,127 +74,130 @@ export const Player = (props: JSX.IntrinsicElements["group"]) => {
             {...props}
             dispose={null}
         >
-            <group name="Scene">
-                <group
-                    name="Player002"
-                    position={[-0.012, 0.706, -1.243]}
-                    rotation={[Math.PI, 0, 0]}
-                    scale={0.7}
+            <group
+                name="Player002"
+                position={[-0.012, 0.706, -1.243]}
+                rotation={[Math.PI, 0, 0]}
+                scale={0.7}
+            >
+                <pointLight
+                    position={[-0.1, -0.5, 0.8]}
+                    intensity={0.1}
+                    color="#888"
+                />
+                <mesh
+                    name="Axis"
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Axis.geometry}
+                    material={materials.steel}
+                    position={[0.137, -0.117, 0.098]}
+                    rotation={[Math.PI / 2, 0, 0.571]}
                 >
-                    <mesh
-                        name="Axis"
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.Axis.geometry}
-                        material={materials.steel}
-                        position={[0.137, -0.117, 0.098]}
-                        rotation={[Math.PI / 2, 0, 0.571]}
-                    >
-                        <group
-                            name="Needle"
-                            position={[0.001, -0.001, 0.01]}
-                            rotation={[1.54, -0.576, -0.017]}
-                        >
-                            <mesh
-                                name="Object_5001"
-                                castShadow
-                                receiveShadow
-                                geometry={nodes.Object_5001.geometry}
-                                material={materials.steel}
-                            />
-                            <mesh
-                                name="Object_5001_1"
-                                castShadow
-                                receiveShadow
-                                geometry={nodes.Object_5001_1.geometry}
-                                material={materials.plastic}
-                            />
-                            <mesh
-                                name="Object_5001_2"
-                                castShadow
-                                receiveShadow
-                                geometry={nodes.Object_5001_2.geometry}
-                                material={materials.colored}
-                            />
-                            <mesh
-                                name="Object_5001_3"
-                                castShadow
-                                receiveShadow
-                                geometry={nodes.Object_5001_3.geometry}
-                                material={materials.metal}
-                            />
-                            <mesh
-                                name="Object_5001_4"
-                                castShadow
-                                receiveShadow
-                                geometry={nodes.Object_5001_4.geometry}
-                                material={materials["steel_2.0"]}
-                            />
-                        </group>
-                    </mesh>
                     <group
-                        name="Case"
-                        position={[-0.002, -0.095, 0.179]}
-                        rotation={[2.548, 0, 0]}
+                        name="Needle"
+                        position={[0.001, -0.001, 0.01]}
+                        rotation={[1.54, -0.576, -0.017]}
                     >
                         <mesh
-                            name="Object_3001"
+                            name="Object_5001"
                             castShadow
                             receiveShadow
-                            geometry={nodes.Object_3001.geometry}
+                            geometry={nodes.Object_5001.geometry}
+                            material={materials.steel}
+                        />
+                        <mesh
+                            name="Object_5001_1"
+                            castShadow
+                            receiveShadow
+                            geometry={nodes.Object_5001_1.geometry}
+                            material={materials.plastic}
+                        />
+                        <mesh
+                            name="Object_5001_2"
+                            castShadow
+                            receiveShadow
+                            geometry={nodes.Object_5001_2.geometry}
+                            material={materials.colored}
+                        />
+                        <mesh
+                            name="Object_5001_3"
+                            castShadow
+                            receiveShadow
+                            geometry={nodes.Object_5001_3.geometry}
                             material={materials.metal}
                         />
                         <mesh
-                            name="Object_3001_1"
+                            name="Object_5001_4"
                             castShadow
                             receiveShadow
-                            geometry={nodes.Object_3001_1.geometry}
-                            material={materials.glass}
+                            geometry={nodes.Object_5001_4.geometry}
+                            material={materials["steel_2.0"]}
                         />
                     </group>
-                </group>
+                </mesh>
                 <group
-                    name="Body"
-                    position={[-0.012, 0.706, -1.243]}
-                    rotation={[-Math.PI / 2, 0, 0]}
-                    scale={0.7}
+                    name="Case"
+                    position={[-0.002, -0.095, 0.179]}
+                    rotation={[2.548, 0, 0]}
                 >
                     <mesh
-                        name="Object_0006"
+                        name="Object_3001"
                         castShadow
                         receiveShadow
-                        geometry={nodes.Object_0006.geometry}
-                        material={materials.wood}
-                    />
-                    <mesh
-                        name="Object_0006_1"
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.Object_0006_1.geometry}
-                        material={materials.glass}
-                    />
-                    <mesh
-                        name="Object_0006_2"
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.Object_0006_2.geometry}
+                        geometry={nodes.Object_3001.geometry}
                         material={materials.metal}
                     />
                     <mesh
-                        name="Object_0006_3"
+                        name="Object_3001_1"
                         castShadow
                         receiveShadow
-                        geometry={nodes.Object_0006_3.geometry}
-                        material={materials.plastic}
-                    />
-                    <mesh
-                        name="Object_0006_4"
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.Object_0006_4.geometry}
-                        material={materials.steel}
+                        geometry={nodes.Object_3001_1.geometry}
+                        material={materials.glass}
                     />
                 </group>
+            </group>
+            <group
+                name="Body"
+                position={[-0.012, 0.706, -1.243]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                scale={0.7}
+            >
+                <mesh
+                    name="Object_0006"
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Object_0006.geometry}
+                    material={materials.wood}
+                />
+                <mesh
+                    name="Object_0006_1"
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Object_0006_1.geometry}
+                    material={materials.glass}
+                />
+                <mesh
+                    name="Object_0006_2"
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Object_0006_2.geometry}
+                    material={materials.metal}
+                />
+                <mesh
+                    name="Object_0006_3"
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Object_0006_3.geometry}
+                    material={materials.plastic}
+                />
+                <mesh
+                    name="Object_0006_4"
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Object_0006_4.geometry}
+                    material={materials.steel}
+                />
             </group>
         </group>
     );

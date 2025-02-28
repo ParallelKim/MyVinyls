@@ -43,7 +43,11 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
     ) as GLTFResult;
     const albumTexture = useTexture(album.cover);
     const coverMaterial = useMemo(() => {
-        return new MeshStandardMaterial({ map: albumTexture });
+        const material = new MeshStandardMaterial({ map: albumTexture });
+        material.roughness = 1;
+        material.metalness = 0.7;
+
+        return material;
     }, [albumTexture]);
 
     const lpState = useRef<

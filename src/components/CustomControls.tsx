@@ -47,20 +47,24 @@ export const CustomControls = () => {
         };
 
         const init = async () => {
-            if (!ref.current) return;
-            ref.current.disconnect();
-            await ref.current.fitToBox(lpPlayerTarget, true);
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            await ref.current.fitToBox(shelfTarget, true);
+            const controls = ref.current;
+            if (!controls) return;
+            controls.disconnect();
+            controls.moveTo(0, 2, 0);
+            await controls.fitToBox(lpPlayerTarget, true);
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            await controls.fitToBox(shelfTarget, true);
+            controls.smoothTime = 0.25;
             await Promise.all([
-                ref.current.rotate(0, -Math.PI / 12, true),
-                ref.current.elevate(-0.15, true),
+                controls.rotate(0, -Math.PI / 12, true),
+                controls.elevate(-0.15, true),
             ]);
-            ref.current.saveState();
-            ref.current.connect(document.body);
+            controls.smoothTime = 0.5;
+            controls.saveState();
+            controls.connect(document.body);
 
             if (isDebug) return;
-            ref.current.addEventListener("sleep", springBack);
+            controls.addEventListener("sleep", springBack);
         };
 
         setTimeout(init, 0); // NOTE: 바운딩 박스가 비동기적으로 초기화되기 때문에 스레드 분리 필요

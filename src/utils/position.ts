@@ -26,12 +26,12 @@ export const easeOutLerp = ({
         target.copy(goal);
     }
 
-    if (dis < 0.01 && dis > 0) {
+    if (dis < 0.025 && dis > 0) {
         target.copy(goal);
         onEnded?.();
     }
 
-    const alpha = Math.min(1, Math.min(0.3, speedFactor / dis));
+    const alpha = Math.min(0.3, speedFactor / dis);
 
     target.lerp(goal, alpha);
 };

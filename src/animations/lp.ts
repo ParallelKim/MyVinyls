@@ -4,7 +4,7 @@ import { easeOutLerp } from "utils/position";
 
 const temp = new Vector3();
 
-const CAMERA_DISTANCE = -0.95; // 원하는 카메라와의 거리
+const CAMERA_DISTANCE = -1.05; // 원하는 카메라와의 거리
 
 export const focusLp = (
     camera: Camera,
@@ -20,7 +20,6 @@ export const focusLp = (
     easeOutLerp({
         target: lpGroup.position,
         goal: temp,
-        speedFactor: 5,
     });
     easeOutLerp({
         target: coverRef.position,
@@ -65,7 +64,7 @@ export const returnLp = (
         lpGroup.position.copy(temp);
         lpGroup.rotation.set(...LP_ROOT.ROT.init);
         recordRef.position.copy(RECORD.POS.init);
-        recordRef.rotation.set(0, 0, 0);
+        recordRef.rotation.set(0, 0, -Math.PI / 2);
         coverRef.position.copy(COVER.POS.init);
         callback();
     }

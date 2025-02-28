@@ -37,7 +37,7 @@ export const AlbumInfo = () => {
         <group
             name="album info"
             scale={0.06}
-            position={[-0.3, 0, 0]}
+            position={[-0.3, 0, -0.3]}
         >
             <group>
                 <mesh
@@ -58,8 +58,8 @@ export const AlbumInfo = () => {
                         color="#000"
                         transparent
                         opacity={0.7}
-                        side={DoubleSide}
                         depthWrite={false}
+                        forceSinglePass
                     />
                 </mesh>
                 <group
