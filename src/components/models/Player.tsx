@@ -5,7 +5,7 @@ Files: C:\Users\parallel\Downloads\room\player.glb [2.33MB] > C:\Users\parallel\
 */
 
 import * as THREE from "three";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Group } from "three";

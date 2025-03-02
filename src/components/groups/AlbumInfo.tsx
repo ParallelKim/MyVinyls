@@ -1,7 +1,6 @@
 import { Addition, Base, Geometry, Subtraction } from "@react-three/csg";
 import { Center, Text } from "@react-three/drei";
 import { useState } from "react";
-import { DoubleSide } from "three";
 
 import usePlayerStore from "@/states/playerStore";
 import useAnimationStore from "@/states/animationStore";
