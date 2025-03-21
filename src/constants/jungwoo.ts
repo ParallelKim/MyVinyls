@@ -38,7 +38,7 @@ export const JUNGWOO: Artist = {
                 "허물",
                 "Crack",
             ],
-            cover: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/bf/09/24/bf0924c3-9581-80cd-453b-01109ba76dc6/8809964654609.jpg/592x592bb.webp",
+            cover: "/jungwoo2.jpg",
             url: "https://www.youtube.com/watch?v=vZVQ3loVjs0&list=OLAK5uy_nhXRJcv8WxjwjfK6Ul7PRMpSog-01_YQ8",
         },
     ],
