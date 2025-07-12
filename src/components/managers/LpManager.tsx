@@ -157,16 +157,16 @@ export class LpManager {
 
         if (temp.distanceTo(this.recordRef.position) < 0.01) {
             this.recordRef.position.copy(temp);
-            this.lpState = "playing";
             controls.rotate(0, -Math.PI / 8, true);
+            this.lpState = "playing";
         }
     };
 
     play = () => {
-        this.rotationSpeed = lerp(this.rotationSpeed, Math.PI / 180, 0.01);
+        this.rotationSpeed = lerp(this.rotationSpeed, Math.PI / 180, 0.02);
     };
 
     pause = () => {
-        this.rotationSpeed = lerp(this.rotationSpeed, 0, 0.01);
+        this.rotationSpeed = lerp(this.rotationSpeed, 0, 0.02);
     };
 }

@@ -5,7 +5,7 @@ export const Targets = () => {
     const { isDebug } = useSceneStore();
 
     return (
-        <group visible={false}>
+        <group visible={!isDebug}>
             <TargetMesh
                 name="shelfTarget"
                 size={1.5}

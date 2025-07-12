@@ -1,4 +1,5 @@
 import usePlayerStore from "@/states/playerStore";
+import { eventManager } from "../managers/EventManager";
 import { Next } from "./Next";
 import { Pause } from "./Pause";
 import { Play } from "./Play";
@@ -10,30 +11,42 @@ export const YTController = () => {
     const isFirst = currentIndex === 0;
     const isLast = album && album.list.length - 1 === currentIndex;
 
-    const control =
-        (action: "play" | "pause" | "prev" | "next") => async () => {
-            if (player) {
-                if (action === "play") {
-                    await player.playVideo();
-                } else if (action === "pause") {
-                    await player.pauseVideo();
-                } else if (action === "prev") {
-                    if (isFirst) return;
-                    await player.previousVideo();
-                } else if (action === "next") {
-                    if (isLast) return;
-                    await player.nextVideo();
-                }
+    const control = {
+        play: async () => {
+            if (!player) return;
+            await player.playVideo();
+            eventManager.emit({
+                type: "LP_RESUME",
+                payload: { album: album, lpId: album?.id },
+            });
+        },
+        pause: async () => {
+            if (!player) return;
+            await player.pauseVideo();
+            if (album) {
+                eventManager.emit({
+                    type: "LP_PAUSED",
+                    payload: { album: album, lpId: album.id },
+                });
             }
-        };
+        },
+        prev: async () => {
+            if (!player || isFirst) return;
+            await player.previousVideo();
+        },
+        next: async () => {
+            if (!player || isLast) return;
+            await player.nextVideo();
+        },
+    };
+
+    const isControllerInit = player && album && duration;
 
     return (
         <div
             className={
                 "yt-controller " +
-                (player && album && duration
-                    ? "yt-ctrl-visible"
-                    : "yt-ctrl-hidden")
+                (isControllerInit ? "yt-ctrl-visible" : "yt-ctrl-hidden")
             }
         >
             <div className="yt-progress">
@@ -42,16 +55,16 @@ export const YTController = () => {
             </div>
             <div
                 className={
-                    "yt-buttons " + (player ? "" : "yt-buttons-disabled")
+                    "yt-buttons" + (player ? "" : " yt-buttons-disabled")
                 }
             >
-                <Prev onClick={control("prev")} />
-                {status !== "ready" ? (
-                    <Pause onClick={control("pause")} />
+                <Prev onClick={control.prev} />
+                {status === "ready" ? (
+                    <Play onClick={control.play} />
                 ) : (
-                    <Play onClick={control("play")} />
+                    <Pause onClick={control.pause} />
                 )}
-                <Next onClick={control("next")} />
+                <Next onClick={control.next} />
             </div>
         </div>
     );

@@ -12,11 +12,18 @@ export type AnimationStatus =
     | "returning"
     | "error";
 
+type AnimationEventType =
+    | "LP_SELECTED"
+    | "LP_UNSELECTED"
+    | "LP_PLAYING"
+    | "LP_PAUSED"
+    | "LP_RESUME";
+
 export type AnimationEvent = {
-    type: "LP_SELECTED" | "LP_UNSELECTED" | "LP_PLAYING";
+    type: AnimationEventType;
     payload: {
         album: Album | null;
-        lpId: string | null;
+        lpId?: string;
         songIndex?: number;
     };
 };
@@ -35,14 +42,13 @@ export class EventManager {
     emit(event: AnimationEvent) {
         try {
             if (event.type === "LP_SELECTED") {
-                if (
+                const needUnselect =
                     this.selectedLpId &&
-                    this.selectedLpId !== event.payload.lpId
-                ) {
-                    this.unselect();
-                }
+                    this.selectedLpId !== event.payload.lpId;
 
-                this.selectedLpId = event.payload.lpId;
+                if (needUnselect) this.unselect();
+
+                this.selectedLpId = event.payload.lpId ?? null;
             }
             this.handlers.forEach((handler) => handler(event));
             if (event.type === "LP_UNSELECTED") {
@@ -61,7 +67,7 @@ export class EventManager {
         this.handlers.forEach((handler) =>
             handler({
                 type: "LP_UNSELECTED",
-                payload: { album: null, lpId: this.selectedLpId },
+                payload: { album: null, lpId: this.selectedLpId ?? undefined },
             })
         );
         this.selectedLpId = null;
@@ -74,11 +80,12 @@ export class EventManager {
         });
 
         const unsubscribe = this.subscribe((event) => {
+            if (event.type === "LP_PLAYING") lpManager.lpState = "placing";
+            if (event.type === "LP_PAUSED") lpManager.lpState = "paused";
+            if (event.type === "LP_RESUME") lpManager.lpState = "playing";
             if (event.type === "LP_UNSELECTED") {
                 lpManager.lpState = "returning";
                 unsubscribe();
-            } else if (event.type === "LP_PLAYING") {
-                lpManager.lpState = "placing";
             }
         });
     }

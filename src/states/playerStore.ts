@@ -4,7 +4,6 @@ import { YouTubePlayer } from "react-youtube";
 import { create } from "zustand";
 
 interface PlayerState {
-    isPlaying: boolean;
     currentTime: number;
     volume: number;
     album: Album | null;
@@ -20,14 +19,12 @@ interface PlayerState {
     ) => void;
     setCurrentIndex: (index: number) => void;
     setStatus: (status: AnimationStatus, duration: number) => void;
-    setIsPlaying: (isPlaying: boolean) => void;
     setCurrentTime: (time: number) => void;
     setDuration: (duration: number) => void;
     setVolume: (volume: number) => void;
 }
 
 const usePlayerStore = create<PlayerState>()((set) => ({
-    isPlaying: false,
     currentTime: 0,
     duration: 0,
     volume: 1,
@@ -39,7 +36,6 @@ const usePlayerStore = create<PlayerState>()((set) => ({
     setPlayer: (player) => set({ player }),
     setCurrentIndex: (currentIndex) => set({ currentIndex }),
     setStatus: (status, duration) => set({ status, duration }),
-    setIsPlaying: (isPlaying) => set({ isPlaying }),
     setCurrentTime: (currentTime) => set({ currentTime }),
     setDuration: (duration) => set({ duration }),
     setVolume: (volume) => set({ volume }),

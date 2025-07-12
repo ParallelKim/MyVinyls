@@ -1,26 +1,19 @@
-import { useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useEffect } from "react";
 
-import usePlayerStore from "@/states/playerStore";
 import useAnimationStore from "@/states/animationStore";
+import usePlayerStore from "@/states/playerStore";
 
+import { useThree } from "@react-three/fiber";
 import { AnimationEvent, eventManager } from "./EventManager";
 import { timelineManager } from "./TimelineManager";
-import { useThree } from "@react-three/fiber";
 
 gsap.registerPlugin(useGSAP);
 
 export const AnimationManager = () => {
-    const {
-        player,
-        status,
-        currentIndex,
-        duration,
-        album,
-        setAlbum,
-        setIsPlaying,
-    } = usePlayerStore();
+    const { player, status, currentIndex, duration, album, setAlbum } =
+        usePlayerStore();
 
     const { setCurrentAnim } = useAnimationStore();
     const { controls, scene } = useThree((state) => ({
@@ -60,6 +53,7 @@ export const AnimationManager = () => {
                     setCurrentAnim("idle");
                 } else if (event.type === "LP_PLAYING") {
                     console.log("LP_PLAYING", event.payload);
+                    console.log("player", player);
 
                     if (!player) return;
                     // 곡 선택 시 로딩 상태로 전환하여 레코드 이동 애니메이션 시작
@@ -83,7 +77,6 @@ export const AnimationManager = () => {
 
                     await new Promise((resolve) => setTimeout(resolve, 500));
                     setCurrentAnim("playing");
-                    setIsPlaying(true);
                     await player.playVideoAt(event.payload.songIndex ?? 0);
                     timelineManager.syncWithYouTube(player);
                 }

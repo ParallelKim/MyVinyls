@@ -37,7 +37,6 @@ export const YTPlayer = () => {
         >
             <YouTube
                 onReady={(event) => {
-                    console.log("YTPlayer onReady", event);
                     setPlayer(
                         event.target as YouTubePlayer & {
                             playerInfo: { playlistIndex: number };
