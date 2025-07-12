@@ -5,18 +5,14 @@ Files: C:\Users\parallel\Downloads\room\record.glb [108.04KB] > C:\Users\paralle
 */
 
 import { useGLTF, useTexture } from "@react-three/drei";
-import { ThreeEvent } from "@react-three/fiber";
-import { useRef, useMemo } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
 import { Group, MeshStandardMaterial } from "three";
 import { GLTF } from "three-stdlib";
-import { useFrame, useThree } from "@react-three/fiber";
 
-import useAnimationStore from "@/states/animationStore";
-import { eventManager } from "@/components/managers/EventManager";
-import { focusLp, placeLp, playLp, returnLp } from "@/animations/lp";
-
-import { Album } from "@/types/Album";
 import { LP_GAP, LP_ROOT } from "@/constants/lp";
+import { Album } from "@/types/Album";
+import { LpManager } from "../managers/LpManager";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -50,65 +46,11 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
         return material;
     }, [albumTexture]);
 
-    const lpState = useRef<
-        "idle" | "focus" | "returning" | "playing" | "placing"
-    >("idle");
     const groupRef = useRef<Group>(null);
-
-    const { currentAnim } = useAnimationStore();
-    const { camera } = useThree();
+    const lpManager = new LpManager(album, order, groupRef);
 
     // 각 CustomLp가 자신의 애니메이션을 업데이트함
-    useFrame(({ scene, controls }) => {
-        if (lpState.current === "idle") return;
-        if (groupRef.current) {
-            const coverRef = groupRef.current.getObjectByName("cover") as Group;
-            const recordRef = groupRef.current.getObjectByName(
-                "record"
-            ) as Group;
-
-            if (lpState.current === "focus") {
-                focusLp(camera, groupRef.current, coverRef, recordRef);
-            } else if (lpState.current === "returning") {
-                returnLp(groupRef.current, coverRef, recordRef, order, () => {
-                    lpState.current = "idle";
-                });
-            } else if (lpState.current === "placing") {
-                const station = scene.getObjectByName("stationTarget");
-                if (!station) return;
-
-                placeLp(groupRef.current, coverRef, recordRef, station, () => {
-                    lpState.current = "playing";
-                    (controls as any).rotate(0, -Math.PI / 8, true);
-                });
-            } else if (lpState.current === "playing") {
-                playLp(recordRef);
-            }
-        }
-    });
-
-    const handleClick = (e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        if (!groupRef.current || currentAnim === "playing") return;
-
-        const isSelected = eventManager.isSelected(album.id);
-
-        if (isSelected) {
-            lpState.current = "returning";
-            eventManager.unselect();
-        } else {
-            lpState.current = "focus";
-            eventManager.select({
-                album,
-                onUnselect: () => {
-                    lpState.current = "returning";
-                },
-                onPlaying: () => {
-                    lpState.current = "placing";
-                },
-            });
-        }
-    };
+    useFrame(lpManager.onFrame);
 
     return (
         <group
@@ -116,7 +58,7 @@ export function CustomLp({ album, order }: { album: Album; order: number }) {
             ref={groupRef}
             position-x={order * LP_GAP}
             rotation-x={LP_ROOT.ROT.init[0]}
-            onClick={handleClick}
+            onClick={lpManager.onClick}
             dispose={null}
         >
             <group name="cover">

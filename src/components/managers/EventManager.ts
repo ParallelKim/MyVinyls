@@ -1,4 +1,5 @@
 import { Album } from "@/types/Album";
+import type { LpManager } from "./LpManager";
 
 export type AnimationStatus =
     | "idle"
@@ -66,26 +67,18 @@ export class EventManager {
         this.selectedLpId = null;
     }
 
-    select({
-        album,
-        onUnselect,
-        onPlaying,
-    }: {
-        album: Album;
-        onUnselect: () => void;
-        onPlaying: () => void;
-    }) {
+    select(lpManager: LpManager) {
         this.emit({
             type: "LP_SELECTED",
-            payload: { album, lpId: album.id },
+            payload: { album: lpManager.album, lpId: lpManager.album.id },
         });
 
         const unsubscribe = this.subscribe((event) => {
             if (event.type === "LP_UNSELECTED") {
-                onUnselect();
+                lpManager.lpState = "returning";
                 unsubscribe();
             } else if (event.type === "LP_PLAYING") {
-                onPlaying();
+                lpManager.lpState = "placing";
             }
         });
     }
