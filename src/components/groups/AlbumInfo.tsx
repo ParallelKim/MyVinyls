@@ -1,27 +1,23 @@
 import { Addition, Base, Geometry, Subtraction } from "@react-three/csg";
 import { Center, Text } from "@react-three/drei";
-import { useState } from "react";
-import { DoubleSide } from "three";
-
-import usePlayerStore from "@/states/playerStore";
-import useAnimationStore from "@/states/animationStore";
 import { ThreeEvent } from "@react-three/fiber";
+import { useState } from "react";
+
 import { eventManager } from "@/components/managers/EventManager";
+import useAnimationStore from "@/states/animationStore";
+import usePlayerStore from "@/states/playerStore";
 
 export const AlbumInfo = () => {
     const [hoveredIndex, setHoveredIndex] = useState(0);
     const { album, currentIndex } = usePlayerStore();
     const { currentAnim } = useAnimationStore();
 
-    // 앨범이 없거나 focusing 상태가 아니면 렌더링하지 않음
-    if (!album || currentAnim !== "focusing") {
-        return null;
-    }
-
     const len = album?.list.length ?? 2;
 
     const handlePlay = async (e: ThreeEvent<MouseEvent>, idx: number) => {
         e.stopPropagation();
+
+        if (!album) return;
 
         eventManager.emit({
             type: "LP_PLAYING",
@@ -36,7 +32,7 @@ export const AlbumInfo = () => {
     return (
         <group
             name="album info"
-            scale={0.06}
+            scale={currentAnim === "focusing" ? 0.06 : 0}
             position={[-0.3, 0, -0.3]}
         >
             <group>
@@ -71,10 +67,10 @@ export const AlbumInfo = () => {
                         fontSize={1.5}
                         font="/Pretendard.woff"
                     >
-                        {album.title}
+                        {album?.title}
                     </Text>
                     <group position={[3, 7, 0]}>
-                        {album.list.map((song, idx) => {
+                        {album?.list.map((song, idx) => {
                             const x =
                                 9 *
                                 Math.cos(
